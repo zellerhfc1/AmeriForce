@@ -1,0 +1,121 @@
+﻿@model AmeriForce.Data.Company
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<link href="~/Content/ContactStyleSheet.css" rel="stylesheet" />
+
+<nav aria-label="breadcrumb" align="right">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Companies" , new { id=999 })">Companies</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Company Details</li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<div style="border:0px solid #333;">
+    <div class="container mainPageBody" style="border:1px solid #333;background-color:#fff;">
+
+        @*Company Detail*@
+        <div class="row contactHeader">
+            <div class="col-lg-5" align="left">
+                <div style="border:0px solid black;">
+                    <table align="left">
+                        <tr>
+                            <td valign="middle" style="border:1px solid #fff;padding:10px;">
+                                <i class="fa fa-building" style="font-size:28px;"></i>
+                            </td>
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:0px;">
+                                <span class="overviewHeader dealAmount">
+                                    @Model.Name
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-6" align="left">
+                @*Use this screen to create a new Company.*@
+            </div>
+            <div class="col-lg-1" align="center">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                <a href='@Url.Action("Edit", "Companies", new { id = Model.ID })' class="btn btn-sm btn-primary"> <i class="far fa-edit"></i> Edit</a>
+                <a href='@Url.Action("Index", "Companies", new { id = 999 })' class="btn btn-sm btn-primary"> <i class="far fa-arrow-alt-circle-left"></i> Back To Company List</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" style="padding:10px;" align="left">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Company Information</h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Mailing Information</h2>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;" align="left">
+                            <b>Name: </b> @Model.Name<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Description: </b> @Model.Description<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Charter State: </b> @Model.CharterState<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>SIC Code: </b> @Model.SICCode<br />
+                            <hr class="hrFieldBuffer" />
+                            @*<b>Company Name: </b> <a href="@Url.Action("Details", "Companies", new { id = Model.contact.AccountId })">@controller.GetCompanyName(Model.contact.AccountId)</a><br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Title: </b> @Model.contact.Title<br />*@
+                        </div>
+
+                        <div class="col-lg-6" style="padding:5px;" align="left">
+                            <b>Address: </b> @Model.MailingAddress<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>City: </b> @Model.MailingCity<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>State: </b> @Model.MailingState<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>ZipCode: </b> @Model.MailingPostalCode<br />
+                            <hr class="hrFieldBuffer" />
+                        </div>
+
+                        @*<div class="col-lg-12" style="padding:5px;" align="left">
+                            <div class="input-group-sm">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+</div>

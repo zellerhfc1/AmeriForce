@@ -1,0 +1,670 @@
+﻿@model IEnumerable<AmeriForce.Data.Contact>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@{
+    var controller = ViewContext.RouteData.Values["controller"] as AmeriForce.Controllers.ContactsController;
+}
+
+<link href="~/Content/ClientStyleSheet.css" rel="stylesheet" />
+
+
+@*<nav aria-label="breadcrumb" align="right">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Clients</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Pattison Sand Company, L.L.C.-2021-01</li>
+        </ol>
+    </nav>*@
+
+@*<div style="border:0px solid #333;">*@
+    @*<div class="container">
+            <div class="row" align="right">
+                <div class="col-lg-12">
+                    <a class="btn btn-primary btn-md tinyButton" href="@Url.Action("TestCreateContact", "Test")" style="padding:5px;margin:10px;">Create New Contact</a>
+                </div>
+            </div>
+        </div>*@
+    <div class="container mainPageBody" style="border:1px solid #333;background-color:#fff;">
+
+        @*Contact Detail Div*@
+        <div class="row contactHeader">
+            <div class="col-lg-5" align="left">
+                <div style="border:0px solid black;">
+                    <table align="left">
+                        <tr>
+                            <td valign="middle" style="border:1px solid #fff;padding:3px;">
+                                <i class="fa fa-user" style="font-size:60px;"></i>
+                                <br />
+                                @Html.ActionLink("Create New", "Create")
+                            </td>
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
+                                <span class="overviewHeader dealAmount">
+                                    Contacts
+                                </span>
+                                <br />
+                                <span class="nameSubHeader gradeAReversed"> @ViewBag.SubTitle (@ViewBag.ContactCount)</span>
+                                <br />
+                                <span class="nameSubHeaderNextCall"> @ViewBag.TimeStamp</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-3 dealAmount" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-3" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-1" align="center">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                <a href='@Url.Action("Index", "Contacts", new { id = 999 })' class="btn btn-sm btn-primary">All Contacts</a>
+                <a href='@Url.Action("Index", "Contacts", new { id = 1 })' class="btn btn-sm btn-primary">All New Contacts</a>
+                <a href='@Url.Action("Index", "Contacts", new { id = 2 })' class="btn btn-sm btn-primary">My Contacts</a>
+                <a href='@Url.Action("Index", "Contacts", new { id = 3 })' class="btn btn-sm btn-primary">Active Referral Partner Contacts</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" style="padding:10px;" align="left">
+                <div class="container">
+                    <p align="right">
+                        Search: <input type="text" name="contactSearch" class="searchTextbox" placeholder="Search Contacts..." />
+                    </p>
+                    <table class="table table-condensed table-striped table-hover searchTable" style="width:100%;">
+                        <tr class="darkTableHeading">
+                            <th align="left" class="leftTextAlign">
+                                @Html.DisplayName("Owner")
+                            </th>
+                            <th class="leftTextAlign" style="width:30px;">
+                                @Html.DisplayName("Grade")
+                            </th>
+                            <th align="left" class="leftTextAlign">
+                                @Html.DisplayName("Contact Name")
+                            </th>
+                            <th align="left" class="leftTextAlign">
+                                @Html.DisplayName("Company")
+                            </th>
+                            <th align="left" class="leftTextAlign">
+                                @Html.DisplayName("Phone")
+                            </th>
+                            <th align="left" class="leftTextAlign">
+                                @Html.DisplayName("Email")
+                            </th>
+                            @*<th>
+                                    @Html.DisplayNameFor(model => model.Description)
+                                </th>*@
+                            @*<th>
+                                @Html.DisplayName("Current Stage")
+                            </th>*@
+                            @*<th>
+                                    @Html.DisplayNameFor(model => model.StageSortOrder)
+                                </th>*@
+                            @*<th>
+                                @Html.DisplayNameFor(model => model.Amount)
+                            </th>*@
+                            @*<th>
+                                    @Html.DisplayNameFor(model => model.ExpectedRevenue)
+                                </th>*@
+                            @*<th>
+                                @Html.DisplayName("Close Date")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Actions")
+                            </th>*@
+                           
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="leftTextAlign">
+                                    @controller.GetUserNameFromID(item.OwnerId)
+                                    @*<img src="~/Images/@(item.OwnerId).jpg" class="img-thumbnail img-rounded" style="height:75px;" />*@
+                                    
+                                </td>
+                                <td class="leftTextAlign">
+
+                                    @{
+                                        switch (item.Rating_Sort)
+                                        {
+                                            case "A":
+                                                <img src="~/Images/aContactIcon.png" style="height:20px;" />
+                                                break;
+                                            case "B":
+                                                <img src="~/Images/bContactIcon.png" style="height:20px;" />
+                                                break;
+                                            case "C":
+                                                <img src="~/Images/cContactIcon.png" style="height:20px;" />
+                                                break;
+                                            case "D":
+                                                <img src="~/Images/dContactIcon.png" style="height:20px;" />
+                                                break;
+                                            case "OTHER":
+                                                <i class="fa fa-question" title="" style="font-size:large;"></i>
+                                                break;
+                                            default:
+                                                <i class="fa fa-question" title="" style="font-size:large;"></i>
+                                                break;
+                                        }
+                                    }
+                                </td>
+                                <td class="leftTextAlign">
+                                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName) 
+                                    @{
+                                        if (item.Relationship_Status == "New")
+                                        {
+                                            <span class="label label-danger">@item.Relationship_Status</span>
+                                        }
+                                    }
+
+                                </td>
+                                <td class="leftTextAlign">
+                                    @{
+                                        var companyName = controller.GetCompanyName(item.AccountId);
+                                    }
+                                    <a href='@Url.Action("Details", "Companies", new { id = item.AccountId })'>@companyName</a>
+
+                                    @*<a href='@Url.Action("Details", "Companies", new { id = item.AccountId })'>@controller.GetCompanyName(item.AccountId)</a>*@
+                                </td>
+                                @*<td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>*@
+                                <td class="leftTextAlign">
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
+                                @*<td>
+                                        @Html.DisplayFor(modelItem => item.StageSortOrder)
+                                    </td>*@
+                                <td class="leftTextAlign">
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                @*<td>
+                                        @Html.DisplayFor(modelItem => item.ExpectedRevenue)
+                                    </td>*@
+                                @*<td class="leftTextAlign">
+                                    @Html.DisplayFor(modelItem => item.CloseDate)
+                                </td>*@
+                               
+                                <td>
+                                    <a href='@Url.Action("Details", "Contacts", new { id=item.Id })' class="btn btn-xs btn-primary">View</a>
+                                    <a href='@Url.Action("Edit", "Contacts", new { id=item.Id })' class="btn btn-xs btn-primary">Edit</a>
+                                    @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                                        @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script src="~/jQuery/jQuery_TableSearch.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Salutation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MiddleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OtherStreet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OtherCity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OtherState)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OtherPostalCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OtherCountry)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingStreet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingCity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingState)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingPostalCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingCountry)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fax)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MobilePhone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomePhone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssistantName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Birthdate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasOptedOutOfEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedById)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastModifiedById)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastActivityDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailBouncedReason)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailBouncedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alt_Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alt_Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Children)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direct_Line)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Extension)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Initial_Meeting_Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LinkedIn_Profile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mailing_Lists)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opt_Out)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opt_Out_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Preferred_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reassigned_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Referral_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Referral_Partner_Agmnt_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Referral_Partner_Agmnt_Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Referring_Company)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Referring_Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Relationship_Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Standard_Pay_Terms)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rating_Sort)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tax_ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Term_Of_Agreement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Twitter_Profile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Update_Needed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Update_Needed_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alt_Phone_3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnershipPercentage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Guarantor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NextActivityID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Salutation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MiddleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OtherStreet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OtherCity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OtherState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OtherPostalCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OtherCountry)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingStreet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingCity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingPostalCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingCountry)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MobilePhone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HomePhone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssistantName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Birthdate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HasOptedOutOfEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedById)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModifiedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModifiedById)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastActivityDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailBouncedReason)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailBouncedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alt_Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alt_Contact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Children)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direct_Line)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Extension)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Initial_Meeting_Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LinkedIn_Profile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mailing_Lists)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Opt_Out)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Opt_Out_Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Preferred_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reassigned_Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referral_Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referral_Partner_Agmnt_Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referral_Partner_Agmnt_Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referring_Company)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referring_Contact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Relationship_Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Standard_Pay_Terms)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating_Sort)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tax_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Term_Of_Agreement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Twitter_Profile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Update_Needed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Update_Needed_Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alt_Phone_3)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnershipPercentage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Guarantor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NextActivityID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

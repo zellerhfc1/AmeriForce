@@ -1,0 +1,84 @@
+﻿@model AmeriForce.Models.Test.TestCompanyEditModel
+
+@{
+    ViewData["Title"] = "Create3";
+}
+
+<h1>Create3</h1>
+
+<h4>TestCompanyEditModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create3">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="input-group">
+                <label asp-for="_testCompany._testCompany.CompanyName" class="control-label input-group-prepend input-group-text"></label>
+                <input asp-for="_testCompany._testCompany.CompanyName" class="form-control" />
+                <span asp-validation-for="_testCompany._testCompany.CompanyName" class="text-danger"></span>
+            </div>*@
+            
+            <div class="input-group-sm">
+                <label asp-for="_testCompany.CompanyName" class="control-label small"></label>
+                <input asp-for="_testCompany.CompanyName" class="form-control" />
+                <span asp-validation-for="_testCompany.CompanyName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.Description" class="control-label"></label>
+                <input asp-for="_testCompany.Description" class="form-control" />
+                <span asp-validation-for="_testCompany.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.SICCode" class="control-label"></label>
+                <input asp-for="_testCompany.SICCode" class="form-control" />
+                <span asp-validation-for="_testCompany.SICCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.CharterState" class="control-label"></label>
+                <input asp-for="_testCompany.CharterState" class="form-control" />
+                <span asp-validation-for="_testCompany.CharterState" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.CreatedDate" class="control-label"></label>
+                <input asp-for="_testCompany.CreatedDate" class="form-control" />
+                <span asp-validation-for="_testCompany.CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.LastModifiedDate" class="control-label"></label>
+                <input asp-for="_testCompany.LastModifiedDate" class="form-control" />
+                <span asp-validation-for="_testCompany.LastModifiedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.MailingAddress" class="control-label"></label>
+                <input asp-for="_testCompany.MailingAddress" class="form-control" />
+                <span asp-validation-for="_testCompany.MailingAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.MailingCity" class="control-label"></label>
+                <input asp-for="_testCompany.MailingCity" class="form-control" />
+                <span asp-validation-for="_testCompany.MailingCity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.MailingState" class="control-label"></label>
+                <input asp-for="_testCompany.MailingState" class="form-control" />
+                <span asp-validation-for="_testCompany.MailingState" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_testCompany.MailingPostalCode" class="control-label"></label>
+                <input asp-for="_testCompany.MailingPostalCode" class="form-control" />
+                <span asp-validation-for="_testCompany.MailingPostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
