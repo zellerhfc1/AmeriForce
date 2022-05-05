@@ -7,13 +7,21 @@ namespace AmeriForce.Helpers
     {
         private readonly ApplicationDbContext _context;
 
+        public UserHelper(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public string GetNameFromID(string id)
         {
             string userName = "";
-            
-                var user = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+
+            var user = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            if (user != null)
+            {
                 userName = $"{user.FirstName} {user.LastName}";
-            
+            }
+
             return userName;
         }
 

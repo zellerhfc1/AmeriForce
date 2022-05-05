@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AmeriForce.Data;
 using AmeriForce.Helpers;
+using AmeriForce.Models.Contacts;
 
 namespace AmeriForce.Controllers
 {
@@ -16,18 +17,41 @@ namespace AmeriForce.Controllers
         private GuidHelper _guidHelper = new GuidHelper();
         private CompanyHelper _companyHelper;
         private LOVHelper _lovHelper;
+        private UserHelper _userHelper;
 
         public ContactsController(ApplicationDbContext context)
         {
             _context = context;
             _lovHelper = new LOVHelper(_context);
             _companyHelper = new CompanyHelper(_context);
+            _userHelper = new UserHelper(_context);
         }
 
         // GET: Contacts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Contacts.ToListAsync());
+            List<ContactIndexViewModel> contactIndexViewModel = new List<ContactIndexViewModel>();
+            var contacts = _context.Contacts.Take(200).OrderByDescending(c => c.CreatedDate);
+            if (contacts.Count() > 0)
+            {
+                foreach(var contact in contacts)
+                {
+                    var contactToList = new ContactIndexViewModel
+                    {
+                        ID = contact.Id,
+                        AccountID = contact.AccountId,
+                        OwnerName = GetUserNameFromID(contact.OwnerId),
+                        Company = GetCompanyName(contact.AccountId),
+                        ContactName = $"{contact.FirstName} {contact.LastName}",
+                        Email = contact.Email,
+                        Grade = contact.Rating_Sort,
+                        Phone = contact.Phone,
+                        RelationshipStatus = contact.Relationship_Status
+                    };
+                    contactIndexViewModel.Add(contactToList);
+                }
+            }
+            return View(contactIndexViewModel);
         }
 
         // GET: Contacts/Details/5
@@ -167,17 +191,17 @@ namespace AmeriForce.Controllers
 
         public string GetUserNameFromID(string id)
         {
-            return new UserHelper().GetNameFromID(id);
+            return _userHelper.GetNameFromID(id);
         }
 
         public string GetUserIDFromUserName(string userName)
         {
-            return new UserHelper().GetIDFromName(userName);
+            return _userHelper.GetIDFromName(userName);
         }
 
         public string GetEmailFromUserName(string userName)
         {
-            return new UserHelper().GetEmailFromUserName(userName);
+            return _userHelper.GetEmailFromUserName(userName);
         }
 
 
