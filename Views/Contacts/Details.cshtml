@@ -1,402 +1,1621 @@
-﻿@model AmeriForce.Data.Contact
+﻿@model AmeriForce.Models.Contacts.ContactDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Contact</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AccountId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Salutation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Salutation)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MiddleName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MiddleName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OtherStreet)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OtherStreet)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OtherCity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OtherCity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OtherState)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OtherState)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OtherPostalCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OtherPostalCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OtherCountry)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OtherCountry)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingStreet)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingStreet)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingCity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingCity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingState)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingState)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingPostalCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingPostalCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingCountry)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingCountry)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Fax)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Fax)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MobilePhone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MobilePhone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HomePhone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HomePhone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Department)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Department)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AssistantName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AssistantName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Birthdate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Birthdate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OwnerId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OwnerId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HasOptedOutOfEmail)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HasOptedOutOfEmail)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastModifiedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastModifiedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastModifiedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastModifiedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastActivityDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastActivityDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EmailBouncedReason)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EmailBouncedReason)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EmailBouncedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EmailBouncedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Alt_Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Alt_Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Alt_Contact)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Alt_Contact)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Children)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Children)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Direct_Line)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Direct_Line)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Extension)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Extension)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Initial_Meeting_Details)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Initial_Meeting_Details)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LinkedIn_Profile)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LinkedIn_Profile)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Mailing_Lists)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Mailing_Lists)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Opt_Out)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Opt_Out)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Opt_Out_Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Opt_Out_Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Preferred_Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Preferred_Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Reassigned_Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Reassigned_Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Referral_Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Referral_Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Referral_Partner_Agmnt_Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Referral_Partner_Agmnt_Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Referral_Partner_Agmnt_Details)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Referral_Partner_Agmnt_Details)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Referring_Company)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Referring_Company)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Referring_Contact)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Referring_Contact)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Relationship_Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Relationship_Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Standard_Pay_Terms)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Standard_Pay_Terms)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rating_Sort)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rating_Sort)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tax_ID)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tax_ID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Term_Of_Agreement)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Term_Of_Agreement)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Twitter_Profile)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Twitter_Profile)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Update_Needed)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Update_Needed)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Update_Needed_Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Update_Needed_Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Alt_Phone_3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Alt_Phone_3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OwnershipPercentage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OwnershipPercentage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Guarantor)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Guarantor)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NextActivityID)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NextActivityID)
-        </dd>
-    </dl>
+<script src="~/jQuery/jQueryValidation.js"></script>
+<script src="~/jQuery/jQuery_ContactFunctions.js"></script>
+
+@*@{
+    var controller = ViewContext.Controller as SalesforceReplacementA.Client1.Controllers.ContactsController;
+}*@
+
+<link href="~/Content/ContactStyleSheet.css" rel="stylesheet" />
+
+<nav aria-label="breadcrumb" align="right">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Home</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Contacts")">Contacts</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.contact.FirstName @Model.contact.LastName</li>
+    </ol>
+</nav>
+
+<div style="border:0px solid #333;">
+
+    <div id="fileUploadSuccess" name="fileUploadSuccess" class="alert alert-success alert-dismissible" role="alert">
+        <strong>Files uploaded successfully!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="container mainPageBody" style="border:1px solid #333;background-color:#fff;">
+
+        @*Contact Detail Div*@
+        <div class="row contactHeader">
+            <div class="col-lg-5" align="left">
+                <div style="border:0px solid black;">
+                    <table align="left">
+                        <tr>
+                            <td valign="middle" style="border:1px solid #fff;padding:10px;">
+                                @{
+                                    switch (Model.contact.Rating_Sort)
+                                    {
+                                        case "A":
+                                            <img src="~/Images/aContactIcon.png" style="height:50px;" />
+                                            break;
+                                        case "B":
+                                            <img src="~/Images/bContactIcon.png" style="height:50px;" />
+                                            break;
+                                        case "C":
+                                            <img src="~/Images/cContactIcon.png" style="height:50px;" />
+                                            break;
+                                        case "D":
+                                            <img src="~/Images/dContactIcon.png" style="height:50px;" />
+                                            break;
+                                        case "OTHER":
+                                            <i class="fa fa-question" title="" style="font-size:x-large;"></i>
+                                            break;
+                                        default:
+                                            <i class="fa fa-question" title="" style="font-size:x-large;"></i>
+                                            break;
+                                    }
+                                }
+                            </td>
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
+                                <span class="overviewHeader dealAmount">
+                                    @Model.contact.FirstName.ToUpper() @Model.contact.LastName.ToUpper()
+                                    @{ 
+                                        if (Model.contact.Preferred_Name != "" && Model.contact.Preferred_Name != null)
+                                        {
+                                            @Html.Raw($"({@Model.contact.Preferred_Name})")
+                                        }
+                                    }
+                                </span>
+                                <br />
+                                <span class="nameSubHeaderNextCall"><b>Next Call:</b>  7/01/2021 @@ 11:30 AM CST</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-3 dealAmount" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-2" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-2" align="center">
+                @*<table>
+                    <tr>
+                        <td>
+                            <img src="~/Images/@(Model.contact.OwnerId).jpg" class="img-thumbnail img-rounded" style="height:60px;" />
+                            <br />
+                            <b>@controller.GetUserNameFromID(Model.contact.OwnerId)</b> 
+                        </td>
+                    </tr>
+                </table>*@
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                <a class="btn btn-primary btn-md" href="@Url.Action("Edit", "Contacts", new { id = Model.contact.Id })" style="padding:5px;"><i class="fa fa-edit"></i> Edit</a>
+                <a class="btn btn-primary btn-md" href="@Url.Action("MergeContacts", "Test")" style="padding:5px;"><i class="fa fa-people-arrows"></i> Merge Contacts</a>
+                <a class="btn btn-primary btn-md" href="@Url.Action("MailMergeWordDocs", "Test")" style="padding:5px;"><i class="fa fa-mail-bulk"></i> Mail Merge</a>
+                <a class="btn btn-primary btn-md" href="#" name="btnUploadFile" id="btnUploadFile" data-toggle="modal" style="padding:5px;" data-target="#modalUploadContactFiles"><i class="fa fa-upload"></i> Upload File(s)</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-7" style="padding:10px;" align="left">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle"><i class="fa fa-user"></i> Contact Detail</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;" align="left">
+                            <b>Name: </b> @Model.contact.FirstName @Model.contact.LastName<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Preferred Name: </b> @Model.contact.Preferred_Name<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Company Name: </b> <a href="@Url.Action("Details", "Companies", new { id = Model.contact.AccountId })">@Model.CompanyName</a><br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Title: </b> @Model.contact.Title<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Department: </b> @Model.contact.Department<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Business Phone: </b> @Model.contact.Phone<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Mobile Phone: </b> @Model.contact.MobilePhone<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Home Phone: </b> @Model.contact.HomePhone<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Email: </b> @Model.contact.Email 
+                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" 
+                                        name="btnSendEmailThroughSalesforce" id="btnSendEmailThroughSalesforce" data-toggle="modal" 
+                                        data-target="#modalSendEmailThroughSalesforce"><i class="fa fa-envelope"></i> Send Email</a>
+                            <br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Alt Email: </b> @Model.contact.Alt_Email<br />
+                            <hr class="hrFieldBuffer" />
+                            <img src="~/Images/linkedin.png" /> <b>LinkedIn Profile: </b> <a href="https://@Model.contact.LinkedIn_Profile">@Model.contact.LinkedIn_Profile</a><br />
+                            <hr class="hrFieldBuffer" />
+                            @*<b>Website: </b> <a href="#">https://www.jz.com</a>
+                    <hr class="hrFieldBuffer" />*@
+                            <table>
+                                <tr>
+                                    <td style="vertical-align:top;" class="leftTextAlign">
+                                        <b>Mailing Address:</b>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td style="vertical-align:top;" class="textLargerLineHeight leftTextAlign">
+                                        <a href="https://maps.google.com/?q=@Model.contact.MailingStreet, @Model.contact.MailingCity, @Model.contact.MailingState, @Model.contact.MailingPostalCode">
+                                            @Model.contact.MailingStreet<br />
+                                            @Model.contact.MailingCity, @Model.contact.MailingState @Model.contact.MailingPostalCode
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <hr class="hrFieldBuffer" />
+                            <table>
+                                <tr>
+                                    <td style="vertical-align:top;" class="leftTextAlign">
+                                        <b>Physical Address:</b>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td style="vertical-align:top;" class="textLargerLineHeight leftTextAlign ">
+                                        <a href="https://maps.google.com/?q=@Model.contact.OtherStreet, @Model.contact.OtherCity, @Model.contact.OtherState, @Model.contact.OtherPostalCode">
+                                            @Model.contact.OtherStreet<br />
+                                            @Model.contact.OtherCity, @Model.contact.OtherState  @Model.contact.OtherPostalCode
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;" align="left">
+                            <b>BDO: </b> @Model.OwnerName
+                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" 
+                                    name="btnEditNextScheduledCall" id="btnEditNextScheduledCall" data-toggle="modal" data-target="#modalEditNextScheduledCall"><i class="fa fa-plus"></i> Reassign</a>
+                            <br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Relationship Status: </b> @Model.contact.Relationship_Status<br />
+                            <hr class="hrFieldBuffer" />
+                            <a tabindex="0" class="btn btn-sm tinyButton btn-secondary" role="button" data-html="true" data-toggle="popover" data-placement="left" data-trigger="focus" title="Tag/Grade/Sort Definition" style="padding:0px,10px,0px,10px;" 
+                                    data-content="@Html.Raw("<ul><li>A - Strong Business & Social Relationship</li><li>B - Strong Business Relationship</li><li>C - Business Acquaintance</li><li>D - Infrequent Contact</li></ul")>">?</a>
+                            <b>
+                                Tag/Grade/Sort:
+                            </b> @Model.contact.Rating_Sort 
+                            
+                            <hr class="hrFieldBuffer" />
+                            <b>Last Reassigned Date: </b> @Model.contact.Reassigned_Date<br />
+                            @*<hr class="hrFieldBuffer" />
+                    <i class="fas fa-exclamation-triangle" style="font-size:x-large;color:#dc3545;"></i> <b>Update Needed: </b> Email
+                    <br />*@
+                            <hr class="hrFieldBuffer" />
+                            <b>Mailing Lists: </b> @Model.contact.Mailing_Lists<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Opt Out: </b> @Model.contact.Opt_Out<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Opt Out (Date): </b> @Model.contact.Opt_Out_Date<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Personal Notes:</b>
+                            <br />
+                            @Model.contact.Initial_Meeting_Details<br />
+                            <hr class="hrFieldBuffer" />
+                            <br /><br />
+                            @{
+                                if (Model.contact.Update_Needed != "")
+                                {
+                                    <i class="fas fa-exclamation-triangle" style="font-size:x-large;color:#dc3545;"></i>
+                                }
+                            }
+                             <b>Update Needed: </b> @Model.contact.Update_Needed
+                            <br />
+                            <hr class="hrFieldBuffer" />
+                            <i class="fa-solid fa-square-pen"></i><b>Update Needed (Date): </b> @Model.contact.Update_Needed_Date
+                            <hr class="hrFieldBuffer" />
+                            @{
+                                if (Model.contactDuplicates.Count > 0)
+                                {
+                                    <div class="alert alert-danger alertText" role="alert">
+                                        <i class="fas fa-people-arrows" style="font-size:x-large;"></i>  There are potential duplicates for this contact!
+                                        <br />
+                                        @foreach (var contactDuplicate in Model.contactDuplicates)
+                                        {
+                                        //Html.Raw($"{contactDuplicate.FirstName} {contactDuplicate.LastName} <br>");
+                                        <a href="@Url.Action("Details", "Contacts", new { id = @contactDuplicate.CRMID })" class="btn btn-sm btn-alert">@contactDuplicate.FirstName @contactDuplicate.LastName</a>
+                                        }
+                                    </div>
+                                }
+                            }<br /><br />
+                        </div>
+                    </div>
+                    @*<div class="row">
+                <div class="col-lg-12 textLargerLineHeight" style="padding:10px;" align="left">
+                    <b>Personal Notes:</b>
+                    <br />
+                    Use your existing Salesforce credentials to log into dataloader.io without the hassle of downloading an application. dataloader.io’s uses oAuth 2.0 so you can get started quickly without compromising security.
+                    <br /><br />
+                </div>
+            </div>*@
+
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle"><i class="fa fa-handshake"></i> Referral Partner Info</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Referral Partner Company: </b> <a href="@Url.Action("Details", "Companies", new { id = @Model.contact.Referring_Company })" class="btn btn-sm btn-alert">@Model.ReferringCompany</a>
+                            <hr class="hrFieldBuffer" />
+                            <b>Referral Partner Contact: </b> <a href="@Url.Action("Details", "Contacts", new { id = @Model.contact.Referring_Contact })" class="btn btn-sm btn-alert">@Model.ReferringContact</a>
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Referral Partner Agreement (Date): </b>
+                            @{
+                                string referralPartnerAgreementDate = Model.contact.Referral_Partner_Agmnt_Date?.ToString("MM/dd/yyyy") ?? "";
+                                @Html.Raw(referralPartnerAgreementDate);
+                            }
+                            <hr class="hrFieldBuffer" />
+                            <b>Referral Partner Agreement (Details): </b> @Model.contact.Referral_Partner_Agmnt_Details
+                            <hr class="hrFieldBuffer" />
+                            <b>Tax ID#: </b> @Model.contact.Tax_ID
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                    </div>
+
+                    @*CLIENTS INFO*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-pen-alt"></i><i class="fa fa-share"></i> Clients (Referred)</h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;"><i class="fa fa-plus"></i> New Client</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:0px;">
+                            <div class="panel panel-default">
+                                <div class="panel-body" style="padding:5px;">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-4 boldText" style="padding:0px;">
+                                                Client Name:
+                                            </div>
+                                            <div class="col-sm-2 boldText" style="padding:0px;">
+                                                Referral Date:
+                                            </div>
+                                            <div class="col-sm-2 boldText" style="padding:0px;">
+                                                Ref. Amount ($):
+                                            </div>
+                                            <div class="col-sm-2 boldText" style="padding:0px;">
+                                                Client Status:
+                                            </div>
+                                            <div class="col-sm-2 boldText" style="padding:0px;">
+                                                BDO:
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <hr class="hrFieldBufferWithinPanel" />
+                                            </div>
+                                        </div>
+
+                                        @{
+                                            foreach (var client in Model.clients)
+                                            {
+
+                                                <div class="row">
+                                                    <div class="col-sm-4" style="padding:0px;">
+                                                        <a href="@Url.Action("Details", "Clients", new { id = @client.Id })">@client.Name</a>
+                                                    </div>
+                                                    <div class="col-sm-2" style="padding:0px;">
+                                                        @{
+                                                            string referralDate = client.Referral_Date?.ToString("MM/dd/yyyy") ?? "";
+                                                            @Html.Raw(referralDate);
+                                                        }
+                                                    </div>
+                                                    <div class="col-sm-2 leftTextAlign" style="padding:0px;">
+                                                        @string.Format("{0:c}", client.Amount)
+                                                    </div>
+                                                    <div class="col-sm-2" style="padding:0px;">
+                                                        @client.StageName
+                                                    </div>
+                                                    <div class="col-sm-2" style="padding:0px;">
+                                                        Bill Herrington
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <hr class="hrFieldBufferWithinPanel" />
+                                                    </div>
+                                                </div>
+                                                            }
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    @*FILES INFO*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-folder"></i> Files </h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" name="btnUploadFile" id="btnUploadFile" 
+                                        data-toggle="modal" data-target="#modalUploadContactFiles"><i class="fa fa-plus"></i> Add Files</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:0px;">
+
+                            @Html.Raw(ViewBag.ContactFiles)
+
+                            @*<div class="panel panel-default">
+                        <div class="panel-body" style="padding:5px;">
+                            <div class="col-lg-3" align="center">
+                                <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                    <img src="~/Images/filePlaceholder.png" />
+                                    <br /><br />
+                                    This_Is_The_File_Name.jpg
+                                    <br /><br />
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3" align="center">
+                                <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                    <img src="~/Images/filePlaceholder.png" />
+                                    <br /><br />
+                                    This_Is_The_File_Name.jpg
+                                    <br /><br />
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3" align="center">
+                                <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                    <img src="~/Images/filePlaceholder.png" />
+                                    <br /><br />
+                                    This_Is_The_File_Name.jpg
+                                    <br /><br />
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3" align="center">
+                                <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                    <img src="~/Images/filePlaceholder.png" />
+                                    <br /><br />
+                                    This_Is_The_File_Name.jpg
+                                    <br /><br />
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+
+                        </div>
+                    </div>
+
+
+
+
+
+                    @*MAIL MERGE FILES INFO*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-folder"></i> Mail Merge Files </h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            @*<a class="btn btn-primary btn-sm tinyButton" href="@Url.Action("DocumentUpload", "Test")"><i class="fa fa-plus"></i> Add Files</a>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:0px;">
+
+                            @Html.Raw(ViewBag.MailMergeFiles)
+
+                            @*<div class="panel panel-default">
+                        <div class="panel-body" style="padding:5px;">
+                            <div class="col-lg-3" align="center">
+                                <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                    <img src="~/Images/filePlaceholder.png" />
+                                    <br /><br />
+                                    This_Is_The_File_Name.jpg
+                                    <br /><br />
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3" align="center">
+                                <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                    <img src="~/Images/filePlaceholder.png" />
+                                    <br /><br />
+                                    This_Is_The_File_Name.jpg
+                                    <br /><br />
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3" align="center">
+                                <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                    <img src="~/Images/filePlaceholder.png" />
+                                    <br /><br />
+                                    This_Is_The_File_Name.jpg
+                                    <br /><br />
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3" align="center">
+                                <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                    <img src="~/Images/filePlaceholder.png" />
+                                    <br /><br />
+                                    This_Is_The_File_Name.jpg
+                                    <br /><br />
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+
+
+            <div class="col-lg-5" style="padding:10px;height:100%;" align="left" id="rightScroll">
+                <div class="container">
+                    @*ACTIVITY INFO*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-tasks"></i> Next Scheduled Call</h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" name="btnEditNextScheduledCall" id="btnEditNextScheduledCall" data-toggle="modal" data-target="#modalEditNextScheduledContactCall"><i class="fa fa-plus"></i> Update Call</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:10px;">
+                            @{
+                                if (Model.contactNextTask.ActivityDate < DateTime.Now)
+                                {
+                                    <div id="callBehindSchedule" name="callBehindSchedule" class="alert alert-danger alert" style="padding:3px;font-size:larger;" role="alert">
+                                        <i class="fa fa-exclamation-triangle"></i> <strong>Task is past due.  Please edit to reflect current status.</strong>
+                                    </div>
+                                }
+                            }
+
+
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-1">
+
+                                        @{
+                                            switch (Model.contactNextTask.Type.ToUpper())
+                                            {
+                                                case "EMAIL":
+                                                    <i class="fa fa-envelope" title="Email" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "IN-PERSON MEETING":
+                                                    <i class="fa fa-handshake" title="In-Person Meeting" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "PHONE CALL":
+                                                    <i class="fa fa-mobile-alt" title="Phone Call" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "VIRTUAL MEETING":
+                                                    <i class="fa fa-video" title="Zoom, Skype, etc." style="font-size:x-large;"></i>
+                                                    break;
+                                                case "OTHER":
+                                                    <i class="fa fa-question-circle" title="Other" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "WARNING":
+                                                    <i class="fa fa-exclamation-triangle" title="Warning" style="font-size:x-large;"></i>
+                                                    break;
+                                                default:
+                                                    <i class="fa fa-question-circle" title="Unknown" style="font-size:x-large;"></i>
+                                                    break;
+                                            }
+                                        }
+                                    </div>
+                                    <div class="col-sm-11">
+                                        <b>@Model.OwnerName
+                                        -
+                                            @{
+                                                string nextCallActivityDate = Model.contactNextTask.ActivityDate?.ToString("MM/dd/yyyy") ?? "";
+                                                @Html.Raw(nextCallActivityDate);
+                                            }
+                                            @@
+                                            @{
+                                                string nextCallActivityTime = Model.contactNextTask.ActivityDate?.ToString("hh:mm:ss tt") ?? "";
+                                                @Html.Raw(nextCallActivityTime);
+                                            }
+                                        </b>
+                                        <br />
+                                        @Model.contactNextTask.Description
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-fa fa-comment-dots"></i> Notes</h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" 
+                                    name="btnAddNote" id="btnAddNote" data-toggle="modal" data-target="#modalAddAContactNote"><i class="fa fa-plus"></i> New Note</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:10px;">
+                            
+
+
+                            <div class="container">
+
+                                @{
+                                    foreach (var contactNote in Model.contactNotes)
+                                    {
+
+                                        <div class="row">
+                                            <div class="col-sm-1">
+
+                                                @{
+                                                    switch (contactNote.Type.ToUpper())
+                                                    {
+                                                        case "EMAIL":
+                                                            <i class="fa fa-envelope" title="Email" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "IN-PERSON MEETING":
+                                                            <i class="fa fa-handshake" title="In-Person Meeting" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "PHONE CALL":
+                                                            <i class="fa fa-mobile-alt" title="Phone Call" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "VIRTUAL MEETING":
+                                                            <i class="fa fa-video" title="Zoom, Skype, etc." style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "OTHER":
+                                                            <i class="fa fa-question-circle" title="Other" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "WARNING":
+                                                            <i class="fa fa-exclamation-triangle" title="Warning" style="font-size:x-large;"></i>
+                                                            break;
+                                                        default:
+                                                            <i class="fa fa-question-circle" title="Unknown" style="font-size:x-large;"></i>
+                                                            break;
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="col-sm-11">
+                                                <b>
+                                                    @Model.OwnerName
+                                                -
+                                                @{
+                                                    string noteActivityDate = contactNote.ActivityDate?.ToString("MM/dd/yyyy") ?? "";
+                                                    @Html.Raw(noteActivityDate);
+                                                }
+                                                @@
+                                                @{
+                                                    string noteActivityTime = contactNote.ActivityDate?.ToString("hh:mm:ss tt") ?? "";
+                                                    @Html.Raw(noteActivityTime);
+                                                }
+                                            </b>
+                                            <br />
+                                                @{
+                                                    if (contactNote.Subject != null)
+                                                    {
+                                                        <i>@contactNote.Subject</i>
+                                                            <br />
+                                                    }
+                                                }
+                                                
+                                                @Html.Raw(contactNote.Description)
+                                        </div>
+                                    </div>
+                                    
+                                        <div class="row">
+                                            <hr class="hrFieldBuffer" />
+                                        </div>
+                                                    }
+                                }
+
+
+                            </div>
+
+
+                        </div>
+                        @*<div class="col-lg-9 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                                <a class="btn btn-primary btn-xs" href="#">Phone Call</a>
+                                <input type="button" name="buttonMergeDocument" value="Merge Document" id="buttonMergeDocument" data-toggle="modal" data-target="#modalMergeDocument" class="btn btn-primary btn-xs" />
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle">Address Info</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Mailing Address: </b>
+                    <br /><br />
+                    <a href="https://maps.google.com/?q=P.O. Box 310, Sayre, OK, 73662">
+                        P.O. Box 310<br />
+                        Sayre, OK 73662
+                    </a>
+                    <br /><br />
+                </div>
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Physical Address: </b>
+                    <br /><br />
+                    <a href="https://maps.google.com/?q=P.O. Box 310, Sayre, OK, 73662">
+                        P.O. Box 310<br />
+                        Sayre, OK 73662
+                    </a>
+                    <br /><br />
+                </div>
+            </div>*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle">Updates Needed</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Update Needed: </b> Email<br /><br />
+                </div>
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Update Needed Date: </b> 5/12/2021<br /><br />
+                </div>
+            </div>*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle">Individual Referral Agreement</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Referral Partner Agmnt (Date): </b> 09/12/2003<br />
+                    <hr class="hrFieldBuffer" />
+                    <b>Referral Partner Agmnt (Details): </b> All fees to be paid to Donald Brown (individual)<br />
+                    <hr class="hrFieldBuffer" />
+                    <b>Leasing Industry Referral: </b> No<br /><br />
+                </div>
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Standard Pay Terms: </b> Scale - Max Reached - 15% Gross<br />
+                    <hr class="hrFieldBuffer" />
+                    <b>Term Of Agreement: </b> Annual Renewal - Active Broker Status<br />
+                    <hr class="hrFieldBuffer" />
+                    <b>Tax ID #: </b> 84-5166835
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a tabindex="0" class="btn btn-xs btn-info" role="button" data-html="true" data-toggle="popover" data-trigger="focus" title="Tax ID Definition" data-content="@Html.Raw("Business Entities = FIN<br>Individuals = SSN")">?</a>
+                    <br /><br />
+                </div>
+            </div>*@
+
+
+
+
+        @*NOTES INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle"><i class="fa fa-comment-dots"></i> Notes</h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground" align="left">
+                    <a class="btn btn-primary btn-sm tinyButton tinyButton tinyButton" href="#">New Note</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="padding:0px;">
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="10%" class="leftTextAlign">Title</th>
+                                        <th scope="col" width="63%" class="leftTextAlign">Content</th>
+                                        <th scope="col" width="7%" class="leftTextAlign">Last Modified</th>
+                                        <th scope="col" width="8%" class="leftTextAlign">Created By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton tinyButton" href="#">View</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        </td>
+                                        <td class="leftTextAlign">Progress</td>
+                                        <td class="leftTextAlign">
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                        </td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton tinyButton" href="#">View</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        </td>
+                                        <td class="leftTextAlign">Progress</td>
+                                        <td class="leftTextAlign">
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                        </td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br /><br />*@
+
+
+
+
+
+
+
+
+        @*<div class="row">
+                <div class="col-lg-12" style="height:50px;">
+                    <hr width="100%" />
+                </div>
+            </div>
+
+            <br /><br />*@
+
+        @*ACTIVITY INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground" style="height:35px;">
+                    <h2 class="subHeadingTitle"><i class="fa fa-calendar-alt"></i> Activity Information</h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                    <a class="btn btn-primary btn-xs" href="#">Phone Call</a>
+                    <a class="btn btn-primary btn-xs" href="#">Email</a>
+                    <a class="btn btn-primary btn-xs" href="#">In-person Meeting</a>
+                    <a class="btn btn-primary btn-xs" href="#">Virtual Meeting</a>
+                    <a class="btn btn-primary btn-xs" href="#">Event</a>
+                    <input type="button" name="buttonMergeDocument" value="Merge Document" id="buttonMergeDocument" data-toggle="modal" data-target="#modalMergeDocument" class="btn btn-primary btn-xs" />
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-heading workingSectionSubHeader">Current</div>
+                        <div class="panel-body" style="padding:0px;">
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="3%">Date</th>
+                                        <th scope="col" width="10%">Assigned To</th>
+                                        <th scope="col" width="3%"></th>
+                                        <th scope="col" width="77%" class="leftTextAlign">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-mobile-alt" title="Phone Call"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-handshake" title="In-Person Meeting"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-video" title="Virtual Meeting"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-envelope" title="Email"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-heading workingSectionSubHeader">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6" align="left">
+                                        Activity History
+                                    </div>
+                                    <div class="col-md-6" align="right">
+                                        Sort:
+                                        <select>
+                                            <option>All Activities</option>
+                                            <option>Email</option>
+                                            <option>In-person Meeting</option>
+                                            <option>Phone</option>
+                                            <option>Virtual Meeting</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="padding:0px;">
+
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="3%">Date</th>
+                                        <th scope="col" width="10%">Assigned To</th>
+                                        <th scope="col" width="3%"></th>
+                                        <th scope="col" width="77%" class="leftTextAlign">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-mobile-alt" title="Phone Call"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-handshake" title="In-Person Meeting"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-video" title="Virtual Meeting"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-envelope" title="Email"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <br /><br />*@
+
+        @*CONTACT INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle">
+                        <i class="fa fa-address-card"></i> <i class="fa fa-share"></i> Contacts (Referred)
+                    </h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground" align="left">
+                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;">New Contact</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+
+                        <table class="table table-striped table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="7%">Action</th>
+                                    <th scope="col" width="15%" class="leftTextAlign">Name</th>
+                                    <th scope="col" width="15%" class="leftTextAlign">Account Name</th>
+                                    <th scope="col" width="15%" class="leftTextAlign">Phone</th>
+                                    <th scope="col" width="48%" class="leftTextAlign"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding:3px;">
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                    </td>
+                                    <td class="leftTextAlign"><a href="#">Janakiram Ajjarapu</a></td>
+                                    <td class="leftTextAlign"><a href="#">OSR Holding Company</a></td>
+                                    <td class="leftTextAlign">(908) 756-7300</td>
+                                    <td class="leftTextAlign"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:3px;">
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                    </td>
+                                    <td class="leftTextAlign"><a href="#">Janakiram Ajjarapu</a></td>
+                                    <td class="leftTextAlign"><a href="#">OSR Holding Company</a></td>
+                                    <td class="leftTextAlign">(908) 756-7300</td>
+                                    <td class="leftTextAlign"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:3px;">
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                    </td>
+                                    <td class="leftTextAlign"><a href="#">Janakiram Ajjarapu</a></td>
+                                    <td class="leftTextAlign"><a href="#">OSR Holding Company</a></td>
+                                    <td class="leftTextAlign">(908) 756-7300</td>
+                                    <td class="leftTextAlign"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <br /><br />*@
+
+        @*OPPORTUNITY INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle"><i class="fa fa-pen-alt"></i> Deals</h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground">
+                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;">New Opportunity</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="padding:0px;">
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Opportunity Name</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Account Name</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Acccount Site</th>
+                                        <th scope="col" class="leftTextAlign">Stage</th>
+                                        <th scope="col" class="leftTextAlign">Close Date</th>
+                                        <th scope="col" class="leftTextAlign">Owner</th>
+                                        <th scope="col" class="leftTextAlign">Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc.-2016-11</a></td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc</a></td>
+                                        <td class="leftTextAlign"></td>
+                                        <td class="leftTextAlign">95-Declined by ASF</td>
+                                        <td class="leftTextAlign">12/31/2016</td>
+                                        <td class="leftTextAlign"><a href="#">Lori Lemuel</a></td>
+                                        <td class="leftTextAlign">Factoring (Standard)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc.-2016-11</a></td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc</a></td>
+                                        <td class="leftTextAlign"></td>
+                                        <td class="leftTextAlign">95-Declined by ASF</td>
+                                        <td class="leftTextAlign">12/31/2016</td>
+                                        <td class="leftTextAlign"><a href="#">Lori Lemuel</a></td>
+                                        <td class="leftTextAlign">Factoring (Standard)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc.-2016-11</a></td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc</a></td>
+                                        <td class="leftTextAlign"></td>
+                                        <td class="leftTextAlign">95-Declined by ASF</td>
+                                        <td class="leftTextAlign">12/31/2016</td>
+                                        <td class="leftTextAlign"><a href="#">Lori Lemuel</a></td>
+                                        <td class="leftTextAlign">Factoring (Standard)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <br /><br />*@
+
+
+        @*LEAD INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle"><i class="fa fa-pen-alt"></i><i class="fa fa-share"></i>  Preliminary Deals (Referred)</h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground" align="left">
+                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;">New Lead</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="padding:0px;">
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Name</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Company</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Phone</th>
+                                        <th scope="col" width="48%" class="leftTextAlign">Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Jasmin Espy</a></td>
+                                        <td class="leftTextAlign"><a href="#">Clear Choice Staffing Solutions</a></td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Jasmin Espy</a></td>
+                                        <td class="leftTextAlign"><a href="#">Clear Choice Staffing Solutions</a></td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Jasmin Espy</a></td>
+                                        <td class="leftTextAlign"><a href="#">Clear Choice Staffing Solutions</a></td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <br /><br />*@
+
+
+
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                <h2 class="subHeadingTitle">Audit Information</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6" style="padding:10px;">
+                <b>Created By: </b> Jennifer Mendoza,  1/3/2019, 11:54 AM<br /><br />
+            </div>
+            <div class="col-lg-6" style="padding:10px;">
+                <b>Last Updated By: </b> Kirsty Dodd, 8/21/2019, 8:36 AM<br /><br />
+            </div>
+        </div>
+
+
+
+    </div>
+
+
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+
+@*<script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="popover"]').popover()
+        });
+    </script>*@
+
+
+
+<div class="modal fade panel-primary" id="modalUploadContactFiles" tabindex="-1" role="dialog" aria-labelledby="modalUploadContactFiles">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal leftTextAlign" align="left">
+                Upload Contact Files <i class="fa fa-upload"></i>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="contact_Id" id="contact_Id" value="@Model.contact.Id" />
+
+                @*<div id="ContactSuccess" class="alert alert-success">
+
+                    </div>
+                    <div id="ContactError" class="alert alert-success">
+                        <strong>There was a problem updating the not.  Please try again.</strong>
+                    </div>*@
+
+                @using (Html.BeginForm("Upload", "Contacts", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div style="padding:10px;">
+                        <input type="hidden" name="uploadContactID" value="@Model.contact.Id" />
+
+                        @*FILE NAME *@
+                        @*<div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                <span class="input-group-addon input-sm" id="LabelUploadFileName">File Name </span>
+                                <span class="input-group-addon requiredClass" id="IG_upload_FileName" name="IG_upload_FileName"></span>
+                                <input type="text" id="upload_FileName" name="upload_FileName" class="form-control input-lg" maxlength="50" />
+                            </div>*@
+
+                        @*FILE TO UPLOAD *@
+                        <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                            <span class="input-group-addon input-sm" id="LabelUploadFile">Files </span>
+                            <span class="input-group-addon requiredClass" id="IG_file" name="IG_file"></span>
+                            @*<input type="file" id="file" name="file" class="form-control input-lg" maxlength="50" />*@
+                            <input type="file" id="files" name="files" class="form-control input-lg" multiple />
+                        </div>
+
+                        <div id="uploadedFileNames" name="uploadedFileNames">
+
+                        </div>
+                        @*<input type="text" name="FileDescription" id="FileDescription" />
+                            <br /><br />
+                            @Html.TextBox("file", "", new { type = "file", @class = "btn btn-default", style = "width: 100%;" }) <br />
+                            <br /><br />*@
+                        <input class="btn btn-primary btn-md" type="submit" value="Upload File(s)" />
+                    </div>
+                }
+
+            </div>
+            <div class="modal-footer rightTextAlign">
+                @*<button type="submit" class="btn btn-primary"><i name="clientUploadSpinner" id="clientUploadSpinner" class="fas fa-spinner fa-spin clientUploadContactSpinner"></i> &nbsp;Upload Client Files</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+
+<div class="modal fade panel-primary" id="modalAddAContactNote" tabindex="-1" role="dialog" aria-labelledby="modalAddAContactNote">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                <i class="fa fa-comment-dots"></i> Add A Note
+            </div>
+            <form id="SubmitAddAContactNote" name="SubmitAddAContactNote" style="text-align:left;">
+
+                <div class="modal-body">
+                    <input type="hidden" name="contactNote_Id" id="contactNote_Id" value="@Model.contact.Id" />
+
+                    <div id="NewContactNoteSuccess" class="alert alert-success">
+
+                    </div>
+                    <div id="NewContactNoteError" class="alert alert-success">
+                        <strong>There was a problem updating the note.  Please try again.</strong>
+                    </div>
+
+                    @*TASK TYPE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteType">Note Type </span>
+                        <span class="input-group-addon requiredClass" id="IG_contactNote_Type" name="IG_contactNote_Type"></span>
+                        @Html.DropDownList("contactNote_Type", Model.TaskListNotes, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                    @*TASK OWNER *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteOwner">Note Owner </span>
+                        <span class="input-group-addon requiredClass" id="IG_contactNote_OwnerId" name="IG_contactNote_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                        @Html.DropDownList("contactNote_OwnerId", Model.ActiveUserListNotes, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+                    
+                    @*TASK DUE DATE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteActivityDate">Complete By: </span>
+                        <span class="input-group-addon requiredClass" id="IG_contactNote_ActivityDate" name="IG_contactNote_ActivityDate"></span>
+                        <input type="text" id="contactNote_ActivityDate" name="contactNote_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
+                    </div>
+
+                    @*TASK nOTES *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteDescription">Notes </span>
+                        <span class="input-group-addon requiredClass" id="IG_contactNote_Description" name="IG_contactNote_Description"></span>
+                        <textarea rows="50" style="height:150px;" id="contactNote_Description" name="contactNote_Description" class="form-control input-lg clientEntryTerms" maxlength="5000"></textarea>
+                    </div>
+
+                    @*<table class="table table-striped table-hover table-condensed">
+                            <thead>
+                            <tbody>
+                                <tr>
+                                    <td class="centerTextAlign" style="width:5%;">Date:</td>
+                                    <td class="leftTextAlign"><input type="text" value="08/01/2021" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="centerTextAlign">Time:</td>
+                                    <td class="leftTextAlign"><input type="text" value="04:00 PM" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="centerTextAlign">Notes:</td>
+                                    <td class="leftTextAlign">
+                                        <textarea cols="40" rows="10">
+                                            Don mentioned $3.5MM RE deal, warehouse facility in South Texas appraised at $7.5MM, want to refi to pay grandfather out, requested package
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>*@
+
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" class="btn btn-primary"><i name="contactSpinner" id="contactSpinner" class="fas fa-spinner fa-spin facilitySpinner"></i> &nbsp;Update Note</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade panel-primary" id="modalEditNextScheduledContactCall" tabindex="-1" role="dialog" aria-labelledby="modalEditNextScheduledContactCall">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+               Update Next Scheduled Call <i class="fa fa-tasks"></i> 
+            </div>
+            <form id="SubmitUpdateNextScheduledContactCall" name="SubmitUpdateNextScheduledContactCall" style="text-align:left;">
+
+                <div class="modal-body">
+                    <input type="hidden" name="contactNextTask_Id" id="contactNextTask_Id" value="@Model.contact.NextActivityID" />
+                    <input type="hidden" name="contact_Id" id="contact_Id" value="@Model.contact.Id" />
+
+                    <div id="NextContactCallSuccess" class="alert alert-success">
+
+                    </div>
+                    <div id="NextContactCallError" class="alert alert-success">
+                        <strong>There was a problem updating the next scheduled call.  Please try again.</strong>
+                    </div>
+                    @*TASK TYPE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelContactCallType">Call Type </span>
+                        <span class="input-group-addon requiredClass" id="IG_contactNextTask" name="IG_contactNextTask"></span>
+                        @Html.DropDownListFor(model => Model.contactNextTask.Type, Model.TaskList, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                    @*TASK OWNER *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelContactTaskOwner">Task Owner </span>
+                        <span class="input-group-addon requiredClass" id="IG_contactNextTask_OwnerId" name="IG_contactNextTask_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                        @Html.DropDownListFor(model => Model.contactNextTask.OwnerId, Model.ActiveUserList, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                    @*TASK DUE DATE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelContactTaskActivityDate">Task Date </span>
+                        <span class="input-group-addon requiredClass" id="IG_contactNextTask_ActivityDate" name="IG_contactNextTask_ActivityDate"></span>
+                        <input type="text" id="contactNextTask_ActivityDate" name="contactNextTask_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" value="@Model.contactNextTask.ActivityDate" />
+                    </div>
+
+                    @*TASK nOTES *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelContactNextTaskDescription">Notes </span>
+                        <span class="input-group-addon requiredClass" id="IG_contactNextTask_Description" name="IG_contactNextTask_Description"></span>
+                        <textarea rows="50" style="height:150px;" id="contactNextTask_Description" name="contactNextTask_Description" class="form-control input-lg clientEntryTerms" maxlength="5000">@Model.contactNextTask.Description</textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" class="btn btn-primary"><i name="nextContactCallSpinner" id="nextContactCallSpinner" class="fas fa-spinner fa-spin contactNextTaskSpinner"></i> &nbsp;Update Next Activity</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+        $('#fileUploadSuccess').hide();
+
+
+        var today = new Date();
+        $('#contactNote_ActivityDate').datepicker({
+            dateFormat: "mm/dd/yy",
+            startDate: today,
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            autoclose: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0",
+            //gotoCurrent: true,
+            orientation: "bottom" // add this
+        });
+
+        $('#modalUploadContactFiles').on('hidden.bs.modal', function () {
+            console.log("hidden");
+            $("#uploadedFileNames").html("");
+            $("#uploadedFileNames").removeClass("fileUploadFileDisplay");
+            $("#files").val("");
+        })
+
+        //var uploadSuccess = 'Request["uploadStatus"]';
+        //if (uploadSuccess == "SUCCESS") {
+        //    console.log(uploadSuccess)
+        //    $('#fileUploadSuccess').show();
+        //    $('#fileUploadSuccess').delay(4000).fadeOut();
+        //}
+
+        $("#files").change(function () {
+            console.log(this.files.length);
+            $("#uploadedFileNames").html("");
+            $("#uploadedFileNames").addClass("fileUploadFileDisplay");
+            $("#uploadedFileNames").append("<b>Files to Upload:</b><br>");
+            for (var i = 0; i < this.files.length; i++) {
+                //console.log(this.files[i].name);
+                $("#uploadedFileNames").append(this.files[i].name + "<br>");
+            }
+        });
+
+    });
+
+    $('#buttonMergeDocument').click(function () {
+        /* when the button in the form, display the entered values in the modal */
+        $('#lname').text($('#lastname').val());
+        $('#fname').text($('#firstname').val());
+    });
+
+    $('#btnEditNextScheduledCall').click(function () {
+        /* when the button in the form, display the entered values in the modal */
+        $('#lname').text($('#lastname').val());
+        $('#fname').text($('#firstname').val());
+    });
+</script>

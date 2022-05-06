@@ -227,60 +227,53 @@ namespace AmeriForce.Helpers
         }
 
 
-        //public IEnumerable<SelectListItem> GetTaskTypes()
-        //{
-        //    // GET TASK TYPES
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetTaskTypes()
+        {
+            // GET TASK TYPES
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var tasks = _context.LOV_TaskType.OrderBy(t => t.TaskType);
 
-        //        var tasks = db.LOV_TaskTypes.OrderBy(t => t.TaskType);
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var task in tasks)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{task.TaskType}";
-        //            item.Value = $"{task.TaskType}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var task in tasks)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{task.TaskType}";
+                    item.Value = $"{task.TaskType}";
+                    sList.Add(item);
+                }
+                return sList;
+        }
 
 
-        //public IEnumerable<SelectListItem> GetActiveUsers()
-        //{
-        //    // GET CONTACTS LIST BY COMPANY
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetActiveUsers()
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var users = _context.Users.Where(c => c.IsActive == true).OrderBy(c => c.FirstName);
 
-        //        var users = db.Users.Where(c => c.IsActive == true).OrderBy(c => c.FirstName);
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var user in users)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{user.FirstName} {user.LastName}";
-        //            item.Value = $"{user.Id}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var user in users)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{user.FirstName} {user.LastName}";
+                    item.Value = $"{user.Id}";
+                    sList.Add(item);
+                }
+                return sList;
+            
+        }
 
 
         //public IEnumerable<SelectListItem> GetActiveUsersEmailList()
@@ -391,29 +384,29 @@ namespace AmeriForce.Helpers
         }
 
 
-        //public IEnumerable<SelectListItem> GetYesNoList()
-        //{
-        //    // GET CONTACTS LIST BY COMPANY
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetYesNoList()
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    var defaultItem = new SelectListItem();
-        //    defaultItem.Text = "";
-        //    defaultItem.Value = "";
-        //    sList.Add(defaultItem);
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
 
-        //    var yesItem = new SelectListItem();
-        //    yesItem.Text = "Yes";
-        //    yesItem.Value = "true";
-        //    sList.Add(yesItem);
+            var yesItem = new SelectListItem();
+            yesItem.Text = "Yes";
+            yesItem.Value = "true";
+            sList.Add(yesItem);
 
-        //    var noItem = new SelectListItem();
-        //    noItem.Text = "No";
-        //    noItem.Value = "false";
-        //    sList.Add(noItem);
+            var noItem = new SelectListItem();
+            noItem.Text = "No";
+            noItem.Value = "false";
+            sList.Add(noItem);
 
-        //    return sList;
-        //}
+            return sList;
+        }
 
 
         //public IEnumerable<SelectListItem> GetApprovalDecisionList()
