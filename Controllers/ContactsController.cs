@@ -14,6 +14,9 @@ using AmeriForce.Services;
 using Microsoft.AspNetCore.Http;
 using AmeriForce.Models;
 using System.Web;
+using AmeriForce.Models.Companies;
+using System.Text;
+using System.Security.Claims;
 
 namespace AmeriForce.Controllers
 {
@@ -23,15 +26,17 @@ namespace AmeriForce.Controllers
         private GuidHelper _guidHelper = new GuidHelper();
         private CompanyHelper _companyHelper;
         private LOVHelper _lovHelper;
-        private UserHelper _userHelper; 
+        private UserHelper _userHelper;
         private UploadHelper _uploadHelper;
-        
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ContactsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ContactsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _httpContextAccessor = httpContextAccessor; 
 
             _lovHelper = new LOVHelper(_context);
             _companyHelper = new CompanyHelper(_context);
@@ -46,7 +51,7 @@ namespace AmeriForce.Controllers
             var contacts = _context.Contacts.Take(200).OrderByDescending(c => c.CreatedDate);
             if (contacts.Count() > 0)
             {
-                foreach(var contact in contacts)
+                foreach (var contact in contacts)
                 {
                     var contactToList = new ContactIndexViewModel
                     {
@@ -289,7 +294,7 @@ namespace AmeriForce.Controllers
                     using (FileStream stream = new FileStream(Path.Combine(webRootPath, fileLocation, fileName), FileMode.Create))
                     {
                         uploadedFile.CopyTo(stream);
-                        
+
                         fileUploads.Add(fileName);
                         ViewBag.UploadStatus += string.Format("<b>{0}</b> uploaded.<br />", fileName);
                     }
@@ -304,75 +309,103 @@ namespace AmeriForce.Controllers
             }
         }
 
-
-        public async Task<IActionResult> MailMergeWordDoc(string id)
+        public ActionResult SendEmail(string id)
         {
-            var x = new MailMergeHelper(_context, id, "Contacts", "Form-Opp - Term Sheet - Standard.doc");
-            x.WordDocumentMailMerge();
-
-            return Content(x.ToString());
+            var tempEmailID = new GuidHelper().GetGUIDString("tempemail");
+            var sendEmailModel = new ContactSendEmailMessageViewModel();
+            sendEmailModel.ContactName = GetContactName(id);
+            sendEmailModel.RelatedTo = id;
+            sendEmailModel.TemporaryID = tempEmailID;
+            sendEmailModel.FromName = _userHelper.GetNameFromEmail(_httpContextAccessor.HttpContext.User.Identity.Name);
+            sendEmailModel.FromAddress = HttpContext.User.Identity.Name;
+            sendEmailModel.UserEmailList = _lovHelper.GetActiveUsersEmailList();
+            sendEmailModel.ContactEmailList = _lovHelper.GetContactEmailListByContactId(id);
+            return View(sendEmailModel);
         }
 
 
-
-
-        public ActionResult MergeContacts(string id)
-        {
-            var contactsForMerge = GetContactsForMerge(id);
-            if (contactsForMerge != null)
-            {
-                return View(contactsForMerge);
-            }
-            return View();
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult MergeContacts(FormCollection collection)
+        public ActionResult SendEmail(string id, FormCollection collection)
         {
-            string contactString = "";
-            string x = "";
-            foreach (string key in collection.Keys)
-            {
-                if (key == "IsChecked")
-                {
-                    contactString = collection[key];
-                    List<string> contactList = new List<string>();
-                    contactList = contactString.Split(',').ToList();
-                }
-            }
-            return RedirectToAction("MergeChosenContacts", new { chosenContacts = contactString });
+            var emailHelper = new SendGridEmailHelper();
+
+            var toAddressEmail = "jasonpzeller@gmail.com"; // new ContactHelper().GetEmailAddress(collection["ToAddress"].ToString());
+            var collect = collection["ToAddress"].ToString();
+            var collect2 = collection["CcAddress"].ToString();
+
+            var tos = new List<string> { toAddressEmail };
+            var ccs = new List<string> { "bigjpztri@gmail.com", "zellerff@yahoo.com" };
+            var bccs = new List<string> { "jzeller@amerisource.us.com", };
+            string tosCombined = string.Join(",", tos);
+            string ccsCombined = string.Join(",", ccs);
+            string bccsCombined = string.Join(",", bccs);
+
+            //var email = new OutlookEmailHelper();
+
+            //var newEmail = new EmailViewModel
+            //{
+            //    FromAddress = "admin@amerisource.us.com",
+            //    ToAddresses = tosCombined,
+            //    CCAddresses = ccsCombined,
+            //    BCCAddresses = bccsCombined,
+            //    Subject = "This is a test of the email system",
+            //    Body = new StringBuilder("Hello, welcome to our test!<br><br><img src='http://webs2:88/Intranet/Home/GetImg/28' />")
+            //};
+
+            //var emailStatus = email.SendEmail(newEmail);
+
+            //return Content(emailStatus.ToString());
+
+            return Content(tos.ToString());
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         [HttpPost]
         public JsonResult UpdateNextScheduledCall(string NextCallID,
-                                                        string NextCallType,
-                                                        string NextCallOwnerID,
-                                                        string NextCallActivityDate,
-                                                        string NextCallDescription)
+                                                            string NextCallType,
+                                                            string NextCallOwnerID,
+                                                            string NextCallActivityDate,
+                                                            string NextCallDescription)
         {
 
-                try
-                {
-                    var existingCall = _context.CRMTasks.Where(c => c.Id == NextCallID).FirstOrDefault();
+            try
+            {
+                var existingCall = _context.CRMTasks.Where(c => c.Id == NextCallID).FirstOrDefault();
 
-                    if (existingCall != null)
-                    {
-                        existingCall.Type = NextCallType;
-                        existingCall.OwnerId = NextCallOwnerID;
-                        existingCall.ActivityDate = Convert.ToDateTime(NextCallActivityDate);
-                        existingCall.Description = NextCallDescription;
-                        //existingCall.CreatedById = User.Identity.Name;
-                        existingCall.LastModifiedById = User.Identity.Name;
-                        existingCall.LastModifiedDate = DateTime.Now;
-                        _context.SaveChanges();
-                    }
-                }
-                catch (Exception ex)
+                if (existingCall != null)
                 {
-
+                    existingCall.Type = NextCallType;
+                    existingCall.OwnerId = NextCallOwnerID;
+                    existingCall.ActivityDate = Convert.ToDateTime(NextCallActivityDate);
+                    existingCall.Description = NextCallDescription;
+                    //existingCall.CreatedById = User.Identity.Name;
+                    existingCall.LastModifiedById = User.Identity.Name;
+                    existingCall.LastModifiedDate = DateTime.Now;
+                    _context.SaveChanges();
                 }
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             return Json(new { callID = NextCallOwnerID });
         }
@@ -386,25 +419,25 @@ namespace AmeriForce.Controllers
                                            string NextNoteDescription)
         {
 
-                try
+            try
+            {
+                var newNote = new CRMTask()
                 {
-                    var newNote = new CRMTask()
-                    {
-                        Id = new GuidHelper().GetGUIDString("task"),
-                        WhoId = ContactID,
-                        Type = NextNoteType,
-                        OwnerId = NextNoteOwnerID,
-                        ActivityDate = DateTime.Now,
-                        Description = $"{NextNoteDescription}<br>Complete By: {NextNoteActivityDate}",
-                        CreatedById = User.Identity.Name
-                    };
-                    _context.CRMTasks.Add(newNote);
-                    _context.SaveChanges();
-                }
-                catch (Exception ex)
-                {
+                    Id = new GuidHelper().GetGUIDString("task"),
+                    WhoId = ContactID,
+                    Type = NextNoteType,
+                    OwnerId = NextNoteOwnerID,
+                    ActivityDate = DateTime.Now,
+                    Description = $"{NextNoteDescription}<br>Complete By: {NextNoteActivityDate}",
+                    CreatedById = User.Identity.Name
+                };
+                _context.CRMTasks.Add(newNote);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
 
-                }
+            }
 
             return Json(new
             {
@@ -431,10 +464,10 @@ namespace AmeriForce.Controllers
         {
             try
             {
-                var currentContact = _context.Contacts.Where(c=>c.Id == ContactID).FirstOrDefault();
+                var currentContact = _context.Contacts.Where(c => c.Id == ContactID).FirstOrDefault();
                 if (currentContact != null && OwnerID != "")
                 {
-                    currentContact.OwnerId = NewOwnerID; 
+                    currentContact.OwnerId = NewOwnerID;
                 }
                 _context.SaveChanges();
             }
@@ -448,25 +481,6 @@ namespace AmeriForce.Controllers
                 resultMessage = "success"
             });
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -490,7 +504,7 @@ namespace AmeriForce.Controllers
 
         public string GetContactName(string id)
         {
-            return new ContactHelper().GetName(id);
+            return new ContactHelper(_context).GetName(id);
         }
 
         public string GetUserNameFromID(string id)
@@ -521,7 +535,7 @@ namespace AmeriForce.Controllers
             try
             {
                 returnString += "<div class='container'><div class='row'><table class='table table-condensed table-hover table-striped' style='width:100%;padding:0px;'>";
-                
+
                 var files = new DirectoryInfo(Path.Combine(webRootPath, fileLocation)).GetFiles().OrderByDescending(f => f.CreationTime);
 
                 foreach (var f in files)
@@ -559,7 +573,7 @@ namespace AmeriForce.Controllers
 
                     returnString += $@"<tr><td style='width:5%;' class='leftTextAlign'>
                                             <i class='fa fa-{fileTypeFontAwesome}' data-toggle='tooltip' title='{1}' style='color:#{colorFontAwesome};font-size:14px;'></i></td>
-                                                <td class='leftTextAlign' style='width:60%;'><a href='../../Documents/Contacts/{id}/{Path.GetFileName(f.ToString()).Replace("'",HttpUtility.UrlEncode("'"))}' target='_blank'><span style='font-size:12px;'>{Path.GetFileName(f.ToString())}</span>
+                                                <td class='leftTextAlign' style='width:60%;'><a href='../../Documents/Contacts/{id}/{Path.GetFileName(f.ToString()).Replace("'", HttpUtility.UrlEncode("'"))}' target='_blank'><span style='font-size:12px;'>{Path.GetFileName(f.ToString())}</span>
                                                 </a></td>
                                                 <td style='width:35%;'>Uploaded: {fileInfo.LastWriteTime.ToString()}</td>
                                                 </tr>";
@@ -575,15 +589,6 @@ namespace AmeriForce.Controllers
             }
             return returnString;
 
-        }
-
-
-        private List<Contact> GetContactsForMerge(string companyID)
-        {
-            List<Contact> activeContacts;
-            activeContacts = _context.Contacts.Where(c => c.AccountId == companyID && c.Relationship_Status != "Dead").ToList();
-
-            return activeContacts;
         }
 
 

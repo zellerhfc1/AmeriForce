@@ -278,7 +278,7 @@ $(document).ready(function () {
                     $("#ownerReassignSpinner").hide();
                     $("#NewReassignSuccess").html("<strong>Owner has been reassigned successfully!</strong>")
 
-                    var returnToClient = "/Contacts/Details/" + contactMailMergeId;
+                    var returnToClient = "/Contacts/Details/" + contactReassignId;
                     window.location.href = 'https://' + $(location).attr('host') + returnToClient;
                 },
                     4000);

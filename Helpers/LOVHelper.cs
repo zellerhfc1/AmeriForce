@@ -141,34 +141,28 @@ namespace AmeriForce.Helpers
         //}
 
 
-        //public IEnumerable<SelectListItem> GetContactEmailListByClient(string clientID)
-        //{
+        public IEnumerable<SelectListItem> GetContactEmailListByContactId(string contactID)
+        {
+            // GET CONTACTS LIST BY ContactID
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    var companyID = new ClientHelper().GetCompanyIDFromClientID(clientID);
+            var contacts = _context.Contacts.Where(c => c.Id == contactID).ToList();
 
-        //    // GET CONTACTS LIST BY CLIENT
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+            //var defaultItem = new SelectListItem();
+            //defaultItem.Text = "";
+            //defaultItem.Value = "";
+            //sList.Add(defaultItem);
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
-        //        var contacts = db.Contacts.Where(c => c.AccountId == companyID).ToList();
-
-        //        //var defaultItem = new SelectListItem();
-        //        //defaultItem.Text = "";
-        //        //defaultItem.Value = "";
-        //        //sList.Add(defaultItem);
-
-        //        foreach (var contact in contacts)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{contact.FirstName} {contact.LastName}";
-        //            item.Value = $"{contact.Id}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+            foreach (var contact in contacts)
+            {
+                item = new SelectListItem();
+                item.Text = $"{contact.FirstName} {contact.LastName}";
+                item.Value = $"{contact.Id}";
+                sList.Add(item);
+            }
+            return sList;
+        }
 
 
         //public IEnumerable<SelectListItem> GetBDOList()
@@ -276,28 +270,23 @@ namespace AmeriForce.Helpers
         }
 
 
-        //public IEnumerable<SelectListItem> GetActiveUsersEmailList()
-        //{
-        //    // GET CONTACTS LIST BY COMPANY
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetActiveUsersEmailList()
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var users = _context.Users.Where(c => c.IsActive == true).OrderBy(c => c.FirstName);
 
-        //        var users = db.Users.Where(c => c.IsActive == true).OrderBy(c => c.FirstName);
-
-
-        //        foreach (var user in users)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{user.FirstName} {user.LastName}";
-        //            item.Value = $"{user.Email}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var user in users)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{user.FirstName} {user.LastName}";
+                    item.Value = $"{user.Email}";
+                    sList.Add(item);
+                }
+                return sList;
+        }
 
 
         //public IEnumerable<SelectListItem> GetReferralTypes()

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AmeriForce.Models.Companies;
 using AmeriForce.Data;
 using AmeriForce.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace AmeriForce.Controllers
 {
@@ -16,6 +17,7 @@ namespace AmeriForce.Controllers
         private readonly ApplicationDbContext _context;
         private GuidHelper _guidHelper = new GuidHelper();
         private CompanyHelper _companyHelper;
+        private UserHelper _userHelper;
         private LOVHelper _lovHelper;
 
         public CompaniesController(ApplicationDbContext context)
@@ -23,6 +25,7 @@ namespace AmeriForce.Controllers
             _context = context;
             _lovHelper = new LOVHelper(_context);
             _companyHelper = new CompanyHelper(_context);
+            _userHelper = new UserHelper(_context);
         }
 
         // GET: Companies
@@ -179,6 +182,135 @@ namespace AmeriForce.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        public async Task<IActionResult> MailMergeWordDoc(string id)
+        {
+            var x = new MailMergeHelper(_context, id, "Contacts", "Form-Opp - Term Sheet - Standard.doc");
+            x.WordDocumentMailMerge();
+
+            return Content(x.ToString());
+        }
+
+
+        public async Task<IActionResult> MergeContacts(string id)
+        {
+            ViewBag.CompanyName = _companyHelper.GetCompanyName(id);
+            var contactsForMerge = GetContactsForMerge(id);
+            if (contactsForMerge != null)
+            {
+                return View(contactsForMerge);
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MergeContacts(IFormCollection collection)
+        {
+            string contactString = "";
+            string x = "";
+            foreach (string key in collection.Keys)
+            {
+                if (key == "IsChecked")
+                {
+                    contactString = collection[key];
+                    List<string> contactList = new List<string>();
+                    contactList = contactString.Split(',').ToList();
+                }
+            }
+            return RedirectToAction("MergeChosenContacts", new { chosenContacts = contactString });
+        }
+
+
+        public ActionResult MergeChosenContacts(string chosenContacts)
+        {
+            List<string> contactList = new List<string>();
+            List<Contact> mergeableContacts = new List<Contact>();
+            var companyMergeContactsVM = new CompanyMergeContactsViewModel
+            {
+                ContactIDList = new List<string>(),
+                FirstNameList = new List<string>(),
+                LastNameList = new List<string>(),
+                PhoneList = new List<string>(),
+                MobilePhoneList = new List<string>(),
+                EmailList = new List<string>(),
+                OwnerList = new List<OwnerInfo>()
+            };
+
+            if (chosenContacts != null)
+            {
+                contactList = chosenContacts.Split(',').ToList();
+            }
+
+            foreach (string contact in contactList)
+            {
+                var newContact = _context.Contacts.Where(c => c.Id == contact).FirstOrDefault();
+                mergeableContacts.Add(newContact);
+            }
+
+            for (int i = 0; i < mergeableContacts.Count(); i++)
+            {
+                companyMergeContactsVM.ContactIDList.Add(mergeableContacts[i].Id.ToString());
+                companyMergeContactsVM.FirstNameList.Add(mergeableContacts[i].FirstName.ToString());
+                companyMergeContactsVM.LastNameList.Add(mergeableContacts[i].LastName);
+                companyMergeContactsVM.PhoneList.Add(mergeableContacts[i].Phone);
+                companyMergeContactsVM.MobilePhoneList.Add(mergeableContacts[i].MobilePhone);
+                companyMergeContactsVM.EmailList.Add(mergeableContacts[i].Email);
+                var ownerInfo = new OwnerInfo()
+                {
+                    OwnerID = mergeableContacts[i].OwnerId,
+                    OwnerName = _userHelper.GetNameFromID(mergeableContacts[i].OwnerId),
+                };
+                companyMergeContactsVM.OwnerList.Add(ownerInfo);
+            }
+
+            return View(companyMergeContactsVM);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MergeChosenContacts(FormCollection collection)
+        {
+            var contactid = collection["cbContactID"];
+            var fname = collection["cbFirstName"];
+            var lname = collection["cbLastName"];
+            var phone = collection["cbPhone"];
+            var mobile = collection["cbMobilePhone"];
+            var email = collection["cbEmail"];
+            var ownerid = collection["cbOwner"];
+
+            var contact = _context.Contacts.Where(c => c.Id == contactid).FirstOrDefault();
+            if (contact != null)
+            {
+                contact.FirstName = fname;
+                contact.LastName = lname;
+                contact.Phone = phone;
+                contact.MobilePhone = mobile;
+                contact.Email = email;
+                contact.OwnerId = ownerid;
+
+                _context.SaveChanges();
+            }
+
+            return Content("asdf");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private bool CompanyExists(string id)
         {
             return _context.Companies.Any(e => e.ID == id);
@@ -235,6 +367,16 @@ namespace AmeriForce.Controllers
             };
             return returnCompany;
         }
+
+
+        private List<Contact> GetContactsForMerge(string companyID)
+        {
+            List<Contact> activeContacts;
+            activeContacts = _context.Contacts.Where(c => c.AccountId == companyID && c.Relationship_Status != "Dead").ToList();
+            return activeContacts;
+        }
+
+
 
 
         [AcceptVerbs("Get", "Post")]

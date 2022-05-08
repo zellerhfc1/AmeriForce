@@ -7,6 +7,11 @@ namespace AmeriForce.Helpers
     {
         private readonly ApplicationDbContext _context;
 
+        public ContactHelper(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public string GetName(string id)
         {
             string clientName = "";

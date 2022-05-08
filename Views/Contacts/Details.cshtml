@@ -107,7 +107,6 @@
         <div class="row">
             <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
                 <a class="btn btn-primary btn-md" href="@Url.Action("Edit", "Contacts", new { id = Model.contact.Id })" style="padding:5px;"><i class="fa fa-edit"></i> Edit</a>
-                <a class="btn btn-primary btn-md" href="@Url.Action("MergeContacts", "Test")" style="padding:5px;"><i class="fa fa-people-arrows"></i> Merge Contacts</a>
                 @*<a class="btn btn-primary btn-md" href="@Url.Action("MailMergeWordDocs", "Test")" style="padding:5px;"><i class="fa fa-mail-bulk"></i> Mail Merge</a>*@
                 <a class="btn btn-primary btn-md" href="#" name="btnCreateContactMailMerge" id="btnCreateContactMailMerge" 
                         data-toggle="modal" data-target="#modalContactMailMerge"><i class="fa fa-mail-bulk"></i> Mail Merge</a>
@@ -146,10 +145,9 @@
                             <hr class="hrFieldBuffer" />
                             <b>Home Phone: </b> @Model.contact.HomePhone<br />
                             <hr class="hrFieldBuffer" />
-                            <b>Email: </b> @Model.contact.Email 
-                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" 
-                                        name="btnSendEmailThroughSalesforce" id="btnSendEmailThroughSalesforce" data-toggle="modal" 
-                                        data-target="#modalSendEmailThroughSalesforce"><i class="fa fa-envelope"></i> Send Email</a>
+                            <b>Email: </b> @Model.contact.Email        
+                            <a class="btn btn-primary btn-sm tinyButton" href="@Url.Action("SendEmail", "Contacts", new { id = Model.contact.Id })" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" >
+                                    <i class="fa fa-envelope"></i> Send Email</a>
                             <br />
                             <hr class="hrFieldBuffer" />
                             <b>Alt Email: </b> @Model.contact.Alt_Email<br />

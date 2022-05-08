@@ -1,0 +1,101 @@
+﻿@model AmeriForce.Models.Companies.CompanyMergeContactsViewModel
+
+@{
+    ViewBag.Title = "Merge Chosen Contacts";
+}
+
+
+<h2>MergeChosenContacts</h2>
+
+@using (Html.BeginForm("MergeChosenContacts", "Companies", FormMethod.Post, new { @createCompanyForm = Model, @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>CompanyMergeContactsViewModel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <table cellpadding="10" cellspacing="10" class="table table-bordered table-striped">
+            <tr>
+                <td></td>
+                @{
+                    for(var i = 0; i < Model.FirstNameList.Count(); i++)
+                    {
+                        <td style="background-color:#333;"> 
+                            @Model.FirstNameList[i].ToString() @Model.LastNameList[i].ToString() 
+                            <br />
+                            <input type="radio" id="cbContactID" name="cbContactID" value="@Model.ContactIDList[i].ToString()" />
+                        </td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>First Name</td>
+                @{
+                    foreach (var item in Model.FirstNameList)
+                    {
+                        <td><input type="radio" id="cbFirstName" name="cbFirstName" value="@item" /> @item</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                @{
+                    foreach (var item in Model.LastNameList)
+                    {
+                        <td><input type="radio" id="cbLastName" name="cbLastName" value="@item" /> @item</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>Phone</td>
+                @{
+                    foreach (var item in Model.PhoneList)
+                    {
+                        <td><input type="radio" id="cbPhone" name="cbPhone" value="@item" /> @item</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>Mobile Phone</td>
+                @{
+                    foreach (var item in Model.MobilePhoneList)
+                    {
+                        <td><input type="radio" id="cbMobilePhone" name="cbMobilePhone" value="@item" /> @item</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>Email</td>
+                @{
+                    foreach (var item in Model.EmailList)
+                    {
+                        <td><input type="radio" id="cbEmail" name="cbEmail" value="@item" /> @item</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>Owner</td>
+                @{
+                    foreach (var item in Model.OwnerList)
+                    {
+                        <td><input type="radio" id="cbOwner" name="cbOwner" value="@item.OwnerID" /> @item.OwnerName</td>
+                    }
+                }
+            </tr>
+        </table>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+                    }
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
