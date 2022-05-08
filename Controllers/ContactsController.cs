@@ -82,6 +82,7 @@ namespace AmeriForce.Controllers
             ViewBag.ContactFiles = contactFiles;
 
             detailsModel.contact = contact;
+            detailsModel.OwnerName = GetUserNameFromID(contact.OwnerId);
             detailsModel.clients = _context.Clients.Where(c => c.Referring_Contact == contact.Id);
             detailsModel.contactNotes = _context.CRMTasks.Where(c => c.WhoId == contact.Id && c.Id != contact.NextActivityID).OrderByDescending(c => c.ActivityDate);
             detailsModel.contactNextTask = _context.CRMTasks.Where(c => c.Id == detailsModel.contact.NextActivityID).FirstOrDefault();
@@ -103,6 +104,7 @@ namespace AmeriForce.Controllers
 
                 detailsModel.contactNextTask = _context.CRMTasks.Where(c => c.Id == nextCRMTask.Id).FirstOrDefault();
             }
+            detailsModel.contactNextTaskOwner = GetUserNameFromID(detailsModel.contactNextTask.OwnerId);
 
 
             detailsModel.TaskList = _lovHelper.GetTaskTypes();
@@ -110,6 +112,7 @@ namespace AmeriForce.Controllers
             detailsModel.TaskListNotes = _lovHelper.GetTaskTypes();
             detailsModel.ActiveUserListNotes = _lovHelper.GetActiveUsers();
             detailsModel.YesNoList = _lovHelper.GetYesNoList();
+            detailsModel.MailMergeTemplateList = _lovHelper.GetMailMergeTemplateList();
 
 
             // Duplicate Detection
@@ -301,6 +304,172 @@ namespace AmeriForce.Controllers
             }
         }
 
+
+        public async Task<IActionResult> MailMergeWordDoc(string id)
+        {
+            var x = new MailMergeHelper(_context, id, "Contacts", "Form-Opp - Term Sheet - Standard.doc");
+            x.WordDocumentMailMerge();
+
+            return Content(x.ToString());
+        }
+
+
+
+
+        public ActionResult MergeContacts(string id)
+        {
+            var contactsForMerge = GetContactsForMerge(id);
+            if (contactsForMerge != null)
+            {
+                return View(contactsForMerge);
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MergeContacts(FormCollection collection)
+        {
+            string contactString = "";
+            string x = "";
+            foreach (string key in collection.Keys)
+            {
+                if (key == "IsChecked")
+                {
+                    contactString = collection[key];
+                    List<string> contactList = new List<string>();
+                    contactList = contactString.Split(',').ToList();
+                }
+            }
+            return RedirectToAction("MergeChosenContacts", new { chosenContacts = contactString });
+        }
+
+
+        [HttpPost]
+        public JsonResult UpdateNextScheduledCall(string NextCallID,
+                                                        string NextCallType,
+                                                        string NextCallOwnerID,
+                                                        string NextCallActivityDate,
+                                                        string NextCallDescription)
+        {
+
+                try
+                {
+                    var existingCall = _context.CRMTasks.Where(c => c.Id == NextCallID).FirstOrDefault();
+
+                    if (existingCall != null)
+                    {
+                        existingCall.Type = NextCallType;
+                        existingCall.OwnerId = NextCallOwnerID;
+                        existingCall.ActivityDate = Convert.ToDateTime(NextCallActivityDate);
+                        existingCall.Description = NextCallDescription;
+                        //existingCall.CreatedById = User.Identity.Name;
+                        existingCall.LastModifiedById = User.Identity.Name;
+                        existingCall.LastModifiedDate = DateTime.Now;
+                        _context.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            return Json(new { callID = NextCallOwnerID });
+        }
+
+
+        [HttpPost]
+        public JsonResult UpdateContactNote(string ContactID,
+                                            string NextNoteType,
+                                           string NextNoteOwnerID,
+                                           string NextNoteActivityDate,
+                                           string NextNoteDescription)
+        {
+
+                try
+                {
+                    var newNote = new CRMTask()
+                    {
+                        Id = new GuidHelper().GetGUIDString("task"),
+                        WhoId = ContactID,
+                        Type = NextNoteType,
+                        OwnerId = NextNoteOwnerID,
+                        ActivityDate = DateTime.Now,
+                        Description = $"{NextNoteDescription}<br>Complete By: {NextNoteActivityDate}",
+                        CreatedById = User.Identity.Name
+                    };
+                    _context.CRMTasks.Add(newNote);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            return Json(new
+            {
+                callID = NextNoteOwnerID
+            });
+        }
+
+
+        [HttpPost]
+        public JsonResult MailMergeWordDoc(string ContactID, string TemplateType, string OwnerID)
+        {
+            var mailMergeHelper = new MailMergeHelper(_context, OwnerID, "Contacts", TemplateType, ContactID);
+            //mailMergeHelper.WordDocumentMailMerge();
+
+            return Json(new
+            {
+                resultMessage = "success"
+            });
+        }
+
+
+        [HttpPost]
+        public JsonResult ContactReassignToNewOwner(string ContactID, string NewOwnerID, string OwnerID)
+        {
+            try
+            {
+                var currentContact = _context.Contacts.Where(c=>c.Id == ContactID).FirstOrDefault();
+                if (currentContact != null && OwnerID != "")
+                {
+                    currentContact.OwnerId = NewOwnerID; 
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json(new
+            {
+                resultMessage = "success"
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public async Task<ActionResult> ContactMergeTest(string id)
         {
             var potentialMerges = new CompanyContactMerge(id, _context).GetPotentialContactsToMerge();
@@ -406,6 +575,15 @@ namespace AmeriForce.Controllers
             }
             return returnString;
 
+        }
+
+
+        private List<Contact> GetContactsForMerge(string companyID)
+        {
+            List<Contact> activeContacts;
+            activeContacts = _context.Contacts.Where(c => c.AccountId == companyID && c.Relationship_Status != "Dead").ToList();
+
+            return activeContacts;
         }
 
 

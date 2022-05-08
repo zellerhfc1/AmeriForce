@@ -434,32 +434,29 @@ namespace AmeriForce.Helpers
         //}
 
 
-        //public IEnumerable<SelectListItem> GetMailMergeTemplateList()
-        //{
-        //    // GET CONTACTS LIST BY COMPANY
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetMailMergeTemplateList()
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
 
-        //        var mailMergeTemplates = db.LOV_TemplateTypes.OrderBy(t => t.TemplateName).ToList();
+                var mailMergeTemplates = _context.LOV_TemplateType.OrderBy(t => t.TemplateName).ToList();
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        foreach (var mailMergeTemplate in mailMergeTemplates)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{mailMergeTemplate.TemplateName}";
-        //            item.Value = $"{mailMergeTemplate.TemplateName}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var mailMergeTemplate in mailMergeTemplates)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{mailMergeTemplate.TemplateName}";
+                    item.Value = $"{mailMergeTemplate.TemplateName}";
+                    sList.Add(item);
+                }
+                return sList;
+        }
 
 
 

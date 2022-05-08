@@ -15,6 +15,8 @@ namespace AmeriForce.Models.Contacts
         public IEnumerable<Client> clients { get; set; }
         public IEnumerable<CRMTask> contactNotes { get; set; }
         public CRMTask contactNextTask { get; set; }
+        public string contactNextTaskOwner { get; set; }
+
         public List<ContactDuplicateViewModel> contactDuplicates { get; set; }
 
 
@@ -35,5 +37,6 @@ namespace AmeriForce.Models.Contacts
         public IEnumerable<SelectListItem> TaskListNotes { get; set; }
         public IEnumerable<SelectListItem> ActiveUserListNotes { get; set; }
         public IEnumerable<SelectListItem> YesNoList { get; set; }
+        public IEnumerable<SelectListItem> MailMergeTemplateList { get; set; }
     }
 }

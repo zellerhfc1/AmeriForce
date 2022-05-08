@@ -5,9 +5,6 @@
 }
 
 
-<script src="~/jQuery/jQueryValidation.js"></script>
-<script src="~/jQuery/jQuery_ContactFunctions.js"></script>
-
 @*@{
     var controller = ViewContext.Controller as SalesforceReplacementA.Client1.Controllers.ContactsController;
 }*@
@@ -111,7 +108,9 @@
             <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
                 <a class="btn btn-primary btn-md" href="@Url.Action("Edit", "Contacts", new { id = Model.contact.Id })" style="padding:5px;"><i class="fa fa-edit"></i> Edit</a>
                 <a class="btn btn-primary btn-md" href="@Url.Action("MergeContacts", "Test")" style="padding:5px;"><i class="fa fa-people-arrows"></i> Merge Contacts</a>
-                <a class="btn btn-primary btn-md" href="@Url.Action("MailMergeWordDocs", "Test")" style="padding:5px;"><i class="fa fa-mail-bulk"></i> Mail Merge</a>
+                @*<a class="btn btn-primary btn-md" href="@Url.Action("MailMergeWordDocs", "Test")" style="padding:5px;"><i class="fa fa-mail-bulk"></i> Mail Merge</a>*@
+                <a class="btn btn-primary btn-md" href="#" name="btnCreateContactMailMerge" id="btnCreateContactMailMerge" 
+                        data-toggle="modal" data-target="#modalContactMailMerge"><i class="fa fa-mail-bulk"></i> Mail Merge</a>
                 <a class="btn btn-primary btn-md" href="#" name="btnUploadFile" id="btnUploadFile" data-toggle="modal" style="padding:5px;" data-target="#modalUploadContactFiles"><i class="fa fa-upload"></i> Upload File(s)</a>
             </div>
         </div>
@@ -197,7 +196,7 @@
                         <div class="col-lg-6" style="padding:5px;" align="left">
                             <b>BDO: </b> @Model.OwnerName
                             <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" 
-                                    name="btnEditNextScheduledCall" id="btnEditNextScheduledCall" data-toggle="modal" data-target="#modalEditNextScheduledCall"><i class="fa fa-plus"></i> Reassign</a>
+                                    name="btnReassignContact" id="btnReassignContact" data-toggle="modal" data-target="#modalReassignContact"><i class="fa fa-plus"></i> Reassign</a>
                             <br />
                             <hr class="hrFieldBuffer" />
                             <b>Relationship Status: </b> @Model.contact.Relationship_Status<br />
@@ -537,7 +536,8 @@
                             <h2 class="subHeadingTitle"><i class="fa fa-tasks"></i> Next Scheduled Call</h2>
                         </div>
                         <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
-                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" name="btnEditNextScheduledCall" id="btnEditNextScheduledCall" data-toggle="modal" data-target="#modalEditNextScheduledContactCall"><i class="fa fa-plus"></i> Update Call</a>
+                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" 
+                                    name="btnEditNextScheduledCall" id="btnEditNextScheduledCall" data-toggle="modal" data-target="#modalEditNextScheduledContactCall"><i class="fa fa-plus"></i> Update Call</a>
                         </div>
                     </div>
                     <div class="row">
@@ -584,7 +584,7 @@
                                         }
                                     </div>
                                     <div class="col-sm-11">
-                                        <b>@Model.OwnerName
+                                        <b>@Model.contactNextTaskOwner
                                         -
                                             @{
                                                 string nextCallActivityDate = Model.contactNextTask.ActivityDate?.ToString("MM/dd/yyyy") ?? "";
@@ -660,7 +660,7 @@
                                             </div>
                                             <div class="col-sm-11">
                                                 <b>
-                                                    @Model.OwnerName
+                                                    @Model.contactNextTaskOwner
                                                 -
                                                 @{
                                                     string noteActivityDate = contactNote.ActivityDate?.ToString("MM/dd/yyyy") ?? "";
@@ -1413,7 +1413,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header overviewHeaderNormal">
-                <i class="fa fa-comment-dots"></i> Add A Note
+                Add A Note<i class="fa fa-comment-dots"></i> 
             </div>
             <form id="SubmitAddAContactNote" name="SubmitAddAContactNote" style="text-align:left;">
 
@@ -1515,25 +1515,29 @@
                         @Html.DropDownListFor(model => Model.contactNextTask.Type, Model.TaskList, new { @class = "form-control input-sm", @maxlength = 5 })
                     </div>
 
+
                     @*TASK OWNER *@
                     <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
-                        <span class="input-group-addon input-sm" id="LabelContactTaskOwner">Task Owner </span>
-                        <span class="input-group-addon requiredClass" id="IG_contactNextTask_OwnerId" name="IG_contactNextTask_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                            <div class="input-group-prepend">
+                            <span class="input-group-text input-sm" id="LabelContactTaskOwner">Task Owner </span>
+                            <span class="input-group-text requiredClass" id="IG_contactNextTask_OwnerId" name="IG_contactNextTask_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                            </div>
                         @Html.DropDownListFor(model => Model.contactNextTask.OwnerId, Model.ActiveUserList, new { @class = "form-control input-sm", @maxlength = 5 })
                     </div>
-
+                    
+                    
                     @*TASK DUE DATE *@
                     <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
-                        <span class="input-group-addon input-sm" id="LabelContactTaskActivityDate">Task Date </span>
+                        <span class="input-group-addon input-sm" id="LabelNextTaskActivityDate">Complete By: </span>
                         <span class="input-group-addon requiredClass" id="IG_contactNextTask_ActivityDate" name="IG_contactNextTask_ActivityDate"></span>
-                        <input type="text" id="contactNextTask_ActivityDate" name="contactNextTask_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" value="@Model.contactNextTask.ActivityDate" />
+                        <input type="text" id="contactNextTask_ActivityDate" name="contactNextTask_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
                     </div>
 
                     @*TASK nOTES *@
                     <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
-                        <span class="input-group-addon input-sm" id="LabelContactNextTaskDescription">Notes </span>
+                        <span class="input-group-addon input-sm" id="LabelNextTaskDescription">Notes </span>
                         <span class="input-group-addon requiredClass" id="IG_contactNextTask_Description" name="IG_contactNextTask_Description"></span>
-                        <textarea rows="50" style="height:150px;" id="contactNextTask_Description" name="contactNextTask_Description" class="form-control input-lg clientEntryTerms" maxlength="5000">@Model.contactNextTask.Description</textarea>
+                        <textarea rows="50" style="height:150px;" id="contactNextTask_Description" name="contactNextTask_Description" class="form-control input-lg clientEntryTerms" maxlength="5000"></textarea>
                     </div>
 
                 </div>
@@ -1554,11 +1558,121 @@
 
 
 
+<div class="modal fade panel-primary" id="modalContactMailMerge" tabindex="-1" role="dialog" aria-labelledby="modalContactMailMerge">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                Contact Mail Merge <i class="fa fa-file-word"></i> 
+            </div>
+            <form id="SubmitContactMailMerge" name="SubmitSubmitContactMailMerge" style="text-align:left;">
+
+                <div class="modal-body">
+                    <input type="hidden" name="contactMailMerge_Id" id="contactMailMerge_Id" value="@Model.contact.Id" />
+                    <input type="hidden" name="contactMailMerge_OwnerId" id="contactMailMerge_OwnerId" value="@Model.contact.OwnerId" />
+
+                    <div id="NewMailMergeSuccess" class="alert alert-success">
+
+                    </div>
+                    <div id="NewMailMergeError" class="alert alert-success">
+                        <strong>There was a problem creating the mail merge.  Please try again.</strong>
+                    </div>
+
+
+                    @*TEMPLATE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-sm" id="LabelMailMerge_Template">Template </span>
+                                            <span class="input-group-text requiredClass" id="IG_mailMerge_Template" name="IG_mailMerge_Template"><i class="fas fa-file-word" aria-hidden="true"></i></span>
+                        </div>
+                        @Html.DropDownList("mailMerge_Template", Model.MailMergeTemplateList, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+                    
+
+
+                    @*<table class="table table-striped table-hover table-condensed">
+                            <thead>
+                            <tbody>
+                                <tr>
+                                    <td class="centerTextAlign" style="width:5%;">Date:</td>
+                                    <td class="leftTextAlign"><input type="text" value="08/01/2021" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="centerTextAlign">Time:</td>
+                                    <td class="leftTextAlign"><input type="text" value="04:00 PM" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="centerTextAlign">Notes:</td>
+                                    <td class="leftTextAlign">
+                                        <textarea cols="40" rows="10">
+                                            Don mentioned $3.5MM RE deal, warehouse facility in South Texas appraised at $7.5MM, want to refi to pay grandfather out, requested package
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>*@
+
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" class="btn btn-primary"><i name="mailMergeSpinner" id="mailMergeSpinner" class="fas fa-spinner fa-spin mailMergeSpinner"></i> &nbsp;Create Document</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade panel-primary" id="modalReassignContact" tabindex="-1" role="dialog" aria-labelledby="modalReassignContact">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                Reassign Contact to Another Owner <i class="fa-solid fa-arrows-down-to-people"></i>
+            </div>
+            <form id="SubmitReassignContact" name="SubmitReassignContact" style="text-align:left;">
+
+                <div class="modal-body">
+                    <input type="hidden" name="contactReassign_Id" id="contactReassign_Id" value="@Model.contact.Id" />
+                    <input type="hidden" name="contactReassign_OwnerId" id="contactReassign_OwnerId" value="@Model.contact.OwnerId" />
+
+                    <div id="NewReassignSuccess" class="alert alert-success">
+
+                    </div>
+                    <div id="NewReassignError" class="alert alert-success">
+                        <strong>There was a problem creating the mail merge.  Please try again.</strong>
+                    </div>
+
+
+                    @*OWNER TO REASSIGN *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-sm" id="LabelReassign_Template">New Owner </span>
+                                            <span class="input-group-text requiredClass" id="IG_mailMerge_Template" name="IG_Reassign_Template"><i class="fas fa-arrows-down-to-people" aria-hidden="true"></i></span>
+                        </div>
+                        @Html.DropDownList("contactReassign_NewOwnerId", Model.ActiveUserList, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" class="btn btn-primary"><i name="ownerReassignSpinner" id="ownerReassignSpinner" class="fas fa-spinner fa-spin ownerReassignSpinner"></i> &nbsp;Reassign to New Owner</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 
 
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 
+
+<script src="~/jQuery/jQueryValidation.js"></script>
+<script src="~/jQuery/jQuery_ContactFunctions.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -1587,12 +1701,12 @@
             $("#files").val("");
         })
 
-        //var uploadSuccess = 'Request["uploadStatus"]';
-        //if (uploadSuccess == "SUCCESS") {
-        //    console.log(uploadSuccess)
-        //    $('#fileUploadSuccess').show();
-        //    $('#fileUploadSuccess').delay(4000).fadeOut();
-        //}
+        var uploadSuccess = 'Request["uploadStatus"]';
+        if (uploadSuccess == "SUCCESS") {
+            console.log(uploadSuccess)
+            $('#fileUploadSuccess').show();
+            $('#fileUploadSuccess').delay(4000).fadeOut();
+        }
 
         $("#files").change(function () {
             console.log(this.files.length);
@@ -1619,3 +1733,5 @@
         $('#fname').text($('#firstname').val());
     });
 </script>
+
+}

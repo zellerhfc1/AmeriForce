@@ -68,5 +68,19 @@ namespace AmeriForce.Helpers
         }
 
 
+        public string GetNameFromUserName(string userName)
+        {
+            string userFullName = "";
+
+            var user = _context.Users.Where(u => u.UserName == userName).FirstOrDefault();
+            if (user != null)
+            {
+                userFullName = $"{user.FirstName} {user.LastName}";
+            }
+
+            return userFullName;
+        }
+
+
     }
 }
