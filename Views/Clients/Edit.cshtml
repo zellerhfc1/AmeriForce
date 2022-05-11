@@ -1,0 +1,739 @@
+﻿@model AmeriForce.Models.Clients.ClientEditViewModel
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="~/Content/ClientStyleSheet.css" rel="stylesheet" />
+
+<nav aria-label="breadcrumb" align="right">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Clients")">Clients</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+            @{
+                if (Model.clientData.Name == "" || Model.clientData.Name == null)
+                {
+                    @Html.Raw("TBD")
+                }
+                else
+                {
+                    @Model.clientData.Name
+                }
+            }
+        </li>
+    </ol>
+</nav>
+
+<div style="border:0px solid #333;">
+
+    <div id="fileUploadSuccess" name="fileUploadSuccess" class="alert alert-success alert-dismissible" role="alert">
+        <strong>Files uploaded successfully!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+
+    <div class="container mainPageBody" style="border:1px solid #333;background-color:#fff;">
+
+        @*Contact Detail Div*@
+        <div class="row contactHeader">
+            <div class="col-lg-6" align="left">
+                <div style="border:0px solid black;">
+                    <table align="left">
+                        <tr>
+                            <td valign="middle" style="border:1px solid #fff;padding:10px;">
+                                <i class="fa fa-file-signature" style="font-size:80px;"></i>
+                            </td>
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
+                                <span class="overviewHeader dealAmount">
+                                    @{
+                                        if (Model.clientData.Name == "" || Model.clientData.Name == null)
+                                        {
+                                            @Html.Raw("TBD")
+                                        }
+                                        else
+                                        {
+                                            @Model.clientData.Name
+                                        }
+                                    }
+                                </span>
+                                <br />
+                                <span class="nameSubHeader gradeAReversed"> @Model.clientData.StageName </span>
+                                <br />
+                                <span class="nameSubHeaderNextCall">
+                                    <b>Next Call:</b>
+                                    @{
+                                        if (Model.clientNextTask != null)
+                                        {
+                                            if (Model.clientNextTask.ActivityDate == null)
+                                            {
+                                                @Html.Raw("TBD")
+                                            }
+                                            else
+                                            {
+                                                @Model.clientNextTask.ActivityDate.ToString()
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("---")
+                                        }
+                                    }
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-3 dealAmount" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-1" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-2" align="center">
+                <table>
+                    <tr>
+                        <td>
+                            <img src="~/Images/@(Model.clientData.OwnerId).jpg" class="img-thumbnail img-rounded" style="height:70px;" />
+                            <br />
+                            <b>@controller.GetUserNameFromID(Model.clientData.OwnerId)</b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+
+        @using (Html.BeginForm("Edit", "Clients", FormMethod.Post, new { @id = "clientEditForm", @name = "clientEditForm", @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" id="ClientID" name="ClientID" value="@Model.clientData.Id" />
+            <input type="hidden" id="ClientCompanyID" name="ClientCompanyID" value="@Model.companyData.ID" />
+            <div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                    <button type="submit" class="btn btn-primary btn-md"><i class="fas fa-save"></i> &nbsp;Save Updates</button>
+                    &nbsp;&nbsp;
+                    <a class="btn btn-primary btn-md" href="@Url.Action("Edit", "Clients", new { id = Model.clientData.Id })" style="padding:5px;"><i class="fa fa-arrow-left"></i> Back to Details Screen</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;" align="left">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle"><i class="fa fa-file-signature"></i> Client Detail</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+
+                                @* CLIENT NAME  *@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientName">Client Name </span>
+                                    <span class="input-group-addon" id="IG_clientData_Name" name="IG_clientData_Name"></span>
+                                    <input type="text" id="clientData_Name" name="clientData_Name" class="form-control input-lg clientEntryTerms" maxlength="50" value="@Model.clientData.Name" />
+                                </div>
+
+                                @* LEGAL ENTITY NAME  *@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelLegalEntityNameName">Legal Entity Name </span>
+                                    <span class="input-group-addon" id="IG_companyData_Name" name="IG_companyData_Name"></span>
+                                    <input type="text" id="companyData_Name" name="companyData_Name" class="form-control input-lg clientEntryTerms" maxlength="50" value="@Model.companyData.Name" />
+                                </div>
+
+                                @* BUSINESS DESCRIPTION  *@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelBusinessDescription">Company Description </span>
+                                    <span class="input-group-addon" id="IG_companyData_Description" name="IG_companyData_Description"></span>
+                                    <input type="text" id="companyData_Description" name="companyData_Description" class="form-control input-lg clientEntryTerms" maxlength="50" value="@Model.companyData.Description" />
+                                </div>
+
+                                @* SIC CODE  *@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelSICCode">SIC Code </span>
+                                    <span class="input-group-addon" id="IG_companyData_SICCode" name="IG_companyData_SICCode"></span>
+                                    <input type="text" id="companyData_SICCode" name="companyData_SICCode" class="form-control input-lg clientEntryTerms" maxlength="50" value="@Model.companyData.SICCode" />
+                                </div>
+
+                                @*COMPANY CHARTER STATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelCompanyCharterState">Charter State </span>
+                                    @Html.DropDownListFor(model => model.companyData.CharterState, Model.StatesList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+
+                                @*CLIENT STAGE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientBDO">Stage </span>
+                                    <span class="input-group-addon requiredClass" id="IG_clientData_StageName" name="IG_clientData_StageName"></span>
+                                    @Html.DropDownListFor(model => model.clientData.StageName, Model.ClientStageList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+                                @*CLIENT AMOUNT*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientAmount">Amount </span>
+                                    <span class="input-group-addon" id="IG_clientData_Amount" name="IG_clientData_Amount">$</span>
+                                    <input type="text" id="clientData.Amount" name="clientData.Amount" class="form-control input-lg clientEntryTerms currencyField" maxlength="50" value="@Model.clientData.Amount" />
+                                </div>
+
+
+                                @*CLIENT CLOSE DATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientCloseDate">Close Date </span>
+                                    @*@Html.TextBoxFor(m => m.clientData.CloseDate, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })*@
+                                    <input type="text" id="clientData_CloseDate" name="clientData_CloseDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" value="@Model.clientData.CloseDate.ToString().Replace("12:00:00 AM", "")" />
+                                </div>
+
+
+                                @*CLIENT BDO*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientBDO">BDO </span>
+                                    <span class="input-group-addon requiredClass" id="IG_clientData_OwnerId" name="IG_clientData_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                                    @Html.DropDownListFor(model => model.clientData.OwnerId, Model.BDOList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        @*REFERRAL SOURCE INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Client Referral Source Information</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;">
+                                @* REFERRAL TYPE *@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientReferralType">Referral Type </span>
+                                    <span class="input-group-addon" id="IG_clientData_LeadSource" name="IG_clientData_LeadSource"></span>
+                                    @Html.DropDownListFor(model => model.clientData.LeadSource, Model.ReferralTypes, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+                                @*REFERRAL DATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientReferralDate">Referral Date </span>
+                                    <input type="text" id="clientData_Referral_Date" name="clientData_Referral_Date" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" value="@Model.clientData.Referral_Date" />
+                                </div>
+                                @*<b>Referral Date: </b> @Model.clientData.Referral_Date.ToString()
+                                    <hr class="hrFieldBuffer" />*@
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;">
+
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelReferringCompany">Referring Company </span>
+                                    <input type="text" id="ReferringCompanyName" name="ReferringCompanyName" class="form-control input-lg clientEntryTerms" maxlength="50" value="@Model.referringCompanyData.Name" />
+
+                                    @*<button name="refreshContacts" id="refreshContacts" type="button" class="btn btn-primary btn-sm">Refresh Contacts</button>*@
+
+                                </div>
+
+
+
+                                <input type="hidden" name="CompanyId" id="CompanyId" value="" />
+                                <input type="hidden" name="ContactId" id="ContactId" value="@Model.clientData.Referring_Contact" />
+
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelReferringContact">Referring Company </span>
+                                    <span class="input-group-addon input-sm" id="LabelReferringContactSpin" style="padding:1px;">
+                                        <button type="button" class="btn btn-primary btn-xs"><i class="fa fa-sync refreshContacts"></i></button>
+                                    </span>
+                                    @Html.DropDownListFor(model => Model.clientData.Referring_Contact, new SelectList(string.Empty, "Value", "Text"), "", new { @class = "form-control input-sm", @maxlength = 5 })
+                                </div>
+
+                                @Html.DropDownListFor(model => model.clientData.Referring_Company, new SelectList(string.Empty, "Value", "Text"), "", new { @class = "form-control input-sm invisible" })
+                                @Html.ValidationMessageFor(model => model.clientData.Referring_Company, "", new { @class = "text-danger" })
+
+                                @*<b>Referring Company: </b>
+                                    <a href='@Url.Action("Details", "Companies", new { id = Model.referringCompanyData.ID })'>@Model.referringCompanyData.Name</a>
+                                    <hr class="hrFieldBuffer" />
+                                    <b>Referring Contact: </b> <a href='@Url.Action("Details", "Contacts", new { id = Model.referringContactData.Id })'>@Model.referringContactData.FirstName @Model.referringContactData.LastName</a>
+                                    <hr class="hrFieldBuffer" />
+                                    <br />*@
+                            </div>
+                        </div>
+
+                        @*TERM SHEET INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Term Sheet</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*TERM SHEET ISSUED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientTerm_Sheet_Issued">Term Sheet Issued </span>
+                                    @Html.TextBoxFor(m => m.clientData.Term_Sheet_Issued, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*TERM SHEET RECEIVED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientTerm_Sheet_Received">Term Sheet Received </span>
+                                    @Html.TextBoxFor(m => m.clientData.Term_Sheet_Received, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        @*UW LEVEL I INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Underwriting Level 1</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*DUE DILIGENCE DEPOSIT RECEIVED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientDue_Diligence_Deposit_Received">Due Diligence Deposit Received </span>
+                                    @Html.TextBoxFor(m => m.clientData.Due_Diligence_Deposit_Received, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>Due Diligence Deposit Received: </b> @Model.clientData.Due_Diligence_Deposit_Received
+                                    <hr class="hrFieldBuffer" />*@
+                                @*DUE DILIGENCE DEPOSIT RECEIVED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientUCC_Search">UCC Search </span>
+                                    @Html.TextBoxFor(m => m.clientData.UCC_Search, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>State UCC Searches Received: </b> @Model.clientData.UCC_Search
+                                    <hr class="hrFieldBuffer" />*@
+                                @*TAX GUARD REPORT*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientTax_Guard_Report">Tax Guard Report </span>
+                                    @Html.TextBoxFor(m => m.clientData.Tax_Guard_Report, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>Tax Guard Report: </b> @Model.clientData.Tax_Guard_Report
+                                    <hr class="hrFieldBuffer" />*@
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*TAX GUARD REPORT*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientFile_Received_by_UW">File Received by UW </span>
+                                    @Html.TextBoxFor(m => m.clientData.File_Received_by_UW, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>File Received by UW: </b> @Model.clientData.File_Received_by_UW
+                                    <hr class="hrFieldBuffer" />*@
+                                @*COUNTY SEARCHES RECEIVED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientFTL_Search_State_County">FTL Search State County </span>
+                                    @Html.TextBoxFor(m => m.clientData.FTL_Search_State_County, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>County Searches Received: </b> @Model.clientData.FTL_Search_State_County
+                                    <hr class="hrFieldBuffer" />*@
+                                @*INSURANCE VERIFICATION*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientIns_Verification_Transp_Staff_only">Insurance Verification </span>
+                                    @Html.TextBoxFor(m => m.clientData.Ins_Verification_Transp_Staff_only, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>Insurance Verification: </b> @Model.clientData.Ins_Verification_Transp_Staff_only
+                                <hr class="hrFieldBuffer" />
+                                <br />*@
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+                        @*START PASTE HERE*@
+
+                        @*UW LEVEL I INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Approval/Decision</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*HANDS FILE OVER FOR FIRST REVIEW*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientUW_Hands_over_for_First_Review">UW Hands Over File for First Review </span>
+                                    @Html.TextBoxFor(m => m.clientData.UW_Hands_over_for_First_Review, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>UW Hands over File to CO: </b> @Model.clientData.UW_Hands_over_for_First_Review
+                                    <hr class="hrFieldBuffer" />-->*@
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*APPROVAL DECISION*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientApproval_Decision">Approval Decision </span>
+                                    @Html.DropDownListFor(model => model.clientData.Approval_Decision, Model.ApprovalTypes, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+                                @*<b>Approval Decision: </b> @Model.clientData.Approval_Decision
+                                    <hr class="hrFieldBuffer" />*@
+                                <br />
+                            </div>
+                        </div>
+
+
+
+                        @*LEGAL DOCS INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Legal Docs</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*LEGAL DOCS ISSUED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientLegal_Docs_Issued">Legal Docs Issued </span>
+                                    @Html.TextBoxFor(m => m.clientData.Legal_Docs_Issued, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>Legal Docs Issued: </b> @Model.clientData.Legal_Docs_Issued
+                                    <hr class="hrFieldBuffer" />*@
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*LEGAL DOCS RECEIVED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientLegal_Docs_Received">Legal Docs Received </span>
+                                    @Html.TextBoxFor(m => m.clientData.Legal_Docs_Received, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>Legal Docs Received: </b> @Model.clientData.Legal_Docs_Received
+                                    <hr class="hrFieldBuffer" />*@
+                                <br />
+                            </div>
+                        </div>
+
+
+
+                        @*PORTFOLIO / AUDIT / VERIFICATION INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Portfolio / Audit / Verification</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*INITIAL FUNDING*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientInitial_Funding">Initial Funding </span>
+                                    @Html.TextBoxFor(m => m.clientData.Initial_Funding, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>Initial Funding Date: </b> @Model.clientData.Initial_Funding
+                                    <hr class="hrFieldBuffer" />*@
+                                @*FILE TO MANAGEMENT FOR REVIEW*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientFile_to_Mgmt_for_Review">File to Mgmt for Review </span>
+                                    @Html.TextBoxFor(m => m.clientData.File_to_Mgmt_for_Review, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>File to Mgmt for Review: </b> @Model.clientData.File_to_Mgmt_for_Review
+                                    <hr class="hrFieldBuffer" />*@
+                                @*ALL POST FUNDING TASKS COMPLETED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientAll_Post_Funding_Tasks_Completed">All Post Funding Tasks Completed </span>
+                                    @Html.TextBoxFor(m => m.clientData.All_Post_Funding_Tasks_Completed, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>All Post-Funding Tasks Received: </b> @Model.clientData.All_Post_Funding_Tasks_Completed
+                                    <hr class="hrFieldBuffer" />*@
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*FILE TO CLIENT SERVICES*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientFile_to_Client_Services">File to Client Services </span>
+                                    @Html.TextBoxFor(m => m.clientData.File_to_Client_Services, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>File to Client Services: </b> @Model.clientData.File_to_Client_Services
+                                <hr class="hrFieldBuffer" />*@
+                                @*MANAGEMENT COMPLETES POST FUNDING FILE REVIEW*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <span class="input-group-addon input-sm" id="LabelClientMgmt_Completes_Post_Funding_File_Review">Mgmt Completes Post Funding File Review </span>
+                                    @Html.TextBoxFor(m => m.clientData.Mgmt_Completes_Post_Funding_File_Review, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                                </div>
+                                @*<b>Mgmt Completes Post-Funding File Review: </b> @Model.clientData.Mgmt_Completes_Post_Funding_File_Review
+                                    <hr class="hrFieldBuffer" />*@
+                            </div>
+                        </div>
+
+
+
+                        @*METRICS*@
+                        @*<div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Metrics</h2>
+                            </div>
+                        </div>*@
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;">
+                                @*<b>UW Process: </b>*@
+                                @*UW_Hands_over_for_First_Review__c - File_Received_by_UW__c*@
+                                @{
+                                    @*DateTime uwHandsOverForFirstReview = Convert.ToDateTime(Model.clientData.UW_Hands_over_for_First_Review);
+                                    DateTime fileReceivedByUW = Convert.ToDateTime(Model.clientData.File_Received_by_UW);
+
+                                    TimeSpan uwProcess = uwHandsOverForFirstReview.Subtract(fileReceivedByUW);
+                                    @Html.Raw($"{uwProcess.TotalDays.ToString("0.##")} Days")*@
+                                }
+                                @*@*<hr class="hrFieldBuffer" />
+                                <b>Client Legal Doc Review: </b>*@
+                                @*@{
+                                    var x = Convert.ToInt32(Model.clientData.Legal_Docs_Received - Model.clientData.Legal_Docs_Issued) * 24;
+                                    @Html.Raw(x);
+                                    }*@
+                                @{
+                                    @*DateTime legalDocsReceived = Convert.ToDateTime(Model.clientData.Legal_Docs_Received);
+                                    DateTime legalDocsIssued = Convert.ToDateTime(Model.clientData.Legal_Docs_Issued);
+
+                                    TimeSpan legalDocsOut = legalDocsReceived.Subtract(legalDocsIssued);
+                                    @Html.Raw($"{legalDocsOut.TotalDays.ToString("0.##")} Days")*@
+                                }
+                                @*<hr class="hrFieldBuffer" />
+                                <b>Total Funding Timeline: </b>*@
+                                @*Initial_Funding__c - File_Received_by_UW__c*@
+                                @{
+                                    @*DateTime fileReceivedByUW2 = Convert.ToDateTime(Model.clientData.File_Received_by_UW);
+                                    DateTime initialFunding2 = Convert.ToDateTime(Model.clientData.Initial_Funding);
+
+                                    TimeSpan totalFundingTimeline = initialFunding2.Subtract(fileReceivedByUW2);
+                                    @Html.Raw($"{totalFundingTimeline.TotalDays.ToString("0.##")} Days")*@
+                                }
+                                @*<hr class="hrFieldBuffer" />
+                                <b>Completion of all Post-Funding Tasks: </b>*@
+                                @{
+                                    @*DateTime allPostFundingTasksCompleted = Convert.ToDateTime(Model.clientData.All_Post_Funding_Tasks_Completed);
+                                    DateTime initialFunding3 = Convert.ToDateTime(Model.clientData.Initial_Funding);
+
+                                    TimeSpan completionOfAllPostFundingTasks = allPostFundingTasksCompleted.Subtract(initialFunding3);
+                                    @Html.Raw($"{completionOfAllPostFundingTasks.TotalDays.ToString("0.##")} Days")*@
+                                }
+                                @*<hr class="hrFieldBuffer" />
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;">
+                                <b>Post-Funding UW Processing: </b>*@
+                                @{
+                                    @*DateTime fileToClientServices = Convert.ToDateTime(Model.clientData.File_to_Client_Services);
+                                    DateTime initialFunding = Convert.ToDateTime(Model.clientData.Initial_Funding);
+
+                                    TimeSpan postFundingUWProcessing = fileToClientServices.Subtract(initialFunding);
+                                    @Html.Raw($"{postFundingUWProcessing.TotalDays.ToString("0.##")} Days")*@
+                                }
+                                @*<hr class="hrFieldBuffer" />
+                                <b>Post-Funding CO Processing: </b>*@
+                                @{
+                                    @*DateTime fileToClientServices2 = Convert.ToDateTime(Model.clientData.File_to_Client_Services);
+                                    DateTime fileToMgmtForReview = Convert.ToDateTime(Model.clientData.File_to_Mgmt_for_Review);
+
+                                    TimeSpan postFundingCOProcessing = fileToMgmtForReview.Subtract(fileToClientServices2);
+                                    @Html.Raw($"{postFundingCOProcessing.TotalDays.ToString("0.##")} Days")*@
+                                }
+                                @*<hr class="hrFieldBuffer" />
+                                <b>Post-Funding Mgmt Review: </b>*@
+                                @{
+                                    @*DateTime mgmtCompletesPostFundingFile = Convert.ToDateTime(Model.clientData.Mgmt_Completes_Post_Funding_File_Review);
+                                    DateTime fileToMgmtForReview2 = Convert.ToDateTime(Model.clientData.File_to_Mgmt_for_Review);
+
+                                    TimeSpan postFundingMgmtReview = mgmtCompletesPostFundingFile.Subtract(fileToMgmtForReview2);
+                                    @Html.Raw($"{postFundingMgmtReview.TotalDays.ToString("0.##")} Days")*@
+                                }
+                                <hr class="hrFieldBuffer" />
+                            </div>
+                        </div>
+
+
+                        @*FILES INFO*@
+                        @*<div class="row">
+                                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                                    <h2 class="subHeadingTitle"><i class="fa fa-folder"></i> Files </h2>
+                                </div>
+                                <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                                    <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" name="btnUploadFile" id="btnUploadFile" data-toggle="modal" data-target="#modalUploadClientFiles"><i class="fa fa-plus"></i> Add Files</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12" style="padding:10px;">
+
+                                    @Html.Raw(ViewBag.ClientFiles)
+
+
+                                </div>
+                            </div>*@
+
+
+
+                        @*MAIL MERGE FILES INFO*@
+                        @*<div class="row">
+                                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                                    <h2 class="subHeadingTitle"><i class="fa fa-folder"></i> Mail Merge Files </h2>
+                                </div>
+                                <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12" style="padding:0px;">
+
+                                    @Html.Raw(ViewBag.MailMergeFiles)
+
+                                </div>
+                            </div>*@
+
+
+                    </div>
+                </div>
+
+
+                @*SIDE SECTION WE DON'T NEED*@
+                @*<div class="col-lg-5" style="padding:10px;height:100%;" align="left" id="rightScroll">
+
+                        <div class="container">
+
+
+
+                        </div>
+                    </div>*@
+            </div>
+
+
+
+                                    //END PASTE HERE
+
+
+
+                                    <div class="row">
+                                        <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                                            <button type="submit" class="btn btn-primary btn-md"><i class="fas fa-save"></i> &nbsp;Save Updates</button>
+                                            &nbsp;&nbsp;
+                                            <a class="btn btn-primary btn-md" href="@Url.Action("Edit", "Clients", new { id = Model.clientData.Id })" style="padding:5px;"><i class="fa fa-arrow-left"></i> Back to Details Screen</a>
+                                        </div>
+                                    </div>
+
+
+                                    }
+    </div>
+
+
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+        $('#fileUploadSuccess').hide(); 
+
+        var uploadSuccess = '@Request["uploadStatus"]';
+        if (uploadSuccess == "SUCCESS") {
+            console.log(uploadSuccess)
+            $('#fileUploadSuccess').show();
+            $('#fileUploadSuccess').delay(4000).fadeOut();
+        }
+
+        $("#files").change(function () {
+            console.log(this.files.length);
+            $("#uploadedFileNames").addClass("fileUploadFileDisplay");
+            $("#uploadedFileNames").append("<b>Files to Upload:</b><br>");
+            for (var i = 0; i < this.files.length; i++) {
+                //console.log(this.files[i].name);
+                $("#uploadedFileNames").append(this.files[i].name + "<br>");
+            }
+        });
+
+    });
+
+    $('#buttonMergeDocument').click(function () {
+        /* when the button in the form, display the entered values in the modal */
+        $('#lname').text($('#lastname').val());
+        $('#fname').text($('#firstname').val());
+    });
+
+    $('#btnEditNextScheduledCall').click(function () {
+        /* when the button in the form, display the entered values in the modal */
+        $('#lname').text($('#lastname').val());
+        $('#fname').text($('#firstname').val());
+    });
+
+    $(".refreshContacts").click(function () {
+
+        $(".refreshContacts").addClass("fa-spin");
+        setTimeout(function () {
+            $(".refreshContacts").removeClass("fa-spin");
+        }, 3000);
+        
+        
+    });
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/jQuery/jQueryValidation.js"></script>
+<script src="~/jQuery/jQuery_ClientFunctions.js"></script>
+<script src="~/jQuery/jQuery_ClientEditValidation.js"></script>
+<script src="~/jQuery/jQuery_GeneralValidation.js"></script>
+
+

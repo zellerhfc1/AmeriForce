@@ -1,0 +1,444 @@
+﻿@model IEnumerable<AmeriForce.Data.Client>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<link href="~/Content/ClientStyleSheet.css" rel="stylesheet" />
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StageName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StageSortOrder)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpectedRevenue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CloseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeadSource)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsClosed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ForecastCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ForecastCategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedById)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastModifiedById)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SystemModstamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastActivityDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastStageChangeDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FiscalYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FiscalQuarter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastAmountChangedHistoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastCloseDateChangedHistoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Legal_Docs_Issued)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Legal_Docs_Received)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Legal_Docs_Time_Out)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.External_Opportunity_ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AD_Credit_Review)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Delayed_Opportunity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.All_Post_Funding_Tasks_Completed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Approval_Decision)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Approval_Decision_Time_1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bankruptcy_Search)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BDO_Write_Up_Received)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client_Profile_Out)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client_Profile_In)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Corporate_Verification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Criminal_Background_Search)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.D_B_Prospect)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Due_Diligence_Deposit_Received)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.File_Received_by_UW)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.File_to_Client_Services)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.File_to_Mgmt_for_Review)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First_Response)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FTL_Search_State_County)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Initial_Funding)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ins_Verification_Transp_Staff_only)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Invoices_Rcd_Ready_to_Move_Fwd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Judgment_Search)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Litigation_Search)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lost_to_Competitor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mgmt_Completes_Post_Funding_File_Review)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pre_Approval_Biz_Hours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reason_Lost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Referral_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Referring_Company)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Referring_Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Searches_Requested)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Searches_Returned)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.STL_Search)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tax_Guard_Report)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Term_Sheet_Issued)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Term_Sheet_Received)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UCC_Search)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UW_Hands_over_for_First_Review)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NextActivityID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StageName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StageSortOrder)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpectedRevenue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CloseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LeadSource)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsClosed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ForecastCategory)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ForecastCategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedById)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModifiedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModifiedById)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SystemModstamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastActivityDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastStageChangeDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FiscalYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FiscalQuarter)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastAmountChangedHistoryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastCloseDateChangedHistoryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Legal_Docs_Issued)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Legal_Docs_Received)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Legal_Docs_Time_Out)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.External_Opportunity_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AD_Credit_Review)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Delayed_Opportunity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.All_Post_Funding_Tasks_Completed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approval_Decision)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approval_Decision_Time_1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bankruptcy_Search)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BDO_Write_Up_Received)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client_Profile_Out)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client_Profile_In)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Corporate_Verification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Criminal_Background_Search)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.D_B_Prospect)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Due_Diligence_Deposit_Received)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.File_Received_by_UW)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.File_to_Client_Services)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.File_to_Mgmt_for_Review)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.First_Response)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FTL_Search_State_County)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Initial_Funding)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ins_Verification_Transp_Staff_only)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Invoices_Rcd_Ready_to_Move_Fwd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Judgment_Search)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Litigation_Search)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lost_to_Competitor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mgmt_Completes_Post_Funding_File_Review)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pre_Approval_Biz_Hours)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reason_Lost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referral_Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referring_Company)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referring_Contact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Searches_Requested)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Searches_Returned)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.STL_Search)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tax_Guard_Report)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Term_Sheet_Issued)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Term_Sheet_Received)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UCC_Search)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UW_Hands_over_for_First_Review)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NextActivityID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

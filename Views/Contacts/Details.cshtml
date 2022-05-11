@@ -28,7 +28,7 @@
         </button>
     </div>
 
-    <div class="container mainPageBody" style="border:1px solid #333;background-color:#fff;">
+    <div class="container-fluid mainPageBody" style="border:1px solid #333;background-color:#fff;">
 
         @*Contact Detail Div*@
         <div class="row contactHeader">
@@ -63,7 +63,14 @@
                             </td>
                             <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
                                 <span class="overviewHeader dealAmount">
-                                    @Model.contact.FirstName.ToUpper() @Model.contact.LastName.ToUpper()
+                                    @{
+                                        if (Model.contact.FirstName != null)
+                                        {
+                                            @Html.Raw($"{Model.contact.FirstName.ToUpper()}")
+                                        }
+                                    } 
+
+                                    @Model.contact.LastName.ToUpper()
                                     @{ 
                                         if (Model.contact.Preferred_Name != "" && Model.contact.Preferred_Name != null)
                                         {
@@ -231,7 +238,13 @@
                              <b>Update Needed: </b> @Model.contact.Update_Needed
                             <br />
                             <hr class="hrFieldBuffer" />
-                            <i class="fa-solid fa-square-pen"></i><b>Update Needed (Date): </b> @Model.contact.Update_Needed_Date
+                            @{
+                                if (Model.contact.Update_Needed != "")
+                                {
+                                    <i class="fa-solid fa-square-pen"></i>
+                                }
+                            }
+                            <b>Update Needed (Date): </b> @Model.contact.Update_Needed_Date
                             <hr class="hrFieldBuffer" />
                             @{
                                 if (Model.contactDuplicates.Count > 0)
@@ -1508,34 +1521,43 @@
                     </div>
                     @*TASK TYPE *@
                     <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
-                        <span class="input-group-addon input-sm" id="LabelContactCallType">Call Type </span>
-                        <span class="input-group-addon requiredClass" id="IG_contactNextTask" name="IG_contactNextTask"></span>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-sm" id="LabelContactCallType">Call Type </span>
+                            <span class="input-group-text requiredClass" id="IG_contactNextTask" name="IG_contactNextTask"></span>
+                        </div>
                         @Html.DropDownListFor(model => Model.contactNextTask.Type, Model.TaskList, new { @class = "form-control input-sm", @maxlength = 5 })
                     </div>
 
 
                     @*TASK OWNER *@
                     <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
-                            <div class="input-group-prepend">
+                        <div class="input-group-prepend">
                             <span class="input-group-text input-sm" id="LabelContactTaskOwner">Task Owner </span>
                             <span class="input-group-text requiredClass" id="IG_contactNextTask_OwnerId" name="IG_contactNextTask_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
-                            </div>
+                        </div>
                         @Html.DropDownListFor(model => Model.contactNextTask.OwnerId, Model.ActiveUserList, new { @class = "form-control input-sm", @maxlength = 5 })
                     </div>
-                    
-                    
+
+
                     @*TASK DUE DATE *@
                     <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
-                        <span class="input-group-addon input-sm" id="LabelNextTaskActivityDate">Complete By: </span>
-                        <span class="input-group-addon requiredClass" id="IG_contactNextTask_ActivityDate" name="IG_contactNextTask_ActivityDate"></span>
-                        <input type="text" id="contactNextTask_ActivityDate" name="contactNextTask_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-sm" id="LabelNextTaskActivityDate">Complete By: </span>
+                            <span class="input-group-text requiredClass" id="IG_contactNextTask_ActivityDate" name="IG_contactNextTask_ActivityDate"></span>
+                        </div>
+                        <input type="text" id="contactNextTask_ActivityDate" name="contactNextTask_ActivityDate" value="@Model.contactNextTask.ActivityDate"
+                                data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" 
+                                maxlength="50" />
                     </div>
 
                     @*TASK nOTES *@
                     <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
-                        <span class="input-group-addon input-sm" id="LabelNextTaskDescription">Notes </span>
-                        <span class="input-group-addon requiredClass" id="IG_contactNextTask_Description" name="IG_contactNextTask_Description"></span>
-                        <textarea rows="50" style="height:150px;" id="contactNextTask_Description" name="contactNextTask_Description" class="form-control input-lg clientEntryTerms" maxlength="5000"></textarea>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-sm" id="LabelNextTaskDescription">Notes </span>
+                            <span class="input-group-text requiredClass" id="IG_contactNextTask_Description" name="IG_contactNextTask_Description"></span>
+                        </div>
+                        <textarea rows="50" style="height:150px;" id="contactNextTask_Description" name="contactNextTask_Description" 
+                        class="form-control input-lg clientEntryTerms" maxlength="5000">@Model.contactNextTask.Description</textarea>
                     </div>
 
                 </div>

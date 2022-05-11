@@ -57,88 +57,77 @@ namespace AmeriForce.Helpers
         }
 
 
-        //public IEnumerable<SelectListItem> GetOwnerDropdown()
-        //{
-        //    // GET COMPANIES LIST
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetOwnerDropdown()
+        {
+            // GET COMPANIES LIST
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var owners = _context.Users.Where(u => u.IsActive == true && (u.Department == "Underwriting" || u.Department == "Business Development")).OrderBy(l => l.FirstName);
 
-        //        var owners = db.Users.Where(u => u.IsActive == true && (u.Department == "Underwriting" || u.Department == "Business Development")).OrderBy(l => l.FirstName);
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
+                foreach (var owner in owners)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{owner.FirstName} {owner.LastName}";
+                    item.Value = owner.Id;
+                    sList.Add(item);
+                }
+                return sList;
 
-        //        foreach (var owner in owners)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{owner.FirstName} {owner.LastName}";
-        //            item.Value = owner.Id;
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+        }
 
 
-        //public IEnumerable<SelectListItem> GetClientStages()
-        //{
-        //    // GET CLIENT STAGES LIST
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetClientStages()
+        {
+            // GET CLIENT STAGES LIST
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var clientStages = _context.ClientStages.OrderBy(c => c.Name).ToList();
 
-        //        var clientStages = db.ClientStages.OrderBy(c => c.Name).ToList();
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var clientStage in clientStages)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{clientStage.Name}";
-        //            item.Value = $"{clientStage.Name}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var clientStage in clientStages)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{clientStage.Name}";
+                    item.Value = $"{clientStage.Name}";
+                    sList.Add(item);
+                }
+                return sList;
+        }
 
 
-        //public IEnumerable<SelectListItem> GetContactListByCompany(string companyID)
-        //{
-        //    // GET CONTACTS LIST BY COMPANY
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetContactListByCompany(string companyID)
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var contacts = _context.Contacts.Where(c => c.AccountId == companyID).ToList();
 
-        //        var contacts = db.Contacts.Where(c => c.AccountId == companyID).ToList();
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var contact in contacts)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{contact.FirstName} {contact.LastName}";
-        //            item.Value = $"{contact.Id}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var contact in contacts)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{contact.FirstName} {contact.LastName}";
+                    item.Value = $"{contact.Id}";
+                    sList.Add(item);
+                }
+                return sList;
+        }
 
 
         public IEnumerable<SelectListItem> GetContactEmailListByContactId(string contactID)
@@ -165,32 +154,28 @@ namespace AmeriForce.Helpers
         }
 
 
-        //public IEnumerable<SelectListItem> GetBDOList()
-        //{
-        //    // GET CONTACTS LIST BY COMPANY
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetBDOList()
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var users = _context.Users.Where(c => c.Department == "BDO" && c.IsActive == true).OrderBy(c => c.FirstName);
 
-        //        var users = db.Users.Where(c => c.Department == "BDO" && c.IsActive == true).OrderBy(c => c.FirstName);
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var user in users)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{user.FirstName} {user.LastName}";
-        //            item.Value = $"{user.Id}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var user in users)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{user.FirstName} {user.LastName}";
+                    item.Value = $"{user.Id}";
+                    sList.Add(item);
+                }
+                return sList;
+        }
 
 
         public IEnumerable<SelectListItem> GetStateList()
@@ -289,32 +274,28 @@ namespace AmeriForce.Helpers
         }
 
 
-        //public IEnumerable<SelectListItem> GetReferralTypes()
-        //{
-        //    // GET CONTACTS LIST BY COMPANY
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetReferralTypes()
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var referralTypes = _context.LOV_ReferralType.OrderBy(c => c.ReferralType);
 
-        //        var referralTypes = db.LOV_ReferralTypes.OrderBy(c => c.ReferralType);
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var referral in referralTypes)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{referral.ReferralType}";
-        //            item.Value = $"{referral.ReferralType}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var referral in referralTypes)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{referral.ReferralType}";
+                    item.Value = $"{referral.ReferralType}";
+                    sList.Add(item);
+                }
+                return sList;
+        }
 
 
         //public IEnumerable<SelectListItem> GetClientStatuses()
@@ -449,123 +430,111 @@ namespace AmeriForce.Helpers
 
 
 
-        //public IEnumerable<SelectListItem> GetRelationshipStatusList(string selectedOption)
-        //{
-        //    // GET LIST OF POTENTIAL RELATIONSHIP STATUSES
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetRelationshipStatusList(string selectedOption = "")
+        {
+            // GET LIST OF POTENTIAL RELATIONSHIP STATUSES
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var relationshipStatues = _context.LOV_RelationshipStatuses.OrderBy(t => t.Status).ToList();
 
-        //        var relationshipStatues = db.LOV_RelationshipStatuses.OrderBy(t => t.Status).ToList();
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var relationshipStatus in relationshipStatues)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{relationshipStatus.Status}";
-        //            item.Value = $"{relationshipStatus.Status}";
-        //            if (item.Value == selectedOption)
-        //            {
-        //                item.Selected = true;
-        //            }
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var relationshipStatus in relationshipStatues)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{relationshipStatus.Status}";
+                    item.Value = $"{relationshipStatus.Status}";
+                    if (item.Value == selectedOption)
+                    {
+                        item.Selected = true;
+                    }
+                    sList.Add(item);
+                }
+                return sList;
+            
+        }
 
 
 
-        //public IEnumerable<SelectListItem> GetTagGradeSortList()
-        //{
-        //    // GET LIST OF TAG/GRADE/SORT STATUSES
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetTagGradeSortList()
+        {
+            // GET LIST OF TAG/GRADE/SORT STATUSES
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var tagGradeSorts = _context.LOV_TagGradeSorts.OrderBy(t => t.Grade).ToList();
 
-        //        var tagGradeSorts = db.LOV_TagGradeSorts.OrderBy(t => t.Grade).ToList();
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var tagGradeSort in tagGradeSorts)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{tagGradeSort.Grade} - {tagGradeSort.Description}";
-        //            item.Value = $"{tagGradeSort.Grade}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var tagGradeSort in tagGradeSorts)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{tagGradeSort.Grade} - {tagGradeSort.Description}";
+                    item.Value = $"{tagGradeSort.Grade}";
+                    sList.Add(item);
+                }
+                return sList;
+            
+        }
 
 
 
-        //public IEnumerable<SelectListItem> GetUpdateNeededList()
-        //{
-        //    // GET LIST OF UPDATE NEEDED ITEMS
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetUpdateNeededList()
+        {
+            // GET LIST OF UPDATE NEEDED ITEMS
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var updatesNeeded = _context.LOV_UpdateNeededs.OrderBy(t => t.UpdateField).ToList();
 
-        //        var updatesNeeded = db.LOV_UpdateNeededs.OrderBy(t => t.UpdateField).ToList();
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var updateNeeded in updatesNeeded)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{updateNeeded.UpdateField}";
-        //            item.Value = $"{updateNeeded.UpdateField}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var updateNeeded in updatesNeeded)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{updateNeeded.UpdateField}";
+                    item.Value = $"{updateNeeded.UpdateField}";
+                    sList.Add(item);
+                }
+                return sList;
+            
+        }
 
 
 
-        //public IEnumerable<SelectListItem> GetMailingLists()
-        //{
-        //    // GET LIST OF MAILING LISTS
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetMailingLists()
+        {
+            // GET LIST OF MAILING LISTS
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    using (var db = new ApplicationDbContext())
-        //    {
+                var mailingLists = _context.LOV_MailingLists.OrderBy(t => t.Name).ToList();
 
-        //        var mailingLists = db.LOV_MailingLists.OrderBy(t => t.Name).ToList();
+                var defaultItem = new SelectListItem();
+                defaultItem.Text = "";
+                defaultItem.Value = "";
+                sList.Add(defaultItem);
 
-        //        var defaultItem = new SelectListItem();
-        //        defaultItem.Text = "";
-        //        defaultItem.Value = "";
-        //        sList.Add(defaultItem);
-
-        //        foreach (var mailingList in mailingLists)
-        //        {
-        //            item = new SelectListItem();
-        //            item.Text = $"{mailingList.Name} - {mailingList.Description}";
-        //            item.Value = $"{mailingList.Name}";
-        //            sList.Add(item);
-        //        }
-        //        return sList;
-        //    }
-        //}
+                foreach (var mailingList in mailingLists)
+                {
+                    item = new SelectListItem();
+                    item.Text = $"{mailingList.Name}";
+                    item.Value = $"{mailingList.Name}";
+                    sList.Add(item);
+                }
+                return sList;
+            
+        }
 
 
 

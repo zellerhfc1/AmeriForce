@@ -1,10 +1,660 @@
-﻿@model AmeriForce.Data.Contact
+﻿@model AmeriForce.Models.Contacts.ContactCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<link href="~/Content/ContactStyleSheet.css" rel="stylesheet" />
+
+<nav aria-label="breadcrumb" align="right">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Contacts" , new { id=999 })">Contacts</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Create New Contact</li>
+    </ol>
+</nav>
+
+
+
+<div style="border:0px solid #333;">
+    <div class="container-fluid mainPageBody" style="border:1px solid #333;background-color:#fff;">
+
+        @*Contact Detail Div*@
+        <div class="row contactHeader">
+            <div class="col-lg-5" align="left">
+                <div style="border:0px solid black;">
+                    <table align="left">
+                        <tr>
+                            <td valign="middle" style="border:1px solid #fff;padding:10px;">
+                                <i class="fa fa-file-signature" style="font-size:40px;"></i>
+                            </td>
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
+                                <span class="overviewHeader dealAmount">
+                                    Create New Contact
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-6" align="left">
+                Use this screen to create a new Contact.
+            </div>
+            <div class="col-lg-1" align="center">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                <a href='@Url.Action("Index", "Contacts", new { id = 999 })' class="btn btn-sm btn-primary"> <i class="far fa-arrow-alt-circle-left"></i> Back To Content List</a>
+            </div>
+        </div>
+
+
+        @using (Html.BeginForm("Create", "Contacts", FormMethod.Post, new { @id = "contactCreateForm", @name = "contactCreateForm", @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-lg-9" style="padding:10px;" align="left">
+                    <div class="container-fluid">
+                        @*CONTACT INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle"><i class="fas fa-user" aria-hidden="true"></i> Contact Information</h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+
+                                @*CONTACT FIRST NAME*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactFirstName">First Name </span>
+                                    </div>
+                                    <input type="text" id="contactData_FirstName" name="contactData_FirstName" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+                                
+                                @*CONTACT LAST NAME*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelClientLastName">Last Name </span>
+                                        <span class="input-group-text requiredClass" id="IG_contactData_LastName"></span>
+                                    </div>
+                                    <input type="text" id="contactData_LastName" name="contactData_LastName" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*CONTACT PREFERRED NAME*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelClientPreferredName">Preferred Name </span>
+                                        <span class="input-group-text requiredClass" id="IG_contactData_PreferredName"></span>
+                                    </div>
+                                    <input type="text" id="contactData_PreferredName" name="contactData_PreferredName" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*CONTACT TITLE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelClientTitle">Title </span>
+                                    </div>
+                                    <input type="text" id="contactData_Title" name="contactData_Title" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*CONTACT DEPARTMENT*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactDepartment">Department </span>
+                                    </div>
+                                    <input type="text" id="contactData_Department" name="contactData_Department" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*CONTACT OWNER*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactBDO">BDO </span>
+                                        <span class="input-group-text requiredClass" id="IG_contactData_OwnerId" name="IG_contactData_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.contactData.OwnerId, Model.BDOList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+                                @*RELATIONSHIP STATUS*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelRelationshipStatus">Relationship Status </span>
+                                        <span class="input-group-text requiredClass" id="IG_contactData_Relationship_Status" name="IG_contactData_RelationshipStatus"></span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.contactData.Relationship_Status, Model.RelationshipStatusList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+                                @*TAG/GRADE/SORT*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelTagGradeSort">Tag/Grade/Sort </span>
+                                        <span class="input-group-text requiredClass" id="IG_contactData_Rating_Sort" name="IG_contactData_Rating_Sort"></span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.contactData.Rating_Sort, Model.TagGradeSortList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+                                @*UPDATE NEEDED*@
+                                @*<div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <span class="input-group-text input-sm" id="LabelUpdateNeeded">Update Needed </span>
+                                    <span class="input-group-text requiredClass" id="IG_contactData_Update_Needed" name="IG_contactData_Update_Needed"><i class="fas fa-user" aria-hidden="true"></i></span>
+                                    @Html.ListBoxFor(model => model.contactData.Update_Needed, Model.UpdateNeededList, new { @class = "form-control", @style="height:75px;" })
+                                    </div>*@
+
+                                @*UPDATE NEEDED*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelUpdateNeeded">Update Needed </span>
+                                        @*<span class="input-group-text requiredClass" id="IG_contactData_Update_Needed" name="IG_contactData_Update_Needed"><i class="fas fa-user" aria-hidden="true"></i></span>*@
+                                    </div>
+                                    @Html.ListBoxFor(model => model.UpdateNeededIntermediate, Model.UpdateNeededList, new { @class = "form-control", @style = "height:75px;" })
+                                </div>
+
+                                @*UPDATE NEEDED DATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelUpdateNeededDate">Update Needed Date </span>
+                                    </div>
+                                    <input type="text" id="contactData_Update_Needed_Date" name="contactData_Update_Needed_Date" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+
+                                @*EMAIL OPT OUT*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactEmailOptOut">Email Opt Out </span>
+                                        @*<span class="input-group-text requiredClass" id="IG_contactData_HasOptedOutOfEmail"></span>*@
+                                    </div>
+                                    <span style="padding:5px;padding-left:10px;">
+                                    @Html.CheckBoxFor(model => model.contactData.HasOptedOutOfEmail) &nbsp;&nbsp;(Click if yes/Unclick if no)
+                                    </span>
+                                </div>
+
+                                @*EMAIL OPT OUT DATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelEmailOptOutDate">Email Opt Out Date </span>
+                                    </div>
+                                    <input type="text" id="contactData_EmailOptOutDate" name="contactData_EmailOptOutDate" data-provide="datepicker" class="form-control input-lg contactEntryTerms dateDropDown" maxlength="50" />
+                                </div>
+
+                                @*MAILING LISTS*@
+                                @*<div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <span class="input-group-text input-sm" id="LabelMailingLists">Mailing Lists </span>
+                                    <span class="input-group-text requiredClass" id="IG_contactData_Mailing_Lists" name="IG_contactData_Mailing_Lists"><i class="fas fa-user" aria-hidden="true"></i></span>
+                                    @Html.ListBoxFor(model => model.contactData.Mailing_Lists, Model.MailingLists, new { @class = "form-control", @style = "height:100px;", @multiple="multiple" })
+                                    </div>*@
+
+                                @*MAILING LISTS*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelMailingLists">Mailing Lists (Test)</span>
+                                        @*<span class="input-group-text requiredClass" id="IG_contactData_Mailing_Lists" name="IG_contactData_Mailing_Lists"><i class="fas fa-user" aria-hidden="true"></i></span>*@
+                                    </div>
+                                    @Html.ListBoxFor(model => model.MailingListIntermediate, Model.MailingLists, new { @class = "form-control", @style = "height:100px;", @multiple = "multiple" })
+                                </div>
+
+                                @*LINKED IN PROFILE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelLinkedInProfile">LinkedIn Profile (without "https:") </span>
+                                    </div>
+                                    <input type="text" id="contactData_LinkedIn_Profile" name="contactData_LinkedIn_Profile" class="form-control input-lg contactEntryTerms" maxlength="100" />
+                                </div>
+
+                                @*CONTACT EMAIL*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactEmail">Email </span>
+                                        <span class="input-group-text" id="IG_contactData_Email" name="IG_contactData_Email"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                                    </div>
+                                    <input type="text" id="contactData_Email" name="contactData_Email" class="form-control input-lg contactEntryTerms emailAddress" maxlength="50" />
+                                </div>
+
+                                @*CONTACT ALT EMAIL*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactAlt_Email">Alternate Email </span>
+                                        <span class="input-group-text" id="IG_contactData_Alt_Email" name="IG_contactData_Alt_Email"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                                    </div>
+                                    <input type="text" id="contactData_Alt_Email" name="contactData_Alt_Email" class="form-control input-lg contactEntryTerms emailAddress" maxlength="50" />
+                                </div>
+
+                                @*CONTACT DIRECT LINE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactDirectLine">Direct Line </span>
+                                        <span class="input-group-text" id="IG_contactData_Direct_Line" name="IG_contactData_Direct_Line"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                                    </div>
+                                    <input type="text" id="contactData_Direct_Line" name="contactData_Direct_Line" class="form-control input-lg contactEntryTerms phone" maxlength="12" />
+                                </div>
+
+                                @*CONTACT BUSINESS PHONE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactPhone">Business Phone </span>
+                                        <span class="input-group-text" id="IG_contactData_Phone" name="IG_contactData_Phone"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                                    </div>
+                                    <input type="text" id="contactData_Phone" name="contactData_Phone" class="form-control input-lg contactEntryTerms phone" maxlength="12" />
+                                </div>
+
+                                @*CONTACT MOBILE PHONE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactMobilePhone">Mobile Phone </span>
+                                        <span class="input-group-text" id="IG_contactData_MobilPhone" name="IG_contactData_MobilePhone"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                                    </div>
+                                    <input type="text" id="contactData_MobilePhone" name="contactData_MobilePhone" class="form-control input-lg contactEntryTerms phone" maxlength="12" />
+                                </div>
+
+                                @*CONTACT HOME PHONE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelClientHomePHone">Home Phone </span>
+                                        <span class="input-group-text" id="IG_clientData_HomePhone" name="IG_clientData_HomePhone"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                                    </div>
+                                    <input type="text" id="contactData_HomePhone" name="contactData_HomePhone" class="form-control input-lg contactEntryTerms phone" maxlength="12" />
+                                </div>
+
+                                @*LAST REASSIGNED DATE*@
+                                @*<div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <span class="input-group-text input-sm" id="LabelReassigned_Date">Reassigned Date </span>
+                                    <input type="text" id="contactData_Reassigned_Date" name="contactData_Reassigned_Date" data-provide="datepicker" class="form-control input-lg contactEntryTerms dateDropDown" maxlength="50" />
+                                    </div>*@
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                @*CONTACT INITIAL MEETING DETAILS*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelClientInitialMeetingDetails">Contact Details </span>
+                                        <span class="input-group-text requiredClass" id="IG_contactData_Initial_Meeting_Details"></span>
+                                        @*<input type="text" id="contactData_Initial_Meeting_Details" name="contactData_Initial_Meeting_Details" class="form-control input-lg clientEntryTerms" maxlength="50" />*@
+                                    </div>
+                                    <textarea rows="50" style="height:150px;" id="contactData_Initial_Meeting_Details" name="contactData_Initial_Meeting_Details" class="form-control input-lg contactEntryTerms" maxlength="500"></textarea>
+                                </div>
+
+                                <br />
+
+                            </div>
+                        </div>
+
+
+                        @*REFERRAL INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle"><i class="fas fa-building" aria-hidden="true"></i> Company Information</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+
+                                @*COMPANY NAME - Use this just in case the contact exists.  If if does, it will select a Contact ID to update the contact.  If not, it will use the text value.*@
+                                @*<div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <span class="input-group-text input-sm" id="LabelCompanyName">Company Name </span>
+                                    <span class="input-group-text requiredClass" id="IG_CompanyName"></span>
+                                    <input type="text" id="CompanyName" name="CompanyName" class="form-control input-lg clientEntryTerms" maxlength="50" />
+                                    </div>*@
+
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelCompanyName">Company Name</span>
+                                        <span class="input-group-text requiredClass" id="IG_CompanyName" name="IG_CompanyName"></span>
+                                    </div>
+                                    <input type="text" id="CompanyName" name="CompanyName" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                    @*<span class="input-group-text input-sm btn btn-primary btn-sm" name="refreshContacts" id="refreshContacts" type="button">Refresh</span>*@
+                                    <input type="hidden" name="CompanyId" id="CompanyId" value="" />
+                                </div>
+
+                                @*COMPANY BUSINESS DESCRIPTION*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelClientBusinessDescription">Business Description </span>
+                                    </div>
+                                    <input type="text" id="companyData_Description" name="companyData_Description" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*OWNERSHIP PERCENTAGE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactOwnershipPercentage">Ownership % </span>
+                                        @*<span class="input-group-text requiredClass" id="IG_contactData_OwnershipPercentage"></span>*@
+                                    </div>
+                                    <input type="text" id="contactData_OwnershipPercentage" name="contactData_OwnershipPercentage" class="form-control input-lg contactEntryTerms" maxlength="50" />
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+
+                                @*COMPANY SIC CODE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelClientSICCode">SIC Code </span>
+                                    </div>
+                                    <input type="text" id="companyData_SICCode" name="companyData_SICCode" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*COMPANY CHARTER STATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelCompanyCharterState">Charter State </span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.companyData.CharterState, Model.StateList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+                                @*GUARANTOR*@
+                                <div class="input-group input-group-sm" style="margin-bottom:0px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactGuarantor">Guarantor? </span>
+                                    </div>
+                                    @*<span class="input-group-text requiredClass" id="IG_contactData_Guarantor"></span>*@
+                                    <span style="padding:5px;padding-left:10px;">
+                                        @Html.CheckBoxFor(model => model.contactData.Guarantor) &nbsp;&nbsp; (Click if yes/Unclick if no)
+                                    </span>
+                                </div>
+
+                                <br />
+
+                            </div>
+
+                        </div>
+
+
+
+                        @*ADDRESS INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle"><i class="fa fa-map-pin"></i> Address Information</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+                                <b>Mailing</b>
+                                <br />
+                                @*MAILING STREET*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactMailingAddress">Street </span>
+                                    </div>
+                                    <input type="text" id="contactData_MailingStreet" name="contactData_MailingStreet" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*MAILING SUITE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactMailingSuite">Suite, Apt #, etc. </span>
+                                    </div>
+                                    <input type="text" id="contactData_MailingSuite" name="contactData_MailingSuite" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*MAILING CITY*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactMailingCity">City </span>
+                                    </div>
+                                    <input type="text" id="contactData_MailingCity" name="contactData_MailingCity" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*MAILING STATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactMailingState">State </span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.contactData.MailingState, Model.StateList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+                                @*MAILING ZIPCODE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactMailingCity">ZipCode </span>
+                                    </div>
+                                    <input type="text" id="contactData_MailingPostalCode" name="contactData_MailingPostalCode" class="form-control input-lg contactEntryTerms zip" maxlength="5" />
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+                                <b>Physical</b>
+                                <br />
+                                @*PHYSICAL STREET*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactOtherAddress">Street </span>
+                                    </div>
+                                    <input type="text" id="contactData_OtherStreet" name="contactData_OtherStreet" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*PHYSICAL SUITE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactOtherSuite">Suite, Apt #, etc. </span>
+                                    </div>
+                                    <input type="text" id="contactData_OtherSuite" name="contactData_OtherSuite" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*PHYSICAL CITY*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactOtherCity">City </span>
+                                    </div>
+                                    <input type="text" id="contactData_OtherCity" name="contactData_OtherCity" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                @*PHYSICAL STATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactOtherState">State </span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.contactData.OtherState, Model.StateList, new { @class = "form-control", @maxlength = 5 })
+                                </div>
+
+                                @*PHYSICAL ZIPCODE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelContactOtherCity">ZipCode </span>
+                                    </div>
+                                    <input type="text" id="contactData_OtherPostalCode" name="contactData_OtherPostalCode" class="form-control input-lg contactEntryTerms zip" maxlength="5" />
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                        @*REFERRAL SOURCE INFORMATION*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Referral Source</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+                                @*// Referral_Date
+                                    // Referral_Partner_Agmnt_Date
+                                    //Referral_Partner_Agmnt_Details
+                                    //Referring_Company
+                                    //Referring_Contact*@
+
+                                @*COMPANY NAME - Use this just in case the contact exists.  If if does, it will select a Contact ID to update the contact.  If not, it will use the text value.*@
+                                @*<div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <span class="input-group-text input-sm" id="LabelCompanyName">Company Name </span>
+                                    <span class="input-group-text requiredClass" id="IG_CompanyName"></span>
+                                    <input type="text" id="CompanyName" name="CompanyName" class="form-control input-lg clientEntryTerms" maxlength="50" />
+                                    </div>*@
+
+                                @*REFERRING COMPANY*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelReferring_Company">Referring Company </span>
+                                    </div>
+                                    <input type="text" id="contactData_Referring_Company" name="contactData_Referring_Company" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                    <input type="hidden" name="ReferringCompanyId" id="ReferringCompanyId" value="" />
+                                </div>
+
+                                @*REFERRING CONTACT*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelReferring_Contact">Referring Contact </span>
+                                        <span class="input-group-text input-sm btn btn-primary btn-sm" name="refreshContacts" id="refreshContacts"><i class="fa fa-redo" aria-hidden="true"></i></span>
+                                    </div>
+                                    <input type="text" id="contactData_Referring_Contact" name="contactData_Referring_Contact" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                    <input type="hidden" name="ReferringContactId" id="ReferringContactId" value="" />
+                                </div>
+
+                                @*REFERRAL DATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelReferralDate">Referral Date </span>
+                                    </div>
+                                    <input type="text" id="contactData_Referral_Date" name="contactData_Referral_Date" data-provide="datepicker" class="form-control input-lg contactEntryTerms dateDropDown" maxlength="50" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6" style="padding:5px;" align="left">
+                                @*REFERRAL PARTNER AGREEMENT DATE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelReferralPartnerAgreementDate">Agreement Date </span>
+                                    </div>
+                                    <input type="text" id="contactData_Referral_Partner_Agmnt_Date" name="contactData_Referral_Partner_Agmnt_Date" data-provide="datepicker" class="form-control input-lg contactEntryTerms dateDropDown" maxlength="50" />
+                                </div>
+
+                                @*REFERRAL PARTNER AGREEMENT DETAILS*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelReferral_Partner_Agreement_Details">Agreement Details </span>
+                                    </div>
+                                    <input type="text" id="contactData_Referral_Partner_Agreement_Details" name="contactData_Referral_Partner_Agreement_Details" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                </div>
+
+                                <br />
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="col-lg-3" style="padding:10px;height:100%;" align="left" id="rightScroll">
+                    <div class="container-fluid">
+                        @*ACTIVITY INFO*@
+                        <div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Next Activity</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            @*TASK TYPE *@
+                            <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text input-sm" id="LabelCallType">Call Type </span>
+                                    <span class="input-group-text requiredClass" id="IG_taskData_Type" name="IG_taskData_Type"></span>
+                                </div>
+                                @Html.DropDownListFor(model => Model.taskData.Type, Model.TaskList, new { @class = "form-control input-sm", @maxlength = 5 })
+                            </div>
+
+                            @*TASK OWNER *@
+                            <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text input-sm" id="LabelTaskOwner">Task Owner </span>
+                                    <span class="input-group-text requiredClass" id="IG_taskData_OwnerId" name="IG_taskData_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                                </div>
+                                @Html.DropDownListFor(model => Model.taskData.OwnerId, Model.ActiveUserList, new { @class = "form-control input-sm", @maxlength = 5 })
+                            </div>
+
+                            @*TASK DUE DATE *@
+                            <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text input-sm" id="LabelTaskActivityDate">Task Date </span>
+                                    <span class="input-group-text requiredClass" id="IG_taskData_ActivityDate" name="IG_taskData_ActivityDate"></span>
+                                </div>
+                                <input type="text" id="taskData_ActivityDate" name="taskData_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
+                            </div>
+
+                            @*TASK nOTES *@
+                            <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text input-sm" id="LabelTaskDescription">Notes </span>
+                                    <span class="input-group-text requiredClass" id="IG_taskData_Description" name="IG_taskData_Description"></span>
+                                </div>
+                                <textarea rows="50" style="height:150px;" id="taskData_Description" name="taskData_Description" class="form-control input-lg clientEntryTerms" maxlength="50"></textarea>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;" align="left">
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="submit" value="Create" class="btn btn-primary btn-lg" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        }
 
 
 
@@ -16,362 +666,73 @@
 
 
 
+        <div class="modal fade panel-primary" id="modalAddClientContact" tabindex="-1" role="dialog" aria-labelledby="modalAddClientContact">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header overviewHeaderNormal">
+                        <i class="fa fa-credit-card"></i> Update Client Contacts
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped table-hover table-condensed">
+                            <thead>
+                            <tbody>
+                                <tr>
+                                    <td class="rightTextAlign" style="width:25%;">Facility Name:</td>
+                                    <td class="leftTextAlign"><input type="text" value="" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="rightTextAlign">Facility Type:</td>
+                                    <td class="leftTextAlign">
+                                        <select>
+                                            <option>-- Select --</option>
+                                            <option>Revolving</option>
+                                            <option>Term</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="rightTextAlign">Facility Categories:</td>
+                                    <td class="leftTextAlign">
+                                        <input type="checkbox" id="vehicle1" name="vehicle1" value="AR">
+                                        <label for="vehicle1"> A/R</label><br>
+                                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                        <label for="vehicle1"> Inventory</label><br>
+                                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                        <label for="vehicle1"> Real Estate</label><br>
+                                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                        <label for="vehicle1"> M & E</label><br>
+                                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                        <label for="vehicle1"> Brokerage</label><br>
+                                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                        <label for="vehicle1"> Other</label><br>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
+                    </div>
+                    <div class="modal-footer leftTextAlign">
+                        <button type="button" class="btn btn-primary">Add Facility</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-
-
-
-
-
-
-
-
-
-
-<h1>Create</h1>
-
-<h4>Contact</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountId" class="control-label"></label>
-                <input asp-for="AccountId" class="form-control" />
-                <span asp-validation-for="AccountId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Salutation" class="control-label"></label>
-                <input asp-for="Salutation" class="form-control" />
-                <span asp-validation-for="Salutation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiddleName" class="control-label"></label>
-                <input asp-for="MiddleName" class="form-control" />
-                <span asp-validation-for="MiddleName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OtherStreet" class="control-label"></label>
-                <input asp-for="OtherStreet" class="form-control" />
-                <span asp-validation-for="OtherStreet" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OtherCity" class="control-label"></label>
-                <input asp-for="OtherCity" class="form-control" />
-                <span asp-validation-for="OtherCity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OtherState" class="control-label"></label>
-                <input asp-for="OtherState" class="form-control" />
-                <span asp-validation-for="OtherState" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OtherPostalCode" class="control-label"></label>
-                <input asp-for="OtherPostalCode" class="form-control" />
-                <span asp-validation-for="OtherPostalCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OtherCountry" class="control-label"></label>
-                <input asp-for="OtherCountry" class="form-control" />
-                <span asp-validation-for="OtherCountry" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MailingStreet" class="control-label"></label>
-                <input asp-for="MailingStreet" class="form-control" />
-                <span asp-validation-for="MailingStreet" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MailingCity" class="control-label"></label>
-                <input asp-for="MailingCity" class="form-control" />
-                <span asp-validation-for="MailingCity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MailingState" class="control-label"></label>
-                <input asp-for="MailingState" class="form-control" />
-                <span asp-validation-for="MailingState" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MailingPostalCode" class="control-label"></label>
-                <input asp-for="MailingPostalCode" class="form-control" />
-                <span asp-validation-for="MailingPostalCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MailingCountry" class="control-label"></label>
-                <input asp-for="MailingCountry" class="form-control" />
-                <span asp-validation-for="MailingCountry" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fax" class="control-label"></label>
-                <input asp-for="Fax" class="form-control" />
-                <span asp-validation-for="Fax" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MobilePhone" class="control-label"></label>
-                <input asp-for="MobilePhone" class="form-control" />
-                <span asp-validation-for="MobilePhone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HomePhone" class="control-label"></label>
-                <input asp-for="HomePhone" class="form-control" />
-                <span asp-validation-for="HomePhone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Department" class="control-label"></label>
-                <input asp-for="Department" class="form-control" />
-                <span asp-validation-for="Department" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AssistantName" class="control-label"></label>
-                <input asp-for="AssistantName" class="form-control" />
-                <span asp-validation-for="AssistantName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Birthdate" class="control-label"></label>
-                <input asp-for="Birthdate" class="form-control" />
-                <span asp-validation-for="Birthdate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OwnerId" class="control-label"></label>
-                <input asp-for="OwnerId" class="form-control" />
-                <span asp-validation-for="OwnerId" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="HasOptedOutOfEmail" /> @Html.DisplayNameFor(model => model.HasOptedOutOfEmail)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedById" class="control-label"></label>
-                <input asp-for="CreatedById" class="form-control" />
-                <span asp-validation-for="CreatedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastModifiedDate" class="control-label"></label>
-                <input asp-for="LastModifiedDate" class="form-control" />
-                <span asp-validation-for="LastModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastModifiedById" class="control-label"></label>
-                <input asp-for="LastModifiedById" class="form-control" />
-                <span asp-validation-for="LastModifiedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastActivityDate" class="control-label"></label>
-                <input asp-for="LastActivityDate" class="form-control" />
-                <span asp-validation-for="LastActivityDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmailBouncedReason" class="control-label"></label>
-                <input asp-for="EmailBouncedReason" class="form-control" />
-                <span asp-validation-for="EmailBouncedReason" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmailBouncedDate" class="control-label"></label>
-                <input asp-for="EmailBouncedDate" class="form-control" />
-                <span asp-validation-for="EmailBouncedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Alt_Email" class="control-label"></label>
-                <input asp-for="Alt_Email" class="form-control" />
-                <span asp-validation-for="Alt_Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Alt_Contact" class="control-label"></label>
-                <input asp-for="Alt_Contact" class="form-control" />
-                <span asp-validation-for="Alt_Contact" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Children" class="control-label"></label>
-                <input asp-for="Children" class="form-control" />
-                <span asp-validation-for="Children" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Direct_Line" class="control-label"></label>
-                <input asp-for="Direct_Line" class="form-control" />
-                <span asp-validation-for="Direct_Line" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Extension" class="control-label"></label>
-                <input asp-for="Extension" class="form-control" />
-                <span asp-validation-for="Extension" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Initial_Meeting_Details" class="control-label"></label>
-                <input asp-for="Initial_Meeting_Details" class="form-control" />
-                <span asp-validation-for="Initial_Meeting_Details" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LinkedIn_Profile" class="control-label"></label>
-                <input asp-for="LinkedIn_Profile" class="form-control" />
-                <span asp-validation-for="LinkedIn_Profile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Mailing_Lists" class="control-label"></label>
-                <input asp-for="Mailing_Lists" class="form-control" />
-                <span asp-validation-for="Mailing_Lists" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Opt_Out" class="control-label"></label>
-                <input asp-for="Opt_Out" class="form-control" />
-                <span asp-validation-for="Opt_Out" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Opt_Out_Date" class="control-label"></label>
-                <input asp-for="Opt_Out_Date" class="form-control" />
-                <span asp-validation-for="Opt_Out_Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Preferred_Name" class="control-label"></label>
-                <input asp-for="Preferred_Name" class="form-control" />
-                <span asp-validation-for="Preferred_Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Reassigned_Date" class="control-label"></label>
-                <input asp-for="Reassigned_Date" class="form-control" />
-                <span asp-validation-for="Reassigned_Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Referral_Date" class="control-label"></label>
-                <input asp-for="Referral_Date" class="form-control" />
-                <span asp-validation-for="Referral_Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Referral_Partner_Agmnt_Date" class="control-label"></label>
-                <input asp-for="Referral_Partner_Agmnt_Date" class="form-control" />
-                <span asp-validation-for="Referral_Partner_Agmnt_Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Referral_Partner_Agmnt_Details" class="control-label"></label>
-                <input asp-for="Referral_Partner_Agmnt_Details" class="form-control" />
-                <span asp-validation-for="Referral_Partner_Agmnt_Details" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Referring_Company" class="control-label"></label>
-                <input asp-for="Referring_Company" class="form-control" />
-                <span asp-validation-for="Referring_Company" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Referring_Contact" class="control-label"></label>
-                <input asp-for="Referring_Contact" class="form-control" />
-                <span asp-validation-for="Referring_Contact" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Relationship_Status" class="control-label"></label>
-                <input asp-for="Relationship_Status" class="form-control" />
-                <span asp-validation-for="Relationship_Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Standard_Pay_Terms" class="control-label"></label>
-                <input asp-for="Standard_Pay_Terms" class="form-control" />
-                <span asp-validation-for="Standard_Pay_Terms" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Rating_Sort" class="control-label"></label>
-                <input asp-for="Rating_Sort" class="form-control" />
-                <span asp-validation-for="Rating_Sort" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tax_ID" class="control-label"></label>
-                <input asp-for="Tax_ID" class="form-control" />
-                <span asp-validation-for="Tax_ID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Term_Of_Agreement" class="control-label"></label>
-                <input asp-for="Term_Of_Agreement" class="form-control" />
-                <span asp-validation-for="Term_Of_Agreement" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Twitter_Profile" class="control-label"></label>
-                <input asp-for="Twitter_Profile" class="form-control" />
-                <span asp-validation-for="Twitter_Profile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Update_Needed" class="control-label"></label>
-                <input asp-for="Update_Needed" class="form-control" />
-                <span asp-validation-for="Update_Needed" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Update_Needed_Date" class="control-label"></label>
-                <input asp-for="Update_Needed_Date" class="form-control" />
-                <span asp-validation-for="Update_Needed_Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Alt_Phone_3" class="control-label"></label>
-                <input asp-for="Alt_Phone_3" class="form-control" />
-                <span asp-validation-for="Alt_Phone_3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OwnershipPercentage" class="control-label"></label>
-                <input asp-for="OwnershipPercentage" class="form-control" />
-                <span asp-validation-for="OwnershipPercentage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Guarantor" class="control-label"></label>
-                <input asp-for="Guarantor" class="form-control" />
-                <span asp-validation-for="Guarantor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NextActivityID" class="control-label"></label>
-                <input asp-for="NextActivityID" class="form-control" />
-                <span asp-validation-for="NextActivityID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
+
+}
+
+<script src="~/jQuery/jQuery_GeneralValidation.js"></script>
+<script src="~/jQuery/jQuery_ContactFunctions.js"></script>
+<script src="~/jQuery/jQuery_ContactValidation.js"></script>

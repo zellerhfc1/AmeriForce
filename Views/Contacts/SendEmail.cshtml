@@ -95,8 +95,8 @@
                         </div>
                     </div>
 
-
-                    @using (Html.BeginForm())
+                    
+                    @using (Html.BeginForm("SendEmail", "Contacts", FormMethod.Post, new { @sendContactEmail = Model, @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
 

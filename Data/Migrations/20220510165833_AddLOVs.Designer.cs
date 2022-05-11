@@ -4,14 +4,16 @@ using AmeriForce.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AmeriForce.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220510165833_AddLOVs")]
+    partial class AddLOVs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -638,9 +640,6 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("EmailBouncedReason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EmailOptOutDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Extension")
                         .HasColumnType("nvarchar(max)");
 
@@ -650,7 +649,7 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Guarantor")
+                    b.Property<bool?>("Guarantor")
                         .HasColumnType("bit");
 
                     b.Property<bool>("HasOptedOutOfEmail")
@@ -693,9 +692,6 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("MailingStreet")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MailingSuite")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Mailing_Lists")
                         .HasColumnType("nvarchar(max)");
 
@@ -727,9 +723,6 @@ namespace AmeriForce.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OtherStreet")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OtherSuite")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerId")

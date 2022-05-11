@@ -307,8 +307,6 @@ $(document).ready(function () {
         // #endregion
 
 
-
-
         $.ajax({
             type: 'POST',
             url: '/Contacts/GetCompanyID',
@@ -319,16 +317,16 @@ $(document).ready(function () {
             success: function (companyInfo) {
 
                 $.each(companyInfo, function (i, company) {
-                    $("#companyData_Description").val(company.Description);
-                    $("#companyData_SICCode").val(company.SICCode);
-                    $("#companyData_CharterState").val(company.CharterState);
-                    $("#clientData_Referring_Company").append('<option value="' + company.Value + '">' +
+                    $("#companyData_Description").val(company.description);
+                    $("#companyData_SICCode").val(company.sicCode);
+                    $("#companyData_CharterState").val(company.charterState);
+                    $("#contactData_Referring_Company").append('<option value="' + company.Value + '">' +
                      company.Text + '</option>');
-                    selectedValue = company.ID;
-                    $("#CompanyId").val(company.ID);
+                    selectedValue = company.id;
+                    $("#CompanyId").val(company.id);
                     alert(company.ID);
                 });
-                $("#clientData_Referring_Company").val(selectedValue);
+                $("#contactData_Referring_Company").val(selectedValue);
                 $("#CompanyId").trigger("change");
             },
             error: function (ex) {
@@ -345,14 +343,14 @@ $(document).ready(function () {
 
         console.log(existingReferringContact);
 
-        $("#clientData_Referring_Contact").empty();
+        $("#contacttData_Referring_Contact").empty();
         $.ajax({
             type: 'POST',
             url: '/Contacts/GetContactListByCompany',
 
             dataType: 'json',
 
-            data: { id: $("#clientData_Referring_Company").val() },
+            data: { id: $("#contactData_Referring_Company").val() },
 
             success: function (contacts) {
 
@@ -361,7 +359,7 @@ $(document).ready(function () {
                     if (existingReferringContact === contact.Value) {
                         isSelected = " selected ";
                     }
-                    $("#clientData_Referring_Contact").append('<option value="' + contact.Value + '" ' + isSelected + '>' +
+                    $("#contactData_Referring_Contact").append('<option value="' + contact.Value + '" ' + isSelected + '>' +
                      contact.Text + '</option>');
                 });
             },
@@ -412,8 +410,8 @@ $(document).ready(function () {
             success: function (companyInfo) {
 
                 $.each(companyInfo, function (i, company) {
-                    $("#clientData_Referring_Company").append('<option value="' + company.Value + '">' +
-                     company.Text + '</option>');
+                    $("#contactData_Referring_Company").append('<option value="' + company.Value + '">' +
+                        company.Text + '</option>');
                     selectedValue = company.ID;
                     $("#ReferringCompanyId").val(company.ID);
                 });
@@ -431,16 +429,16 @@ $(document).ready(function () {
     $("#ReferringCompanyId").change(function () {
         var existingReferringContact = $("#ReferringCompanyId").val();
 
-        console.log(existingReferringContact);
+        console.log("Yo:" + existingReferringContact);
 
-        $("#clientData_Referring_Contact").empty();
+        $("#contactData_Referring_Contact").empty();
         $.ajax({
             type: 'POST',
             url: '/Contacts/GetContactListByCompany',
 
             dataType: 'json',
 
-            data: { id: $("#clientData_Referring_Company").val() },
+            data: { id: $("#contactData_Referring_Company").val() },
 
             success: function (contacts) {
 
@@ -449,7 +447,7 @@ $(document).ready(function () {
                     if (existingReferringContact === contact.Value) {
                         isSelected = " selected ";
                     }
-                    $("#clientData_Referring_Contact").append('<option value="' + contact.Value + '" ' + isSelected + '>' +
+                    $("#contactData_Referring_Contact").append('<option value="' + contact.Value + '" ' + isSelected + '>' +
                      contact.Text + '</option>');
                 });
             },
@@ -463,22 +461,23 @@ $(document).ready(function () {
 
     $("#contactData_Referring_Company").autocomplete({
         source: function (request, response) {
-            $.ajax({
+           $.ajax({
                 url: "/Contacts/GetAutocompleteFeature_Companies",
                 type: "POST",
                 dataType: "json",
                 data: { enteredText: request.term },
                 success: function (data) {
                     response($.map(data, function (item) {
-                        return { label: item.Text, value: item.Value };
+                        console.log(item.name + " " + item.id);
+                        return { label: item.name, value: item.id };
                     }))
 
                 }
             })
         },
-        messages: {
-            noResults: "", results: ""
-        }
+        //messages: {
+        //    noResults: "", results: ""
+        //}
     });
     // #endregion
 

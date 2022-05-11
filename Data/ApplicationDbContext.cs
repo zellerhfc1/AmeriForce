@@ -61,6 +61,11 @@ namespace AmeriForce.Data
         public DbSet<LOV_TemplateType> LOV_TemplateType { get; set; }
         public DbSet<NewInitialDeal> NewInitialDeals { get; set; }
         public DbSet<SICCode> SICCodes { get; set; }
+        public DbSet<LOV_RelationshipStatus> LOV_RelationshipStatuses { get; set; }
+        public DbSet<LOV_TagGradeSort> LOV_TagGradeSorts { get; set; }
+        public DbSet<LOV_UpdateNeeded> LOV_UpdateNeededs { get; set; }
+
+        public DbSet<LOV_MailingList> LOV_MailingLists { get; set; }
 
     }
 }
