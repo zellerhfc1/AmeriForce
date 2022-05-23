@@ -38,21 +38,21 @@ namespace AmeriForce.Helpers
             //using (var db = new ApplicationDbContext())
             //{
 
-                var companies = _context.Companies.OrderBy(l => l.Name).ToList();
+            var companies = _context.Companies.OrderBy(l => l.Name).ToList();
 
-                var defaultItem = new SelectListItem();
-                defaultItem.Text = "";
-                defaultItem.Value = "";
-                sList.Add(defaultItem);
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
 
-                foreach (var company in companies)
-                {
-                    item = new SelectListItem();
-                    item.Text = company.Name;
-                    item.Value = company.ID;
-                    sList.Add(item);
-                }
-                return sList;
+            foreach (var company in companies)
+            {
+                item = new SelectListItem();
+                item.Text = company.Name;
+                item.Value = company.ID;
+                sList.Add(item);
+            }
+            return sList;
             //}
         }
 
@@ -63,21 +63,21 @@ namespace AmeriForce.Helpers
             SelectListItem item;
             List<SelectListItem> sList = new List<SelectListItem>();
 
-                var owners = _context.Users.Where(u => u.IsActive == true && (u.Department == "Underwriting" || u.Department == "Business Development")).OrderBy(l => l.FirstName);
+            var owners = _context.Users.Where(u => u.IsActive == true && (u.Department == "Underwriting" || u.Department == "Business Development")).OrderBy(l => l.FirstName);
 
-                var defaultItem = new SelectListItem();
-                defaultItem.Text = "";
-                defaultItem.Value = "";
-                sList.Add(defaultItem);
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
 
-                foreach (var owner in owners)
-                {
-                    item = new SelectListItem();
-                    item.Text = $"{owner.FirstName} {owner.LastName}";
-                    item.Value = owner.Id;
-                    sList.Add(item);
-                }
-                return sList;
+            foreach (var owner in owners)
+            {
+                item = new SelectListItem();
+                item.Text = $"{owner.FirstName} {owner.LastName}";
+                item.Value = owner.Id;
+                sList.Add(item);
+            }
+            return sList;
 
         }
 
@@ -88,21 +88,21 @@ namespace AmeriForce.Helpers
             SelectListItem item;
             List<SelectListItem> sList = new List<SelectListItem>();
 
-                var clientStages = _context.ClientStages.OrderBy(c => c.Name).ToList();
+            var clientStages = _context.ClientStages.OrderBy(c => c.Name).ToList();
 
-                var defaultItem = new SelectListItem();
-                defaultItem.Text = "";
-                defaultItem.Value = "";
-                sList.Add(defaultItem);
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
 
-                foreach (var clientStage in clientStages)
-                {
-                    item = new SelectListItem();
-                    item.Text = $"{clientStage.Name}";
-                    item.Value = $"{clientStage.Name}";
-                    sList.Add(item);
-                }
-                return sList;
+            foreach (var clientStage in clientStages)
+            {
+                item = new SelectListItem();
+                item.Text = $"{clientStage.Name}";
+                item.Value = $"{clientStage.Name}";
+                sList.Add(item);
+            }
+            return sList;
         }
 
 
@@ -112,21 +112,21 @@ namespace AmeriForce.Helpers
             SelectListItem item;
             List<SelectListItem> sList = new List<SelectListItem>();
 
-                var contacts = _context.Contacts.Where(c => c.AccountId == companyID).ToList();
+            var contacts = _context.Contacts.Where(c => c.AccountId == companyID).ToList();
 
-                var defaultItem = new SelectListItem();
-                defaultItem.Text = "";
-                defaultItem.Value = "";
-                sList.Add(defaultItem);
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
 
-                foreach (var contact in contacts)
-                {
-                    item = new SelectListItem();
-                    item.Text = $"{contact.FirstName} {contact.LastName}";
-                    item.Value = $"{contact.Id}";
-                    sList.Add(item);
-                }
-                return sList;
+            foreach (var contact in contacts)
+            {
+                item = new SelectListItem();
+                item.Text = $"{contact.FirstName} {contact.LastName}";
+                item.Value = $"{contact.Id}";
+                sList.Add(item);
+            }
+            return sList;
         }
 
 
@@ -160,7 +160,7 @@ namespace AmeriForce.Helpers
             SelectListItem item;
             List<SelectListItem> sList = new List<SelectListItem>();
 
-                var users = _context.Users.Where(c => c.Department == "BDO" && c.IsActive == true).OrderBy(c => c.FirstName);
+            var users = _context.Users.Where(c => (c.Department == "Business Development" || c.Department=="Underwriting") && c.IsActive == true).OrderBy(c => c.FirstName);
 
                 var defaultItem = new SelectListItem();
                 defaultItem.Text = "";
@@ -175,6 +175,29 @@ namespace AmeriForce.Helpers
                     sList.Add(item);
                 }
                 return sList;
+        }
+
+        public IEnumerable<SelectListItem> GetBDOListWithInactive()
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
+
+            var users = _context.Users.Where(c => (c.Department == "Business Development" || c.Department == "Underwriting")).OrderBy(c => c.FirstName);
+
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
+
+            foreach (var user in users)
+            {
+                item = new SelectListItem();
+                item.Text = $"{user.FirstName} {user.LastName}";
+                item.Value = $"{user.Id}";
+                sList.Add(item);
+            }
+            return sList;
         }
 
 
@@ -298,6 +321,30 @@ namespace AmeriForce.Helpers
         }
 
 
+        public IEnumerable<SelectListItem> GetCompanyTypes()
+        {
+            // GET COMPANY REFERRAL TYPES
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
+
+            var referralTypes = _context.LOV_CompanyTypes.OrderBy(c => c.ReferralType);
+
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
+
+            foreach (var referral in referralTypes)
+            {
+                item = new SelectListItem();
+                item.Text = $"{referral.ReferralType}";
+                item.Value = $"{referral.ReferralType}";
+                sList.Add(item);
+            }
+            return sList;
+        }
+
+
         //public IEnumerable<SelectListItem> GetClientStatuses()
         //{
         //    // GET CONTACTS LIST BY COMPANY
@@ -334,7 +381,6 @@ namespace AmeriForce.Helpers
 
             using (_context)
             {
-
                 var sicCodes = _context.SICCodes.OrderBy(s => s.Value).ToList();
 
                 var defaultItem = new SelectListItem();
@@ -345,7 +391,7 @@ namespace AmeriForce.Helpers
                 foreach (var sicCode in sicCodes)
                 {
                     item = new SelectListItem();
-                    item.Text = $"{sicCode.ID} - {sicCode.Value}";
+                    item.Text = $"{sicCode.Value}";
                     item.Value = $"{sicCode.Value}";
                     sList.Add(item);
                 }
@@ -379,29 +425,29 @@ namespace AmeriForce.Helpers
         }
 
 
-        //public IEnumerable<SelectListItem> GetApprovalDecisionList()
-        //{
-        //    // GET CONTACTS LIST BY COMPANY
-        //    SelectListItem item;
-        //    List<SelectListItem> sList = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> GetApprovalDecisionList()
+        {
+            // GET CONTACTS LIST BY COMPANY
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
 
-        //    var defaultItem = new SelectListItem();
-        //    defaultItem.Text = "";
-        //    defaultItem.Value = "";
-        //    sList.Add(defaultItem);
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
 
-        //    var yesItem = new SelectListItem();
-        //    yesItem.Text = "APPROVED";
-        //    yesItem.Value = "APPROVED";
-        //    sList.Add(yesItem);
+            var yesItem = new SelectListItem();
+            yesItem.Text = "APPROVED";
+            yesItem.Value = "APPROVED";
+            sList.Add(yesItem);
 
-        //    var noItem = new SelectListItem();
-        //    noItem.Text = "DECLINED";
-        //    noItem.Value = "DECLINED";
-        //    sList.Add(noItem);
+            var noItem = new SelectListItem();
+            noItem.Text = "DECLINED";
+            noItem.Value = "DECLINED";
+            sList.Add(noItem);
 
-        //    return sList;
-        //}
+            return sList;
+        }
 
 
         public IEnumerable<SelectListItem> GetMailMergeTemplateList()

@@ -18,6 +18,7 @@ namespace AmeriForce.Models.Contacts
         public string contactNextTaskOwner { get; set; }
 
         public List<ContactDuplicateViewModel> contactDuplicates { get; set; }
+        public List<EmailMessage> emailMessages { get; set; }
 
 
         //public IEnumerable<Contact> mainContactData { get; set; }

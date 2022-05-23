@@ -172,6 +172,7 @@ h3.subHeadingTitle {
 
 .nameSubHeaderNextCall {
     font-size: medium;
+    font-style: italic;
 }
 
 .priorityAlert {

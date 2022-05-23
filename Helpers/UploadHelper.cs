@@ -58,5 +58,15 @@ namespace AmeriForce.Helpers
                 return;     //Content(String.Format("The directory was created successfully at {0}.", Directory.GetCreationTime(path).ToString()));
             }
         }
+
+        public bool FileExists(string fileNameWithPathAndExtension)
+        {
+            var wwwroot = _webHostEnvironment.WebRootPath;
+            var systemFilePath = Path.Combine(wwwroot, fileNameWithPathAndExtension);
+
+            return System.IO.File.Exists(systemFilePath);
+        }
+
+
     }
 }

@@ -19,21 +19,27 @@ using System.Text;
 using System.Security.Claims;
 using AmeriForce.Models.Email;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AmeriForce.Controllers
 {
+    [Authorize]
     public class ContactsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private GuidHelper _guidHelper = new GuidHelper();
         private CompanyHelper _companyHelper;
+        private ContactHelper _contactHelper;
         private LOVHelper _lovHelper;
         private UserHelper _userHelper;
         private UploadHelper _uploadHelper;
+        private MailMergeHelper _mailMergeHelper;
 
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EmailConfigurationViewModel _emailConfig = new EmailConfigurationViewModel();
+
+        private readonly string _userID;
 
         public ContactsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
@@ -44,34 +50,73 @@ namespace AmeriForce.Controllers
 
             _lovHelper = new LOVHelper(_context);
             _companyHelper = new CompanyHelper(_context);
+            _contactHelper = new ContactHelper(_context);
             _userHelper = new UserHelper(_context);
+            _mailMergeHelper = new MailMergeHelper(_context, webHostEnvironment);
             _uploadHelper = new UploadHelper(_context, _webHostEnvironment);
+            _userID = _userHelper.GetIDFromName(_httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
         // GET: Contacts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
+
             List<ContactIndexViewModel> contactIndexViewModel = new List<ContactIndexViewModel>();
-            var contacts = _context.Contacts.Take(200).OrderByDescending(c => c.CreatedDate);
-            if (contacts.Count() > 0)
-            {
-                foreach (var contact in contacts)
-                {
-                    var contactToList = new ContactIndexViewModel
-                    {
-                        ID = contact.Id,
-                        AccountID = contact.AccountId,
-                        OwnerName = GetUserNameFromID(contact.OwnerId),
-                        Company = GetCompanyName(contact.AccountId),
-                        ContactName = $"{contact.FirstName} {contact.LastName}",
-                        Email = contact.Email,
-                        Grade = contact.Rating_Sort,
-                        Phone = contact.Phone,
-                        RelationshipStatus = contact.Relationship_Status
-                    };
-                    contactIndexViewModel.Add(contactToList);
-                }
-            }
+            //var contacts = _context.Contacts.OrderByDescending(c => c.CreatedDate);
+
+            //switch (id)
+            //{
+            //    case 1:
+            //        ViewBag.SubTitle = "New Contacts";
+            //        ViewBag.TimeStamp = DateTime.Now.ToString("MMMM dd, yyyy HH:mm:ss");
+            //        //string userID = db.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault().Id;
+            //        contacts = _context.Contacts.Where(c => c.Relationship_Status == "New").OrderByDescending(c => c.CreatedDate);
+            //        ViewBag.ClientCount = contacts.Count();
+            //        //return View(contactList);
+            //        break;
+            //    case 2:
+            //        ViewBag.SubTitle = "My Contacts (All)";
+            //        ViewBag.TimeStamp = DateTime.Now.ToString("MMMM dd, yyyy HH:mm:ss");
+            //        //string userIDAll = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault().Id;
+            //        contacts = _context.Contacts.Where(c => c.OwnerId == _userID && (c.Rating_Sort == "A" || c.Rating_Sort == "B" || c.Rating_Sort == "C" || c.Rating_Sort == "D")).Take(1000).OrderBy(c => c.Rating_Sort);
+            //        ViewBag.ContactCount = contacts.Count();
+            //        //return View(contactListAll); 
+            //        break;
+            //    case 3:
+            //        ViewBag.SubTitle = "Active Referral Partner Contacts";
+            //        ViewBag.TimeStamp = DateTime.Now.ToString("MMMM dd, yyyy HH:mm:ss");
+            //        contacts = _context.Contacts.Where(c => c.OwnerId == _userID && c.Relationship_Status == "Active").OrderBy(c => c.LastModifiedDate);
+            //        ViewBag.ContactCount = contacts.Count();
+            //        //return View(activeReferralPartners);
+            //        break;
+            //    default:
+            //        ViewBag.SubTitle = "All Contacts";
+            //        ViewBag.TimeStamp = DateTime.Now.ToString("MMMM dd, yyyy HH:mm:ss");
+            //        contacts = _context.Contacts.OrderByDescending(c => c.CreatedDate);
+            //        ViewBag.ContactCount = contacts.Count();
+            //        //return View(contactListDefault);
+            //        break;
+            //}
+
+            //if (contacts.Count() > 0)
+            //{
+            //    foreach (var contact in contacts)
+            //    {
+            //        var contactToList = new ContactIndexViewModel
+            //        {
+            //            ID = contact.Id,
+            //            AccountID = contact.AccountId,
+            //            OwnerName = GetUserNameFromID(contact.OwnerId),
+            //            Company = GetCompanyName(contact.AccountId),
+            //            ContactName = (!String.IsNullOrEmpty(contact.FirstName)) ? $"{contact.FirstName} {contact.LastName}" : $"{contact.LastName}",
+            //            Email = contact.Email,
+            //            Grade = contact.Rating_Sort,
+            //            Phone = contact.Phone,
+            //            RelationshipStatus = contact.Relationship_Status
+            //        };
+            //        contactIndexViewModel.Add(contactToList);
+            //    }
+            //}
             return View(contactIndexViewModel);
         }
 
@@ -91,9 +136,13 @@ namespace AmeriForce.Controllers
 
             detailsModel.contact = contact;
             detailsModel.OwnerName = GetUserNameFromID(contact.OwnerId);
+            detailsModel.CompanyName = GetCompanyName(contact.AccountId);
+            detailsModel.ReferringCompany = GetCompanyName(contact.Referring_Company);
+            detailsModel.ReferringContact = GetContactName(contact.Referring_Contact);
             detailsModel.clients = _context.Clients.Where(c => c.Referring_Contact == contact.Id);
             detailsModel.contactNotes = _context.CRMTasks.Where(c => c.WhoId == contact.Id && c.Id != contact.NextActivityID).OrderByDescending(c => c.ActivityDate);
             detailsModel.contactNextTask = _context.CRMTasks.Where(c => c.Id == detailsModel.contact.NextActivityID).FirstOrDefault();
+            detailsModel.emailMessages = _context.EmailMessages.Where(e => e.RelatedTo == id).ToList();
 
             if (detailsModel.contactNextTask == null)
             {
@@ -286,91 +335,95 @@ namespace AmeriForce.Controllers
 
                 var transaction = _context.Database.BeginTransaction();
 
-                    var newContact = new Contact()
+                var newContact = new Contact()
+                {
+                    Id = _guidHelper.GetGUIDString("contact"),
+                    AccountId = companyID,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    OtherStreet = physicalStreet,
+                    OtherSuite = physicalSuite,
+                    OtherCity = physicalCity,
+                    OtherState = physicalState,
+                    OtherPostalCode = physicalPostalCode,
+                    MailingStreet = mailingStreet,
+                    MailingSuite = mailingSuite,
+                    MailingCity = mailingCity,
+                    MailingState = mailingState,
+                    MailingPostalCode = mailingPostalCode,
+                    Phone = businessPhone,
+                    MobilePhone = mobilePhone,
+                    HomePhone = homePhone,
+                    Email = email,
+                    Title = title,
+                    Department = department,
+                    //Description
+                    OwnerId = bdo,
+                    HasOptedOutOfEmail = emailOptOut,
+                    EmailOptOutDate = emailOptOutDate,
+                    CreatedDate = DateTime.Now,
+                    CreatedById = _userHelper.GetIDFromName(User.Identity.Name),
+                    LastModifiedDate = DateTime.Now,
+                    LastModifiedById = _userHelper.GetIDFromName(User.Identity.Name),
+                    LastActivityDate = DateTime.Now,
+                    //EmailBouncedReason
+                    // EmailBouncedDate
+                    Alt_Email = alternateEmail,
+                    //Alt_Contact
+                    //Children
+                    Direct_Line = directLine,
+                    //Extension
+                    Initial_Meeting_Details = contactDetails,
+                    LinkedIn_Profile = linkedInProfile,
+                    Mailing_Lists = mailingLists,
+                    Opt_Out = emailOptOut.ToString(),
+                    Opt_Out_Date = emailOptOutDate,
+                    Preferred_Name = preferredName,
+                    //Reassigned_Date
+                    Referral_Date = referralDate,
+                    Referral_Partner_Agmnt_Date = agreementDate,
+                    Referral_Partner_Agmnt_Details = agreementDetails,
+                    Referring_Company = referringCompany,
+                    Referring_Contact = referringContact,
+                    Relationship_Status = relationshipStatus,
+                    Rating_Sort = tagGradeSort,
+                    //Type
+                    Update_Needed = updateNeeded,
+                    Update_Needed_Date = updateNeededDate,
+                    OwnershipPercentage = ownershipPercentage.ToString(),
+                    Guarantor = guarantor,
+                    //NextActivityID
+                };
+                _context.Contacts.Add(newContact);
+                _context.SaveChanges();
+
+                var company = _context.Companies.Where(c => c.ID == companyID).FirstOrDefault();
+                if (company != null)
+                {
+                    company.Name = companyName;
+                    company.Description = businessDescription;
+                    company.SICCode = sicCode;
+                    company.CharterState = charterState;
+                }
+                else
+                {
+                    string newCompanyID = new GuidHelper().GetGUIDString("company");
+                    var newCompany = new Company()
                     {
-                        Id = _guidHelper.GetGUIDString("contact"),
-                        AccountId = companyID,
-                        FirstName = firstName,
-                        LastName = lastName,
-                        OtherStreet = physicalStreet,
-                        OtherSuite = physicalSuite,
-                        OtherCity = physicalCity,
-                        OtherState = physicalState,
-                        OtherPostalCode = physicalPostalCode,
-                        MailingStreet = mailingStreet,
-                        MailingSuite = mailingSuite,
-                        MailingCity = mailingCity,
-                        MailingState = mailingState,
-                        MailingPostalCode = mailingPostalCode,
-                        Phone = businessPhone,
-                        MobilePhone = mobilePhone,
-                        HomePhone = homePhone,
-                        Email = email,
-                        Title = title,
-                        Department = department,
-                        //Description
-                        OwnerId = bdo,
-                        HasOptedOutOfEmail = emailOptOut,
-                        EmailOptOutDate = emailOptOutDate,
+                        ID = newCompanyID,
+                        Name = companyName,
+                        Description = businessDescription,
+                        SICCode = sicCode,
+                        CharterState = charterState,
+                        CreatedBy = _userHelper.GetIDFromName(User.Identity.Name),
                         CreatedDate = DateTime.Now,
-                        CreatedById = "0034W00000APoNIQA1", //UserID,
-                        LastModifiedDate = DateTime.Now,
-                        LastModifiedById = "0034W00000APoNIQA1", //UserID,
-                        LastActivityDate = DateTime.Now,
-                        //EmailBouncedReason
-                        // EmailBouncedDate
-                        Alt_Email = alternateEmail,
-                        //Alt_Contact
-                        //Children
-                        Direct_Line = directLine,
-                        //Extension
-                        Initial_Meeting_Details = contactDetails,
-                        LinkedIn_Profile = linkedInProfile,
-                        Mailing_Lists = mailingLists,
-                        Opt_Out = emailOptOut.ToString(),
-                        Opt_Out_Date = emailOptOutDate,
-                        Preferred_Name = preferredName,
-                        //Reassigned_Date
-                        Referral_Date = referralDate,
-                        Referral_Partner_Agmnt_Date = agreementDate,
-                        Referral_Partner_Agmnt_Details = agreementDetails,
-                        Referring_Company = referringCompany,
-                        Referring_Contact = referringContact,
-                        Relationship_Status = relationshipStatus,
-                        Rating_Sort = tagGradeSort,
-                        //Type
-                        Update_Needed = updateNeeded,
-                        Update_Needed_Date = updateNeededDate,
-                        OwnershipPercentage = ownershipPercentage.ToString(),
-                        Guarantor = guarantor,
-                        //NextActivityID
                     };
-                    _context.Contacts.Add(newContact);
+                    newContact.AccountId = newCompanyID;
+                    _context.Companies.Add(newCompany);
+                }
 
-                    var company = _context.Companies.Where(c => c.ID == companyID).FirstOrDefault();
-                    if (company != null)
-                    {
-                        company.Name = companyName;
-                        company.Description = businessDescription;
-                        company.SICCode = sicCode;
-                        company.CharterState = charterState;
-                    }
-                    else
-                    {
-                        string newCompanyID = new GuidHelper().GetGUIDString("company");
-                        var newCompany = new Company()
-                        {
-                            ID = newCompanyID,
-                            Name = companyName,
-                            Description = businessDescription,
-                            SICCode = sicCode,
-                            CharterState = charterState
-                        };
-                        newContact.AccountId = newCompanyID;
-                        _context.Companies.Add(newCompany);
-                    }
-
-
+                if (!String.IsNullOrEmpty(referringCompany))
+                {
                     var newReferringCompany = _context.Companies.Where(c => c.ID == referringCompany).FirstOrDefault();
                     if (newReferringCompany != null)
                     {
@@ -387,8 +440,10 @@ namespace AmeriForce.Controllers
                         newContact.Referring_Company = newReferringCompanyID;
                         _context.Companies.Add(newReferringCompanyInsert);
                     }
+                }
 
-
+                if (!String.IsNullOrEmpty(referringContact))
+                {
                     var newReferringContact = _context.Contacts.Where(c => c.Id == referringContact).FirstOrDefault();
                     if (newReferringContact != null)
                     {
@@ -405,27 +460,29 @@ namespace AmeriForce.Controllers
                         newContact.Referring_Company = newReferringCompanyID;
                         _context.Companies.Add(newReferringCompanyInsert);
                     }
+                }
 
 
 
-                    string newTaskID = new GuidHelper().GetGUIDString("task");
-                    var newActivity = new CRMTask()
-                    {
-                        Id = newTaskID,
-                        Type = activityCallType,
-                        ActivityDate = activityTaskDate,
-                        OwnerId = activityTaskOwner,
-                        Description = activityNotes
-                    };
-                    _context.CRMTasks.Add(newActivity);
-                    
-                    newContact.NextActivityID = newTaskID;
+                string newTaskID = new GuidHelper().GetGUIDString("task");
+                var newActivity = new CRMTask()
+                {
+                    Id = newTaskID,
+                    WhoId = newContact.Id,
+                    Type = activityCallType,
+                    ActivityDate = activityTaskDate,
+                    OwnerId = activityTaskOwner,
+                    Description = activityNotes
+                };
+                _context.CRMTasks.Add(newActivity);
 
-                    _context.SaveChanges();
+                newContact.NextActivityID = newTaskID;
 
-                    transaction.Commit();
+                _context.SaveChanges();
 
-                
+                transaction.Commit();
+
+
 
                 return RedirectToAction("Index");
             }
@@ -447,7 +504,7 @@ namespace AmeriForce.Controllers
 
             ContactEditViewModel editContactViewModel = new ContactEditViewModel();
 
-            var contactData = await _context.Contacts.FindAsync(id); 
+            var contactData = await _context.Contacts.FindAsync(id);
             if (contactData == null)
             {
                 return NotFound();
@@ -461,23 +518,49 @@ namespace AmeriForce.Controllers
             //}
             //editContactViewModel.MailingListIntermediate = new List<SelectListItem>();
             //editContactViewModel.MailingListIntermediate.AddRange(selectedMailingLists); 
-            
-            
+
+
             var companyData = await _context.Companies.Where(c => c.ID == contactData.AccountId).FirstOrDefaultAsync();
             if (companyData == null)
             {
                 companyData = await _context.Companies.Where(c => c.ID == "001xxxxxxxxxxxxxxx").FirstOrDefaultAsync();
             }
+
+
             List<Client> clients = _context.Clients.Where(c => c.ContactId == id).ToList();
             List<CRMTask> contactNotes = _context.CRMTasks.Where(c => c.WhoId == id).ToList();
             CRMTask contactNextTask = _context.CRMTasks.Where(c => c.Id == contactData.NextActivityID).FirstOrDefault();
-
+            
             editContactViewModel.contactData = contactData;
             editContactViewModel.companyData = companyData;
-            editContactViewModel.ReferralCompanyName = (companyData != null) ? GetCompanyName(companyData.ID) : "";
+            editContactViewModel.ReferralCompanyName = (contactData.Referring_Company != null) ? GetCompanyName(contactData.Referring_Company) : "";
             editContactViewModel.clients = clients;
-            editContactViewModel.contactNotes = contactNotes;
-            editContactViewModel.taskData = contactNextTask;
+            editContactViewModel.contactNotes = contactNotes; 
+            
+
+            if (contactNextTask == null)
+            {
+                string newTaskID = new GuidHelper().GetGUIDString("task");
+                var nextCRMTask = new CRMTask()
+                {
+                    Id = newTaskID,
+                    WhoId = editContactViewModel.contactData.Id,
+                    Type = "Warning",
+                    OwnerId = editContactViewModel.contactData.OwnerId,
+                    ActivityDate = Convert.ToDateTime("01/01/2000"),
+                    Description = "This contact is either old or has just been transferred in the data migration.  Please update the next available task to remain current and show up on the home page calendar"
+                };
+                _context.CRMTasks.Add(nextCRMTask);
+                contactData.NextActivityID = newTaskID;
+                _context.SaveChanges();
+
+                editContactViewModel.taskData = _context.CRMTasks.Where(c => c.Id == nextCRMTask.Id).FirstOrDefault();
+            } else
+            {
+                editContactViewModel.taskData = contactNextTask;
+            }
+            
+
 
             editContactViewModel.CompanyList = _lovHelper.GetCompanyDropdownList();
             editContactViewModel.TaskList = _lovHelper.GetTaskTypes();
@@ -486,7 +569,7 @@ namespace AmeriForce.Controllers
             editContactViewModel.ActiveUserListNotes = _lovHelper.GetActiveUsers();
             editContactViewModel.YesNoList = _lovHelper.GetYesNoList();
 
-            editContactViewModel.BDOList = _lovHelper.GetBDOList();
+            editContactViewModel.BDOList = _lovHelper.GetBDOListWithInactive();
             editContactViewModel.RelationshipStatusList = _lovHelper.GetRelationshipStatusList();
             editContactViewModel.TagGradeSortList = _lovHelper.GetTagGradeSortList();
             editContactViewModel.UpdateNeededList = _lovHelper.GetUpdateNeededList();
@@ -510,7 +593,7 @@ namespace AmeriForce.Controllers
 
             if (contactData.Update_Needed != null)
             {
-                var updateNeededItems = contactData.Update_Needed.Split(',').ToList();
+                var updateNeededItems = contactData.Update_Needed.Split(';').ToList();
                 foreach (var item in updateNeededItems)
                 {
                     var selectedUpdateNeeded = editContactViewModel.UpdateNeededList.Where(m => m.Text == item).FirstOrDefault();
@@ -624,7 +707,22 @@ namespace AmeriForce.Controllers
             string activityCallType = validationHelper.ValidateRequiredString(contactEditVM.taskData.Type);
             string activityTaskOwner = validationHelper.ValidateRequiredString(contactEditVM.taskData.OwnerId);
 
-            DateTime activityTaskDatePreValidation = Convert.ToDateTime(collection["taskData_ActivityDate"].ToString());
+            //var d = DateTime.ParseExact(collection["taskData_ActivityDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture);
+
+
+            //DateTime dateValue;
+            //bool isDate = DateTime.TryParse(collection["taskData_ActivityDate"].ToString(), out dateValue);
+            //if (isDate)
+            //{
+            //    //return dateValue;
+            //}
+           
+
+            //var x = 1;
+            //var activityTaskDatePrePreVal = collection["taskData_ActivityDate"].ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T');
+            //string activityTaskDatePrePreVal = contactEditVM.taskData.ActivityDate.ToString().Replace('T', ' ');
+
+            DateTime activityTaskDatePreValidation = Convert.ToDateTime(contactEditVM.taskData.ActivityDate);
             DateTime activityTaskDate = validationHelper.ValidateDate(activityTaskDatePreValidation);
             string activityNotes = validationHelper.ValidateRequiredString(collection["taskData_Description"].ToString());
             #endregion
@@ -635,7 +733,7 @@ namespace AmeriForce.Controllers
                 var transaction = _context.Database.BeginTransaction();
 
 
-                var updatedContact = _context.Contacts.Where(c=>c.Id == id).FirstOrDefault();
+                var updatedContact = _context.Contacts.Where(c => c.Id == id).FirstOrDefault();
                 if (updatedContact != null) {
                     updatedContact.AccountId = companyID;
                     updatedContact.FirstName = firstName;
@@ -656,29 +754,20 @@ namespace AmeriForce.Controllers
                     updatedContact.Email = email;
                     updatedContact.Title = title;
                     updatedContact.Department = department;
-                    //Description
                     updatedContact.OwnerId = bdo;
                     updatedContact.HasOptedOutOfEmail = emailOptOut;
                     updatedContact.EmailOptOutDate = emailOptOutDate;
-                    updatedContact.CreatedDate = DateTime.Now;
-                    updatedContact.CreatedById = "0034W00000APoNIQA1"; //UserID;
                     updatedContact.LastModifiedDate = DateTime.Now;
-                    updatedContact.LastModifiedById = "0034W00000APoNIQA1"; //UserID;
+                    updatedContact.LastModifiedById = _userHelper.GetIDFromName(User.Identity.Name);
                     updatedContact.LastActivityDate = DateTime.Now;
-                    //EmailBouncedReason
-                    // EmailBouncedDate
                     updatedContact.Alt_Email = alternateEmail;
-                    //Alt_Contact
-                    //Children
                     updatedContact.Direct_Line = directLine;
-                    //Extension
                     updatedContact.Initial_Meeting_Details = contactDetails;
                     updatedContact.LinkedIn_Profile = linkedInProfile;
                     updatedContact.Mailing_Lists = mailingLists;
                     updatedContact.Opt_Out = emailOptOut.ToString();
                     updatedContact.Opt_Out_Date = emailOptOutDate;
                     updatedContact.Preferred_Name = preferredName;
-                    //Reassigned_Date
                     updatedContact.Referral_Date = referralDate;
                     updatedContact.Referral_Partner_Agmnt_Date = agreementDate;
                     updatedContact.Referral_Partner_Agmnt_Details = agreementDetails;
@@ -686,87 +775,91 @@ namespace AmeriForce.Controllers
                     updatedContact.Referring_Contact = referringContact;
                     updatedContact.Relationship_Status = relationshipStatus;
                     updatedContact.Rating_Sort = tagGradeSort;
-                    //Type
                     updatedContact.Update_Needed = updateNeeded;
                     updatedContact.Update_Needed_Date = updateNeededDate;
                     updatedContact.OwnershipPercentage = ownershipPercentage.ToString();
                     updatedContact.Guarantor = guarantor;
-                //NextActivityID
-            }
+                }
 
-            var company = _context.Companies.Where(c => c.ID == companyID).FirstOrDefault();
-            if (company != null)
-            {
-                company.Name = companyName;
-                company.Description = businessDescription;
-                company.SICCode = sicCode;
-                company.CharterState = charterState;
-            }
-            else
-            {
-                string newCompanyID = new GuidHelper().GetGUIDString("company");
-                var newCompany = new Company()
+                var company = _context.Companies.Where(c => c.ID == companyID).FirstOrDefault();
+                if (company != null)
                 {
-                    ID = newCompanyID,
-                    Name = companyName,
-                    Description = businessDescription,
-                    SICCode = sicCode,
-                    CharterState = charterState
-                };
-               // newContact.AccountId = newCompanyID;
-                _context.Companies.Add(newCompany);
-            }
-
-
-            var newReferringCompany = _context.Companies.Where(c => c.ID == referringCompany).FirstOrDefault();
-            if (newReferringCompany != null)
-            {
-                newReferringCompany.Name = referringCompanyString;
-            }
-            else
-            {
-                string newReferringCompanyID = new GuidHelper().GetGUIDString("company");
-                var newReferringCompanyInsert = new Company()
+                    company.Name = companyName;
+                    company.Description = businessDescription;
+                    company.SICCode = sicCode;
+                    company.CharterState = charterState;
+                }
+                else
                 {
-                    ID = newReferringCompanyID,
-                    Name = companyName
-                };
-                //newContact.Referring_Company = newReferringCompanyID;
-                _context.Companies.Add(newReferringCompanyInsert);
-            }
+                    string newCompanyID = new GuidHelper().GetGUIDString("company");
+                    var newCompany = new Company()
+                    {
+                        ID = newCompanyID,
+                        Name = companyName,
+                        Description = businessDescription,
+                        SICCode = sicCode,
+                        CharterState = charterState
+                    };
+                    // newContact.AccountId = newCompanyID;
+                    _context.Companies.Add(newCompany);
+                }
 
 
-            var newReferringContact = _context.Contacts.Where(c => c.Id == referringContact).FirstOrDefault();
-            if (newReferringContact != null)
-            {
-                newReferringContact.LastName = referringContactString;
-            }
-            else
-            {
-                string newReferringCompanyID = new GuidHelper().GetGUIDString("company");
-                var newReferringCompanyInsert = new Company()
+                if (!String.IsNullOrEmpty(referringCompany))
                 {
-                    ID = newReferringCompanyID,
-                    Name = referringContactString
-                };
-                //newContact.Referring_Company = newReferringCompanyID;
-                _context.Companies.Add(newReferringCompanyInsert);
-            }
+                    var newReferringCompany = _context.Companies.Where(c => c.ID == referringCompany).FirstOrDefault();
+                    if (newReferringCompany != null)
+                    {
+                        //newReferringCompany.Name = referringCompanyString;
+                    }
+                    else
+                    {
+                        string newReferringCompanyID = new GuidHelper().GetGUIDString("company");
+                        var newReferringCompanyInsert = new Company()
+                        {
+                            ID = newReferringCompanyID,
+                            Name = companyName
+                        };
+                        //newContact.Referring_Company = newReferringCompanyID;
+                        _context.Companies.Add(newReferringCompanyInsert);
+                    }
+                }
+
+
+                if (!String.IsNullOrEmpty(referringContact))
+                {
+                    var newReferringContact = _context.Contacts.Where(c => c.Id == referringContact).FirstOrDefault();
+                    if (newReferringContact != null)
+                    {
+                        //newReferringContact.LastName = referringContactString;
+                    }
+                    else
+                    {
+                        string newReferringCompanyID = new GuidHelper().GetGUIDString("company");
+                        var newReferringCompanyInsert = new Company()
+                        {
+                            ID = newReferringCompanyID,
+                            Name = referringContactString
+                        };
+                        //newContact.Referring_Company = newReferringCompanyID;
+                        _context.Companies.Add(newReferringCompanyInsert);
+                    }
+                }
 
 
 
-            //string newTaskID = new GuidHelper().GetGUIDString("task");
-            //var newActivity = new CRMTask()
-            //{
-            //    Id = newTaskID,
-            //    Type = activityCallType,
-            //    ActivityDate = activityTaskDate,
-            //    OwnerId = activityTaskOwner,
-            //    Description = activityNotes
-            //};
-            //_context.CRMTasks.Add(newActivity);
+                //string newTaskID = new GuidHelper().GetGUIDString("task");
+                //var newActivity = new CRMTask()
+                //{
+                //    Id = newTaskID,
+                //    Type = activityCallType,
+                //    ActivityDate = activityTaskDate,
+                //    OwnerId = activityTaskOwner,
+                //    Description = activityNotes
+                //};
+                //_context.CRMTasks.Add(newActivity);
 
-            var nextScheduledTask = _context.CRMTasks.Where(c=> c.Id == activityID).FirstOrDefault();
+                var nextScheduledTask = _context.CRMTasks.Where(c => c.Id == activityID).FirstOrDefault();
                 if (nextScheduledTask != null)
                 {
                     nextScheduledTask.Type = activityCallType;
@@ -779,16 +872,16 @@ namespace AmeriForce.Controllers
 
                 _context.SaveChanges();
 
-            transaction.Commit();
+                transaction.Commit();
 
 
 
-            return RedirectToAction("Index");
-        }
+                return RedirectToAction("Index");
+            }
             catch (Exception ex)
             {
                 return Content("Error");
-    }
+            }
 
 
             //if (ModelState.IsValid)
@@ -912,42 +1005,84 @@ namespace AmeriForce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SendEmail(string id, IFormCollection collection)
         {
-
             IEmailService emailService = new EmailService(_emailConfig);
-            emailService.Send(collection["FromName"].ToString(), collection["FromAddress"].ToString(),"jasonpzeller@gmail.com", collection["CcAddress"].ToString(), collection["BccAddress"].ToString(), collection["Subject"].ToString(), collection["HTMLBody"].ToString());
+            var toAddress = _contactHelper.GetEmailAddress(collection["ToAddress"].ToString());
+            emailService.Send(collection["FromName"].ToString(), collection["FromAddress"].ToString(), toAddress, collection["CcAddress"].ToString(), 
+                                    collection["BccAddress"].ToString(), collection["Subject"].ToString(), collection["HTMLBody"].ToString());
 
-
-            //var emailHelper = new SendGridEmailHelper();
-
-            //var toAddressEmail = "jasonpzeller@gmail.com"; // new ContactHelper().GetEmailAddress(collection["ToAddress"].ToString());
-            //var collect = collection["ToAddress"].ToString();
-            //var collect2 = collection["CcAddress"].ToString();
-
-            //var tos = new List<string> { toAddressEmail };
-            //var ccs = new List<string> { "bigjpztri@gmail.com", "zellerff@yahoo.com" };
-            //var bccs = new List<string> { "jzeller@amerisource.us.com", };
-            //string tosCombined = string.Join(",", tos);
-            //string ccsCombined = string.Join(",", ccs);
-            //string bccsCombined = string.Join(",", bccs);
-
-            //var email = new OutlookEmailHelper();
-
-            //var newEmail = new EmailViewModel
-            //{
-            //    FromAddress = "admin@amerisource.us.com",
-            //    ToAddresses = tosCombined,
-            //    CCAddresses = ccsCombined,
-            //    BCCAddresses = bccsCombined,
-            //    Subject = "This is a test of the email system",
-            //    Body = new StringBuilder("Hello, welcome to our test!<br><br><img src='http://webs2:88/Intranet/Home/GetImg/28' />")
-            //};
-
-            //var emailStatus = email.SendEmail(newEmail);
-
-            //return Content(emailStatus.ToString());
+            var sentEmailVM = new SentEmailViewModel()
+            {
+                EmailID = _guidHelper.GetGUIDString("email"),
+                CreatedById = _userID,
+                CreatedDate = DateTime.Now, 
+                MessageDate = DateTime.Now,
+                TextBody = collection["HTMLBody"].ToString(),
+                HTMLBody = collection["HTMLBody"].ToString(),
+                Subject = collection["Subject"].ToString(),
+                FromName = collection["FromName"].ToString(),
+                FromAddress = collection["FromAddress"].ToString(),
+                ToAddress = toAddress,
+                CcAddress = collection["CcAddress"].ToString(),
+                BccAddress = collection["BccAddress"].ToString(),
+                RelatedToId = collection["ToAddress"].ToString()
+            };
+            RecordSentEmail(sentEmailVM);
 
             return Content($"{collection["Subject"].ToString()} {collection["HTMLBody"].ToString()}");
         }
+
+        public void RecordSentEmail(SentEmailViewModel sentEmailVM)
+        {
+            if (sentEmailVM != null)
+            {
+                var newEmailAudit = new EmailMessage
+                {
+                    Id = sentEmailVM.EmailID,
+                    CreatedById = sentEmailVM.CreatedById,
+                    CreatedDate = DateTime.Now,
+                    MessageDate = DateTime.Now,
+                    TextBody = sentEmailVM.TextBody,
+                    HtmlBody = sentEmailVM.HTMLBody,
+                    Subject = sentEmailVM.Subject,
+                    FromName = sentEmailVM.FromName,
+                    FromAddress = sentEmailVM.FromAddress,
+                    ToAddress = sentEmailVM.ToAddress,
+                    CcAddress = sentEmailVM.CcAddress,
+                    BccAddress = sentEmailVM.BccAddress,
+                    RelatedTo = sentEmailVM.RelatedToId
+                };
+                _context.EmailMessages.Add(newEmailAudit);
+                _context.SaveChanges();
+            }
+        }
+
+
+        public IActionResult WordRTFMailMerge()
+        {
+            WordRTFMailMergeModel model = new WordRTFMailMergeModel();
+            return View(model);
+        }
+
+        public IActionResult Test()
+        {
+            _mailMergeHelper.MailMergeForASpecificTemplateOpenXML("asdf");
+
+            //Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.Application();
+            ////string clearancename = Form1.Texts;
+
+            //string webRootPath = _webHostEnvironment.WebRootPath;
+            //var fileLocation = $"Templates/clients/Form-Opp - Term Sheet - Standard.doc";
+            //var uploadedFiles = HttpContext.Request.Form.Files;
+
+
+
+            //Microsoft.Office.Interop.Word.Document doc = app.Documents.Open($"{fileLocation}");
+            ////Word.Words wds = doc.Sections[1].Range.Words;
+            //doc.Activate();
+
+            return Content("asdf");
+        }
+
 
 
 
@@ -1034,17 +1169,17 @@ namespace AmeriForce.Controllers
         }
 
 
-        [HttpPost]
-        public JsonResult MailMergeWordDoc(string ContactID, string TemplateType, string OwnerID)
-        {
-            var mailMergeHelper = new MailMergeHelper(_context, OwnerID, "Contacts", TemplateType, ContactID);
-            //mailMergeHelper.WordDocumentMailMerge();
+        //[HttpPost]
+        //public JsonResult MailMergeWordDoc(string ContactID, string TemplateType, string OwnerID)
+        //{
+        //    var mailMergeHelper = new MailMergeHelper(_context, _webHostEnvironment, OwnerID, "Contacts", TemplateType, ContactID);
+        //    //mailMergeHelper.WordDocumentMailMerge();
 
-            return Json(new
-            {
-                resultMessage = "success"
-            });
-        }
+        //    return Json(new
+        //    {
+        //        resultMessage = "success"
+        //    });
+        //}
 
 
         [HttpPost]
@@ -1094,10 +1229,56 @@ namespace AmeriForce.Controllers
             return Json(companyInfo);
         }
 
+
+        [HttpPost]
+        public JsonResult GetContactChartInfo()
+        {
+            List<ContactIndexViewModel> contacts = new List<ContactIndexViewModel>();
+            try
+            {
+                var currentContacts = _context.Contacts.OrderByDescending(c => c.CreatedDate).ToList();
+                if (currentContacts.Count > 0)
+                {
+                    foreach (var currentContact in currentContacts)
+                    {
+                        contacts.Add(new ContactIndexViewModel
+                        {
+                            ID = currentContact.Id,
+                            OwnerName = _userHelper.GetNameFromID(currentContact.OwnerId),
+                            Grade = currentContact.Rating_Sort,
+                            ContactName = GetContactName(currentContact.Id),
+                            Company = GetCompanyName(currentContact.AccountId),
+                            Phone = currentContact.Phone,
+                            Email = currentContact.Email,
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json(contacts);
+        }
+
+
+
         public JsonResult GetContactListByCompany(string id)
         {
             List<SelectListItem> contacts = new List<SelectListItem>();
             contacts = _lovHelper.GetContactListByCompany(id).ToList();
+
+
+            return Json(new SelectList(contacts, "Value", "Text"));
+        }
+
+
+        public JsonResult GetContactListByCompanyName(string name)
+        {
+            string companyID = _companyHelper.GetCompanyIDFromName(name);
+            List<SelectListItem> contacts = new List<SelectListItem>();
+            contacts = _lovHelper.GetContactListByCompany(companyID).ToList();
 
 
             return Json(new SelectList(contacts, "Value", "Text"));

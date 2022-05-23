@@ -1,13 +1,101 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
 <style>
     body {
-    padding-top: 0px;
-}
+        padding-top: 0px;
+    }
 </style>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<link href="~/Content/HomeStyleSheet.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/21.2.7/css/dx.common.css" />
+<link href="~/Content/DevExpressSchedulerStyle.css" rel="stylesheet" />
+@*<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/21.2.7/css/dx.light.css" />*@
+@*<script src="https://cdn3.devexpress.com/jslib/21.2.7/js/dx.all.js"></script>*@
+
+<nav aria-label="breadcrumb" align="right">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item ml-auto"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewBag.UserName Home Page</li>
+    </ol>
+</nav>
+
+<div class="demo-container" style="background-color:#fff;border:1px solid black;">
+    <div class="container">
+        <div class="row contactHeader">
+            <div class="col-lg-5" align="left">
+                <div style="border:0px solid black;">
+                    <table align="left">
+                        <tr>
+                            <td valign="middle" style="border:1px solid #fff;padding:10px;">
+                                <i class="fa fa-house-user" style="font-size:40px;"></i>
+                            </td>
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
+                                <span class="overviewHeader dealAmount">
+                                    @ViewBag.UserName's Home Page
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-6" align="left">
+                
+            </div>
+            <div class="col-lg-1" align="center">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                <h2 class="subHeadingTitle">Contact Next Scheduled Activity Calendar</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 chartStyle">
+                <div class="scheduler"></div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12" style="height:20px;">
+                &nbsp;
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                <h2 class="subHeadingTitle">Key Information</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 chartStyle">
+                <div id="chart"></div>
+            </div>
+            <div class="col-md-4 chartStyle">
+                <div id="chart2"></div>
+            </div>
+            <div class="col-md-4 chartStyle">
+                <div id="chart3"></div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+<script src="~/jQuery/devExtremeJavascript.js"></script>
+
+

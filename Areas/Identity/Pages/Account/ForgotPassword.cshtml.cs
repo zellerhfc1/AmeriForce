@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using AmeriForce.Models.Email;
+using Microsoft.Extensions.Configuration;
+using AmeriForce.Services;
 
 namespace AmeriForce.Areas.Identity.Pages.Account
 {
@@ -18,12 +21,14 @@ namespace AmeriForce.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        //private readonly IEmailSender _emailSender;
+        private readonly EmailConfigurationViewModel _emailConfig = new EmailConfigurationViewModel();
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IConfiguration configuration)
         {
             _userManager = userManager;
-            _emailSender = emailSender;
+            configuration.GetSection("EmailConfiguration").Bind(_emailConfig);
+            //_emailSender = emailSender;
         }
 
         [BindProperty]
@@ -57,10 +62,15 @@ namespace AmeriForce.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
+                IEmailService emailService = new EmailService(_emailConfig);
+                emailService.Send("AmeriForce Admin", "jasonpzeller@gmail.com", Input.Email, "", "", "Reset Password", 
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+
+                //await _emailSender.SendEmailAsync(
+                //    Input.Email,
+                //    "Reset Password",
+                //    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

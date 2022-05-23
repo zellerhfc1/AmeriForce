@@ -556,6 +556,12 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("CharterState")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CompanyType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -564,6 +570,9 @@ namespace AmeriForce.Data.Migrations
 
                     b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MailingAddress")
                         .HasColumnType("nvarchar(max)");
@@ -931,6 +940,27 @@ namespace AmeriForce.Data.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("LOV_ClientStatus");
+                });
+
+            modelBuilder.Entity("AmeriForce.Data.LOV_CompanyType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReferralType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("LOV_CompanyTypes");
                 });
 
             modelBuilder.Entity("AmeriForce.Data.LOV_MailingList", b =>

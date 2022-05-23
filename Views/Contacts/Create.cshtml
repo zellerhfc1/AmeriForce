@@ -42,7 +42,7 @@
             </div>
 
             <div class="col-lg-6" align="left">
-                Use this screen to create a new Contact.
+                &nbsp;
             </div>
             <div class="col-lg-1" align="center">
                 &nbsp;
@@ -528,14 +528,16 @@
                                     <input type="text" id="contactData_Referring_Company" name="contactData_Referring_Company" class="form-control input-lg contactEntryTerms" maxlength="50" />
                                     <input type="hidden" name="ReferringCompanyId" id="ReferringCompanyId" value="" />
                                 </div>
-
+                                
                                 @*REFERRING CONTACT*@
                                 <div class="input-group input-group-sm" style="margin-bottom:5px;">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text input-sm" id="LabelReferring_Contact">Referring Contact </span>
                                         <span class="input-group-text input-sm btn btn-primary btn-sm" name="refreshContacts" id="refreshContacts"><i class="fa fa-redo" aria-hidden="true"></i></span>
                                     </div>
-                                    <input type="text" id="contactData_Referring_Contact" name="contactData_Referring_Contact" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                    @*<input type="text" id="contactData_Referring_Contact" name="contactData_Referring_Contact" class="form-control input-lg contactEntryTerms" maxlength="50" />*@
+                                    <select id="contactData_Referring_Contact" name="contactData_Referring_Contact" class="form-control input-lg contactEntryTerms">
+                                    </select>
                                     <input type="hidden" name="ReferringContactId" id="ReferringContactId" value="" />
                                 </div>
 
@@ -619,7 +621,7 @@
                                     <span class="input-group-text input-sm" id="LabelTaskActivityDate">Task Date </span>
                                     <span class="input-group-text requiredClass" id="IG_taskData_ActivityDate" name="IG_taskData_ActivityDate"></span>
                                 </div>
-                                <input type="text" id="taskData_ActivityDate" name="taskData_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
+                                <input type="datetime-local" id="taskData_ActivityDate" name="taskData_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
                             </div>
 
                             @*TASK nOTES *@

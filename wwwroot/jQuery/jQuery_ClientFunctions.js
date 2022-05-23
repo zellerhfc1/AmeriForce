@@ -128,9 +128,9 @@ $(document).ready(function () {
                     $("#FacilitySuccess").html("<strong>Facility " + facilityName + " has been updated successfully!</strong>")
 
                     var returnToClient = "/Clients/Details/" + facilityClientID;
-                    window.location.href = 'http://' + $(location).attr('host') + returnToClient;
+                    window.location.href = 'https://' + $(location).attr('host') + returnToClient;
                 },
-            4000);
+            2000);
             },
             fail: function (data) {
                 $("#FacilitySuccess").hide();
@@ -212,7 +212,7 @@ $(document).ready(function () {
                         });
 
                     },
-                4000);
+                2000);
                 },
                 fail: function (data) {
                     console.log("error...");
@@ -256,6 +256,7 @@ $(document).ready(function () {
 
     $("#CompanyId").change(function () {
         var existingReferringCompany = $("#CompanyId").val();
+        var existingReferringContact = $("#ContactId").val();
 
         console.log(existingReferringCompany);
 
@@ -272,7 +273,7 @@ $(document).ready(function () {
 
                 $.each(contacts, function (i, contact) {
                     var isSelected = "";
-                    if (existingReferringCompany === contact.Value) {
+                    if (existingReferringContact === contact.Value) {
                         isSelected = " selected ";
                     }
                     $("#clientData_Referring_Contact").append('<option value="' + contact.Value + '" ' + isSelected + '>' +
@@ -366,10 +367,10 @@ $(document).ready(function () {
                     $("#NextCallSuccess").html("<strong>Next Scheduled Call has been updated successfully!</strong>")
 
                     var returnToClient = "/Clients/Details/" + clientID;
-                    window.location.href = 'http://' + $(location).attr('host') + returnToClient;
+                    window.location.href = 'https://' + $(location).attr('host') + returnToClient;
 
                 },
-            4000);
+            2000);
             },
             fail: function (data) {
                 console.log("error");
@@ -419,9 +420,9 @@ $(document).ready(function () {
                     $("#NewNoteSuccess").html("<strong>Note has been updated successfully!</strong>")
 
                     var returnToClient = "/Clients/Details/" + clientID;
-                    window.location.href = 'http://' + $(location).attr('host') + returnToClient;
+                    window.location.href = 'https://' + $(location).attr('host') + returnToClient;
                 },
-            4000);
+            2000);
             },
             fail: function (data) {
                 $("#NewNoteSuccess").hide();
@@ -470,7 +471,7 @@ $(document).ready(function () {
 
                         console.log(data.clientContactGuarantor);
                     },
-                4000);
+                2000);
                 },
                 fail: function (data) {
                     console.log("error...");
@@ -520,9 +521,9 @@ $(document).ready(function () {
                     $("#ClientContactSuccess").html("<strong>Contact has been updated successfully!</strong>")
 
                     var returnToClient = "/Clients/Details/" + clientID;
-                    window.location.href = 'http://' + $(location).attr('host') + returnToClient;
+                    window.location.href = 'https://' + $(location).attr('host') + returnToClient;
                 },
-            4000);
+            2000);
             },
             fail: function (data) {
                 $("#ClientContactSuccess").hide();
@@ -563,9 +564,9 @@ $(document).ready(function () {
 
                     setTimeout(function () {
                         var returnToClient = "/Clients/Details/" + clientID;
-                        window.location.href = 'http://' + $(location).attr('host') + returnToClient;
+                        window.location.href = 'https://' + $(location).attr('host') + returnToClient;
                     },
-                4000);
+                2000);
                 },
                 fail: function (data) {
                     $("#MailMergeSuccess").hide();

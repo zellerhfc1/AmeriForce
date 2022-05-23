@@ -172,6 +172,7 @@ h3.subHeadingTitle {
 
 .nameSubHeaderNextCall {
     font-size: medium;
+    font-style:italic;
 }
 
 .priorityAlert {
@@ -226,7 +227,8 @@ h3.subHeadingTitle {
 }
 
 .darkTableHeading {
-    background-color: #999;
+    background-color: #333;
+    color:#eee;
     font-weight: bold;
 }
 
@@ -272,4 +274,8 @@ h3.subHeadingTitle {
     border:1px solid #999;
     padding:5px;
     margin:5px;
+}
+
+.datepicker {
+    z-index: 1600 !important; /* has to be larger than 1050 */
 }

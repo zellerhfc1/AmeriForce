@@ -14,15 +14,23 @@ namespace AmeriForce.Helpers
 
         public string GetName(string id)
         {
-            string clientName = "";
+            string contactName = "Not Found";
 
             if (id != "")
             {
                 var contact = _context.Contacts.Where(c => c.Id == id).FirstOrDefault();
-                clientName = $"{contact.FirstName} {contact.LastName}";
-
+                if (contact != null)
+                {
+                    if (contact.FirstName == null)
+                    {
+                        contactName = $"{contact.LastName}";
+                    } else { 
+                        contactName = $"{contact.FirstName} {contact.LastName}";
+                    }
+                    
+                }
             }
-            return clientName;
+            return contactName;
         }
 
 

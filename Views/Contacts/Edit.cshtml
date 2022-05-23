@@ -61,7 +61,7 @@
         </div>
 
 
-        @using (Html.BeginForm("Edit", "Contacts", FormMethod.Post, new { @id = "editCreateForm", @name = "editCreateForm", @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Edit", "Contacts", FormMethod.Post, new { @id = "contactEditForm", @name = "contactEditForm", @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             <div class="row">
@@ -122,7 +122,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text input-sm" id="LabelContactDepartment">Department </span>
                                     </div>
-                                    <input type="text" id="contactData_Department" name="contactData_Department" value="@Model.contactData.Department" class="form-control input-lg contactEntryTerms" maxlength="50" />
+                                    <input type="text" id="contactData_Department" name="contactData_Department" value="@Model.contactData.Department" class="form-control input-lg contactEntryTerms" maxlength="100" />
                                 </div>
 
                                 @*CONTACT OWNER*@
@@ -304,7 +304,7 @@
                         </div>
 
 
-                        @*REFERRAL INFORMATION*@
+                        @*COMPANY INFORMATION*@
                         <div class="row">
                             <div class="col-lg-12 dividerTableBackground" style="height:3px;">
                                 &nbsp;
@@ -320,20 +320,22 @@
 
                                 @*COMPANY NAME - Use this just in case the contact exists.  If if does, it will select a Contact ID to update the contact.  If not, it will use the text value.*@
                                 <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <div class="input-group-prepend">
                                     <span class="input-group-text input-sm" id="LabelCompanyName">Company Name </span>
                                     <span class="input-group-text requiredClass" id="IG_CompanyName"></span>
-                                    <input type="text" id="CompanyName" name="CompanyName" class="form-control input-lg clientEntryTerms" maxlength="50" />
                                     </div>
+                                    <input type="text" id="CompanyName" name="CompanyName" value="@Model.companyData.Name" class="form-control input-lg clientEntryTerms" maxlength="50" />
+                                    </div>
+                                    <input type="hidden" name="CompanyId" id="CompanyId" value="@Model.contactData.AccountId" />
 
-                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                @*<div class="input-group input-group-sm" style="margin-bottom:5px;">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text input-sm" id="LabelCompanyName">Company Name</span>
                                         <span class="input-group-text requiredClass" id="IG_CompanyName" name="IG_CompanyName"></span>
                                     </div>
                                     <input type="text" id="CompanyName" name="CompanyName" class="form-control input-lg contactEntryTerms" value="@Model.companyData.Name" maxlength="50" />
-                                    @*<span class="input-group-text input-sm btn btn-primary btn-sm" name="refreshContacts" id="refreshContacts" type="button">Refresh</span>*@
-                                    <input type="hidden" name="CompanyId" id="CompanyId" value="" />
-                                </div>
+                                    <span class="input-group-text input-sm btn btn-primary btn-sm" name="refreshContacts" id="refreshContacts" type="button">Refresh</span>
+                                </div>*@
 
                                 @*COMPANY BUSINESS DESCRIPTION*@
                                 <div class="input-group input-group-sm" style="margin-bottom:5px;">
@@ -508,18 +510,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6" style="padding:5px;" align="left">
-                                @*// Referral_Date
-                                    // Referral_Partner_Agmnt_Date
-                                    //Referral_Partner_Agmnt_Details
-                                    //Referring_Company
-                                    //Referring_Contact*@
 
-                                @*COMPANY NAME - Use this just in case the contact exists.  If if does, it will select a Contact ID to update the contact.  If not, it will use the text value.*@
-                                @*<div class="input-group input-group-sm" style="margin-bottom:5px;">
-                                    <span class="input-group-text input-sm" id="LabelCompanyName">Company Name </span>
-                                    <span class="input-group-text requiredClass" id="IG_CompanyName"></span>
-                                    <input type="text" id="CompanyName" name="CompanyName" class="form-control input-lg clientEntryTerms" maxlength="50" />
-                                    </div>*@
 
                                 @*REFERRING COMPANY*@
                                 <div class="input-group input-group-sm" style="margin-bottom:5px;">
@@ -527,7 +518,7 @@
                                         <span class="input-group-text input-sm" id="LabelReferring_Company">Referring Company </span>
                                     </div>
                                     <input type="text" id="contactData_Referring_Company" name="contactData_Referring_Company" value="@Model.ReferralCompanyName" class="form-control input-lg contactEntryTerms" maxlength="50" />
-                                    <input type="hidden" name="ReferringCompanyId" id="ReferringCompanyId" value="" />
+                                    <input type="hidden" name="ReferringCompanyId" id="ReferringCompanyId" value="@Model.contactData.Referring_Company" />
                                 </div>
 
                                 @*REFERRING CONTACT*@
@@ -536,8 +527,10 @@
                                         <span class="input-group-text input-sm" id="LabelReferring_Contact">Referring Contact </span>
                                         <span class="input-group-text input-sm btn btn-primary btn-sm" name="refreshContacts" id="refreshContacts"><i class="fa fa-redo" aria-hidden="true"></i></span>
                                     </div>
-                                    <input type="text" id="contactData_Referring_Contact" name="contactData_Referring_Contact" value="@Model.contactData.Referring_Contact" class="form-control input-lg contactEntryTerms" maxlength="50" />
-                                    <input type="hidden" name="ReferringContactId" id="ReferringContactId" value="" />
+                                    @*<input type="text" id="contactData_Referring_Contact" name="contactData_Referring_Contact" value="@Model.contactData.Referring_Contact" class="form-control input-lg contactEntryTerms" maxlength="50" />*@
+                                    <select id="contactData_Referring_Contact" name="contactData_Referring_Contact" class="form-control input-lg contactEntryTerms">
+                                    </select>
+                                    <input type="hidden" name="ReferringContactId" id="ReferringContactId" value="@Model.contactData.Referring_Contact" />
                                 </div>
 
                                 @*REFERRAL DATE*@
@@ -620,7 +613,9 @@
                                     <span class="input-group-text input-sm" id="LabelTaskActivityDate">Task Date </span>
                                     <span class="input-group-text requiredClass" id="IG_taskData_ActivityDate" name="IG_taskData_ActivityDate"></span>
                                 </div>
-                                <input type="text" id="taskData_ActivityDate" name="taskData_ActivityDate" value="@Model.taskData.ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
+                               @* <input type="datetime-local" id="taskData_ActivityDate" name="taskData_ActivityDate" value="{@Model.taskData.ActivityDate:yyyy-MM-ddThh:mm}" 
+                                        class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />*@
+                                <input asp-for="taskData.ActivityDate" asp-format="{0:yyyy-MM-ddThh:mm}" type="datetime-local" class="form-control" />
                             </div>
 
                             @*TASK nOTES *@
@@ -648,7 +643,7 @@
 
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input type="submit" value="Edit" class="btn btn-primary btn-lg" />
+                            <input type="submit" value="Save Edits" class="btn btn-primary btn-lg" />
                         </div>
                     </div>
 

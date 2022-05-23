@@ -1,10 +1,12 @@
 ﻿using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace AmeriForce.Controllers
 {
+    [Authorize]
     public class ReportController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;

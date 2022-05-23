@@ -15,8 +15,6 @@ namespace AmeriForce.Models.Clients
 
         public CRMTask taskData { get; set; }
 
-        [Required]
-        public string TestProperty { get; set; }
 
         //LOVs
         public IEnumerable<SelectListItem> BaseList { get; set; }

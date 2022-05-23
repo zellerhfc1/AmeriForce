@@ -4,6 +4,8 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AmeriForce.Services
 {
@@ -29,14 +31,43 @@ namespace AmeriForce.Services
 
         public void Send(string fromName, string fromAddress, string to, string cc, string bcc, string subject, string html)
         {
+            // split ccs and bccs
+            List<string> ccList = new List<string>();
+            List<string> bccList = new List<string>();
+
+            if (!string.IsNullOrEmpty(cc))
+            {
+                ccList = cc.Split(',').ToList();
+            }
+
+            if (!string.IsNullOrEmpty(cc))
+            {
+                bccList = bcc.Split(',').ToList();
+            }
+
             // create message
             var email = new MimeMessage();
 
             var fromEmail = new MailboxAddress(fromName, fromAddress);
-            email.From.Add(fromEmail); // MailboxAddress.Parse(from));
+            email.From.Add(fromEmail);
             email.To.Add(MailboxAddress.Parse(to));
-            //email.Cc.Add(MailboxAddress.Parse(cc));
-            //email.Bcc.Add(MailboxAddress.Parse(bcc));
+
+            if (ccList.Count > 0)
+            {
+                foreach(var ccItem in ccList)
+                { 
+                    email.Cc.Add(MailboxAddress.Parse(ccItem));
+                }
+            }
+
+            if (bccList.Count > 0)
+            {
+                foreach (var bccItem in bccList)
+                {
+                    email.Bcc.Add(MailboxAddress.Parse(bccItem));
+                }
+            }
+
             email.Subject = subject;
             email.Body = new TextPart(TextFormat.Html) { Text = html };
 

@@ -19,9 +19,37 @@ $(document).ready(function () {
     $("#NewContactNoteError").hide();
 
 
+
+
     var today = new Date();
 
     $('#taskData_ActivityDate').datepicker({
+        dateFormat: "mm/dd/yy",
+        startDate: today,
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        autoclose: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        //gotoCurrent: true,
+        orientation: "bottom" // add this
+    });
+
+    $('#contactNextTask_ActivityDate').datepicker({
+        dateFormat: "mm/dd/yy",
+        startDate: today,
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        autoclose: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        //gotoCurrent: true,
+        orientation: "bottom" // add this
+    });
+
+    $('#contactNote_ActivityDate').datepicker({
         dateFormat: "mm/dd/yy",
         startDate: today,
         showOtherMonths: true,
@@ -61,18 +89,18 @@ $(document).ready(function () {
     });
 
 
-    $('#contactData_EmailOptOutDate').datepicker({
-        dateFormat: "mm/dd/yy",
-        startDate: today,
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        autoclose: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-100:+0",
-        //gotoCurrent: true,
-        orientation: "bottom" // add this
-    });
+    //$('#contactData_EmailOptOutDate').datepicker({
+    //    dateFormat: "mm/dd/yy",
+    //    startDate: today,
+    //    showOtherMonths: true,
+    //    selectOtherMonths: true,
+    //    autoclose: true,
+    //    changeMonth: true,
+    //    changeYear: true,
+    //    yearRange: "-100:+0",
+    //    //gotoCurrent: true,
+    //    orientation: "bottom" // add this
+    //});
 
 
     $('#contactData_Referral_Date').datepicker({
@@ -139,7 +167,7 @@ $(document).ready(function () {
                     $("#NewContactNoteSuccess").html("<strong>Note has been updated successfully!</strong>")
 
                     var returnToClient = "/Contacts/Details/" + contactID;
-                    window.location.href = 'http://' + $(location).attr('host') + returnToClient;
+                    window.location.href = 'https://' + $(location).attr('host') + returnToClient;
                 },
             4000);
             },
@@ -317,17 +345,17 @@ $(document).ready(function () {
             success: function (companyInfo) {
 
                 $.each(companyInfo, function (i, company) {
-                    $("#companyData_Description").val(company.description);
-                    $("#companyData_SICCode").val(company.sicCode);
-                    $("#companyData_CharterState").val(company.charterState);
-                    $("#contactData_Referring_Company").append('<option value="' + company.Value + '">' +
-                     company.Text + '</option>');
-                    selectedValue = company.id;
-                    $("#CompanyId").val(company.id);
-                    alert(company.ID);
+                    $("#companyData_Description").val(company.Description);
+                    $("#companyData_SICCode").val(company.SICCode);
+                    $("#companyData_CharterState").val(company.CharterState);
+                    //$("#contactData_Referring_Company").append('<option value="' + company.Value + '">' +
+                    // company.Text + '</option>');
+                    selectedValue = company.ID;
+                    $("#CompanyId").val(company.ID);
+                    console.log("wHAT" + company.ID);
                 });
-                $("#contactData_Referring_Company").val(selectedValue);
-                $("#CompanyId").trigger("change");
+                //$("#contactData_Referring_Company").val(selectedValue);
+                //$("#CompanyId").trigger("change");
             },
             error: function (ex) {
                 //alert('Failed to retrieve states.' + ex);
@@ -338,37 +366,37 @@ $(document).ready(function () {
 
 
 
-    $("#CompanyId").change(function () {
-        var existingReferringContact = $("#ContactId").val();
+    //$("#CompanyId").change(function () {
+    //    var existingReferringContact = $("#ContactId").val();
 
-        console.log(existingReferringContact);
+    //    console.log(existingReferringContact);
 
-        $("#contacttData_Referring_Contact").empty();
-        $.ajax({
-            type: 'POST',
-            url: '/Contacts/GetContactListByCompany',
+    //    $("#contacttData_Referring_Contact").empty();
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: '/Contacts/GetContactListByCompany',
 
-            dataType: 'json',
+    //        dataType: 'json',
 
-            data: { id: $("#contactData_Referring_Company").val() },
+    //        data: { id: $("#contactData_Referring_Company").val() },
 
-            success: function (contacts) {
+    //        success: function (contacts) {
 
-                $.each(contacts, function (i, contact) {
-                    var isSelected = "";
-                    if (existingReferringContact === contact.Value) {
-                        isSelected = " selected ";
-                    }
-                    $("#contactData_Referring_Contact").append('<option value="' + contact.Value + '" ' + isSelected + '>' +
-                     contact.Text + '</option>');
-                });
-            },
-            error: function (ex) {
-                //alert('Failed to retrieve states.' + ex);
-            }
-        });
-        return false;
-    })
+    //            $.each(contacts, function (i, contact) {
+    //                var isSelected = "";
+    //                if (existingReferringContact === contact.Value) {
+    //                    isSelected = " selected ";
+    //                }
+    //                $("#contactData_Referring_Contact").append('<option value="' + contact.Value + '" ' + isSelected + '>' +
+    //                 contact.Text + '</option>');
+    //            });
+    //        },
+    //        error: function (ex) {
+                
+    //        }
+    //    });
+    //    return false;
+    //})
 
 
     $("#CompanyName").autocomplete({
@@ -385,10 +413,10 @@ $(document).ready(function () {
 
                 }
             })
-        },
-        messages: {
-            noResults: "", results: ""
         }
+        //messages: {
+        //    noResults: "", results: ""
+        //}
     });
     // #endregion
 
@@ -399,6 +427,7 @@ $(document).ready(function () {
     $("#contactData_Referring_Company").change(function () {
 
         var selectedValue = "";
+        console.log("dude..." + $("#contactData_Referring_Company").val());
 
         $.ajax({
             type: 'POST',
@@ -427,18 +456,18 @@ $(document).ready(function () {
 
 
     $("#ReferringCompanyId").change(function () {
-        var existingReferringContact = $("#ReferringCompanyId").val();
+        var existingReferringContact = $("#ReferringContactId").val();
 
         console.log("Yo:" + existingReferringContact);
 
         $("#contactData_Referring_Contact").empty();
         $.ajax({
             type: 'POST',
-            url: '/Contacts/GetContactListByCompany',
+            url: '/Contacts/GetContactListByCompanyName',
 
             dataType: 'json',
 
-            data: { id: $("#contactData_Referring_Company").val() },
+            data: { name: $("#contactData_Referring_Company").val() },
 
             success: function (contacts) {
 
@@ -469,12 +498,12 @@ $(document).ready(function () {
                 success: function (data) {
                     response($.map(data, function (item) {
                         console.log(item.name + " " + item.id);
-                        return { label: item.name, value: item.id };
+                        return { label: item.Text, value: item.Value };
                     }))
 
                 }
             })
-        },
+        }
         //messages: {
         //    noResults: "", results: ""
         //}
@@ -489,6 +518,7 @@ $(document).ready(function () {
     $("#contactData_Referring_Contact").change(function () {
 
         var selectedValue = "";
+        $("#ReferringContactId").val($("#contactData_Referring_Contact").val());
 
         $.ajax({
             type: 'POST',
@@ -561,7 +591,8 @@ $(document).ready(function () {
                 success: function (data) {
                     response($.map(data, function (item) {
                         var fullName = item.FirstName + " " + item.LastName;
-                        return { label: fullName, value: item.Value };
+                        //return { label: fullName, value: item.Value };
+                        return { label: item.Text, value: item.Value };
                     }))
 
                 }
@@ -600,6 +631,7 @@ $(document).ready(function () {
 
 
 
+    $("#contactData_Referring_Company").trigger("change");
 
 
 

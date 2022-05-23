@@ -13,6 +13,7 @@ namespace AmeriForce.Models.Companies
         public CompanyEditIndividualCompanyViewModel companyVM { get; set; }
         public DateTime UpdateDate { get; set; }
 
+        public IEnumerable<SelectListItem> CompanyTypeList { get; set; }
         public IEnumerable<SelectListItem> StateList { get; set; }
         public IEnumerable<SelectListItem> SICCodesList {get; set; }
     }

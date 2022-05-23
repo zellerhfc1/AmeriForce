@@ -9,9 +9,12 @@ using AmeriForce.Models.Companies;
 using AmeriForce.Data;
 using AmeriForce.Helpers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 
 namespace AmeriForce.Controllers
 {
+    [Authorize]
     public class CompaniesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,24 +22,28 @@ namespace AmeriForce.Controllers
         private CompanyHelper _companyHelper;
         private UserHelper _userHelper;
         private LOVHelper _lovHelper;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CompaniesController(ApplicationDbContext context)
+        public CompaniesController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _lovHelper = new LOVHelper(_context);
             _companyHelper = new CompanyHelper(_context);
             _userHelper = new UserHelper(_context);
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Companies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? id)
         {
-            return View(await _context.Companies.OrderByDescending(c=>c.CreatedDate).ToListAsync());
+            var currentLetterOfAlphabet = (String.IsNullOrEmpty(id)) ? "A" : id.ToUpper();
+            return View(await _context.Companies.Where(c=>c.Name.StartsWith(id)).OrderByDescending(c=>c.CreatedDate).ToListAsync());
         }
 
         // GET: Companies/Details/5
         public async Task<IActionResult> Details(string id)
         {
+            var companyDetailsVM = new CompanyDetailsViewModel();
             if (id == null)
             {
                 return NotFound();
@@ -44,20 +51,32 @@ namespace AmeriForce.Controllers
 
             var company = await _context.Companies
                 .FirstOrDefaultAsync(m => m.ID == id);
+            if (company != null)
+            {
+                var contacts = await _context.Contacts.Where(c => c.AccountId == company.ID).ToListAsync();
+                companyDetailsVM.company = company;
+                companyDetailsVM.contacts = contacts;
+            }
+
             if (company == null)
             {
                 return NotFound();
             }
 
-            return View(company);
+            
+
+            return View(companyDetailsVM);
         }
 
         // GET: Companies/Create
         public IActionResult Create()
         {
             CompanyCreateViewModel createCompanyVM = new CompanyCreateViewModel();
+
+            createCompanyVM.CompanyTypeList = _lovHelper.GetCompanyTypes();
             createCompanyVM.StateList = _lovHelper.GetStateList();
             createCompanyVM.SICCodesList = _lovHelper.GetSICCodesList();
+
             return View(createCompanyVM);
         }
 
@@ -106,6 +125,8 @@ namespace AmeriForce.Controllers
 
             var convertedCompany = EditCompany_ConvertToViewModel(company);
             editCompanyVM.companyVM = convertedCompany;
+
+            editCompanyVM.CompanyTypeList = _lovHelper.GetCompanyTypes();
             editCompanyVM.StateList = _lovHelper.GetStateList();
             editCompanyVM.SICCodesList = _lovHelper.GetSICCodesList();
 
@@ -129,12 +150,27 @@ namespace AmeriForce.Controllers
             {
                 try
                 {
-                    var convertCompany = EditCompany_ConvertToDataLayer(company.companyVM);
+                    var existingCompany = await _context.Companies.Where(c=>c.ID == id).FirstOrDefaultAsync();
+                    if (existingCompany != null)
+                    {
+                        existingCompany.ID = company.companyVM.ID;
+                        existingCompany.Name = company.companyVM.Name;
+                        existingCompany.Description = company.companyVM.Description;
+                        existingCompany.CompanyType = company.companyVM.CompanyType;
+                        existingCompany.SICCode = (company.companyVM.SICCode == null) ? company.companyVM.SICCodeManual : company.companyVM.SICCode;
+                        existingCompany.CharterState = company.companyVM.CharterState;
+                        existingCompany.MailingAddress = company.companyVM.MailingAddress;
+                        existingCompany.MailingCity = company.companyVM.MailingCity;
+                        existingCompany.MailingState = company.companyVM.MailingState;
+                        existingCompany.MailingPostalCode = company.companyVM.MailingPostalCode;
+                        existingCompany.LastModifiedDate = DateTime.Now;
+                        existingCompany.LastUpdatedBy = _userHelper.GetIDFromName(User.Identity.Name);
+                    }
+                    
                     if (company.companyVM.SICCodeManual != null)
                     {
                         _companyHelper.AddNewSICCodeToList(company.companyVM.SICCodeManual);    
                     }
-                    _context.Update(convertCompany);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -183,13 +219,13 @@ namespace AmeriForce.Controllers
         }
 
 
-        public async Task<IActionResult> MailMergeWordDoc(string id)
-        {
-            var x = new MailMergeHelper(_context, id, "Contacts", "Form-Opp - Term Sheet - Standard.doc");
-            x.WordDocumentMailMerge();
+        //public async Task<IActionResult> MailMergeWordDoc(string id)
+        //{
+        //    var x = new MailMergeHelper(_context, _webHostEnvironment, id, "Contacts", "Form-Opp - Term Sheet - Standard.doc");
+        //    x.WordDocumentMailMerge();
 
-            return Content(x.ToString());
-        }
+        //    return Content(x.ToString());
+        //}
 
 
         public async Task<IActionResult> MergeContacts(string id)
@@ -300,6 +336,41 @@ namespace AmeriForce.Controllers
 
 
 
+        #region JSON Calls
+        [HttpPost]
+        public JsonResult GetCompanyChartInfo()
+        {
+            var companies = new List<CompanyIndexViewModel>();
+            try
+            {
+                var currentCompanies = _context.Companies.OrderByDescending(c=>c.LastModifiedDate).ToList();
+                if (currentCompanies.Count > 0)
+                {
+                    foreach (var currentCompany in currentCompanies)
+                    {
+                        var currentDescription = (currentCompany.Description != null) ? currentCompany.Description.Replace("<br>", "\n") : "";
+                        companies.Add(new CompanyIndexViewModel
+                        {
+                            ID = currentCompany.ID,
+                            name = currentCompany.Name,
+                            companytype = currentCompany.CompanyType,
+                            description = $"{currentDescription}",
+                            state = currentCompany.CharterState,
+                            lastmodifieddate = currentCompany.LastModifiedDate
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json(companies);
+        }
+
+        #endregion
+
 
 
 
@@ -316,6 +387,8 @@ namespace AmeriForce.Controllers
             return _context.Companies.Any(e => e.ID == id);
         }
 
+
+
         #region Company Validation
         private Company CreateCompany_ConvertToDataLayer(CompanyCreateIndividualCompanyViewModel company)
         {
@@ -323,12 +396,15 @@ namespace AmeriForce.Controllers
             {
                 Name = company.Name,
                 Description = company.Description,
+                CompanyType = company.CompanyType,
                 SICCode = (company.SICCode == null) ? company.SICCodeManual : company.SICCode,
                 CharterState = company.CharterState,
                 MailingAddress = company.MailingAddress,
                 MailingCity = company.MailingCity,
                 MailingState = company.MailingState,
-                MailingPostalCode = company.MailingPostalCode
+                MailingPostalCode = company.MailingPostalCode,
+                CreatedBy = _userHelper.GetIDFromName(User.Identity.Name),
+                CreatedDate = DateTime.Now
             };
             return returnCompany;
         }
@@ -340,6 +416,7 @@ namespace AmeriForce.Controllers
                 ID = company.ID,
                 Name = company.Name,
                 Description = company.Description,
+                CompanyType = company.CompanyType,
                 SICCode = company.SICCode,
                 CharterState = company.CharterState,
                 MailingAddress = company.MailingAddress,
@@ -347,25 +424,11 @@ namespace AmeriForce.Controllers
                 MailingState = company.MailingState,
                 MailingPostalCode = (company.MailingPostalCode==null)?"": company.MailingPostalCode.ToString(),
                 CreatedDate = company.CreatedDate,
-                LastModifiedDate = company.LastModifiedDate
+                CreatedBy = company.CreatedBy,
+                LastModifiedDate = company.LastModifiedDate,
+                LastUpdatedBy = _userHelper.GetIDFromName(User.Identity.Name),
             };
             return returnCompanyVM;
-        }
-        private Company EditCompany_ConvertToDataLayer(CompanyEditIndividualCompanyViewModel company)
-        {
-            var returnCompany = new Company()
-            {
-                ID= company.ID,
-                Name = company.Name,
-                Description = company.Description,
-                SICCode = (company.SICCode == null) ? company.SICCodeManual : company.SICCode,
-                CharterState = company.CharterState,
-                MailingAddress = company.MailingAddress,
-                MailingCity = company.MailingCity,
-                MailingState = company.MailingState,
-                MailingPostalCode = company.MailingPostalCode
-            };
-            return returnCompany;
         }
 
 
@@ -393,6 +456,9 @@ namespace AmeriForce.Controllers
             }
         }
         #endregion
+
+
+
 
 
     }

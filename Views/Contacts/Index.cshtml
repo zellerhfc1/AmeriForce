@@ -15,6 +15,7 @@
     <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">Home</a></li>
     <li class="breadcrumb-item">Contacts</li>
+        <li class="breadcrumb-item active" aria-current="page">Contact Listing</li>
     </ol>
     </nav>
 
@@ -42,9 +43,9 @@
                                 Contacts
                             </span>
                             <br />
-                            <span class="nameSubHeader gradeAReversed"> @ViewBag.SubTitle (@ViewBag.ContactCount)</span>
-                            <br />
-                            <span class="nameSubHeaderNextCall"> @ViewBag.TimeStamp</span>
+                            @*<span class="nameSubHeader gradeAReversed"> @ViewBag.SubTitle (@ViewBag.ContactCount)</span>
+                            <br />*@
+                            <span class="nameSubHeaderNextCall"> Current: @DateTime.Now</span>
                         </td>
                     </tr>
                 </table>
@@ -68,62 +69,146 @@
         </div>
     </div>
 
-    <div class="row">
+   @* <div class="row">
         <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
             <a href='@Url.Action("Index", "Contacts", new { id = 999 })' class="btn btn-sm btn-primary">All Contacts</a>
             <a href='@Url.Action("Index", "Contacts", new { id = 1 })' class="btn btn-sm btn-primary">All New Contacts</a>
             <a href='@Url.Action("Index", "Contacts", new { id = 2 })' class="btn btn-sm btn-primary">My Contacts</a>
             <a href='@Url.Action("Index", "Contacts", new { id = 3 })' class="btn btn-sm btn-primary">Active Referral Partner Contacts</a>
         </div>
-    </div>
+    </div>*@
+
+     <div class="row">
+            <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                <a href='@Url.Action("Create", "Contacts")' class="btn btn-sm btn-primary"> <i class="fa fa-plus"></i> Create Contact</a>
+            </div>
+        </div>
 
     <div class="row">
-        <div class="col-lg-6" style="padding:10px;" align="left">
+        @*<div class="col-lg-6" style="padding:10px;" align="left">
             <a href='@Url.Action("Create", "Contacts")' class="btn btn-sm btn-primary" style="padding:0px 5px 0px 5px;font-size:12px;"> <i class="fa fa-plus"></i> Create Contact</a>
-        </div>
-        <div class="col-lg-6" style="padding:10px;" align="left">
-            <p align="right">
-                Search: <input type="text" name="contactSearch" class="searchTextbox" placeholder="Search Contacts..." />
-            </p>
-        </div>
-        </div>
+        </div>*@
 
+
+        <div class="container">
             <div class="row">
                 <div class="col-lg-12" style="padding:10px;" align="left">
                     <div class="container">
+                        <div id="selectStatus"></div>
+                        <div id="contactsIndexGrid">
 
-                        <table class="table table-condensed table-striped table-hover searchTable" style="width:100%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        @*<div class="col-lg-6" style="padding:10px;" align="left">
+            <p align="right">
+                Search: <input type="text" name="contactSearch" class="searchTextbox" placeholder="Search Contacts..." />
+            </p>
+        </div>*@
+        </div>
+
+            @*<div class="row">
+                <div class="col-lg-12" style="padding:10px;" align="left">
+                        
+                        <table id="tableContactList" class="table table-condensed table-hover table-bordered searchTable" style="width:100%;">
                             <tr class="darkTableHeading">
-                                <th align="left" class="leftTextAlign">
-                                    @Html.DisplayName("Owner")
+                                <th align="left" class="leftTextAlign" >
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6" align="left">
+                                                @Html.DisplayName("Owner")
+                                            </div>
+                                            <div class="col-sm-6" align="right">
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableAsc(0)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-up"></i></button>
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableDesc(0)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
-                                <th class="leftTextAlign" style="width:30px;">
-                                    @Html.DisplayName("Grade")
+                                <th class="leftTextAlign" style="width:160px;padding:5px;">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6" align="left">
+                                                @Html.DisplayName("Grade")
+                                            </div>
+                                            <div class="col-sm-6" align="right">
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableAsc(1)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-up"></i></button>
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableDesc(1)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
-                                <th align="left" class="leftTextAlign">
-                                    @Html.DisplayName("Contact Name")
+                                <th align="left" class="leftTextAlign" style="padding:5px;">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6" align="left">
+                                                @Html.DisplayName("Contact Name")
+                                            </div>
+                                            <div class="col-sm-6" align="right">
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableAsc(2)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-up"></i></button>
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableDesc(2)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
-                                <th align="left" class="leftTextAlign">
-                                    @Html.DisplayName("Company")
+                                <th align="left" class="leftTextAlign" style="padding:5px;">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6" align="left">
+                                                @Html.DisplayName("Company")
+                                            </div>
+                                            <div class="col-sm-6" align="right">
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableAsc(3)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-up"></i></button>
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableDesc(3)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
-                                <th align="left" class="leftTextAlign">
-                                    @Html.DisplayName("Phone")
+                                <th class="leftTextAlign" style="width:160px;padding:5px;">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6" align="left">
+                                                @Html.DisplayName("Phone")
+                                            </div>
+                                            <div class="col-sm-6" align="right">
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableAsc(4)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-up"></i></button>
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableDesc(4)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
-                                <th align="left" class="leftTextAlign">
-                                    @Html.DisplayName("Email")
+                                <th align="left" class="leftTextAlign" style="width:160px;padding:5px;">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6" align="left">
+                                                @Html.DisplayName("Email")
+                                            </div>
+                                            <div class="col-sm-6" align="right">
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableAsc(5)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-up"></i></button>
+                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableDesc(5)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
 
-                                <th></th>
+                                <th style="width:100px;"></th>
                             </tr>
 
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td class="leftTextAlign">
+                                    <td class="leftTextAlign" style="padding:3px;width:200px;">
                                         @item.OwnerName
 
                                     </td>
-                                    <td class="leftTextAlign">
+                                    <td class="centerTextAlign" style="padding:3px;">
 
                                         @{
                                             switch (item.Grade)
@@ -149,34 +234,30 @@
                                             }
                                         }
                                     </td>
-                                    <td class="leftTextAlign">
+                                    <td class="leftTextAlign" style="padding:3px;">
                                         @Html.DisplayFor(modelItem => item.ContactName)
                                         @{
                                             if (item.RelationshipStatus == "New")
                                             {
-                                                <span class="label label-danger">@item.RelationshipStatus</span>
+                                                <span class="badge badge-info">@item.RelationshipStatus</span>
                                             }
                                         }
 
                                     </td>
-                                    <td class="leftTextAlign">
+                                    <td class="leftTextAlign" style="padding:3px;">
                                         <a href='@Url.Action("Details", "Companies", new { id = item.AccountID })'>@item.Company</a>
 
-                                        @*<a href='@Url.Action("Details", "Companies", new { id = item.AccountId })'>@controller.GetCompanyName(item.AccountId)</a>*@
                                     </td>
-                                    <td class="leftTextAlign">
+                                    <td class="leftTextAlign" style="padding:3px;">
                                         @Html.DisplayFor(modelItem => item.Phone)
                                     </td>
-                                    <td class="leftTextAlign">
+                                    <td class="leftTextAlign" style="padding:3px;">
                                         @Html.DisplayFor(modelItem => item.Email)
                                     </td>
 
-                                    <td>
+                                    <td style="padding:3px;">
                                         <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-primary" style="padding:0px 5px 0px 5px;font-size:12px;">View</a> 
                                         <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-primary" style="padding:0px 5px 0px 5px;font-size:12px;">Edit</a> 
-                                        @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                                            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                                            @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
                                     </td>
                                 </tr>
                             }
@@ -184,9 +265,9 @@
                         </table>
 
 
-                    </div>
                 </div>
-            </div>
+            </div>*@
+
         </div>
 
         
@@ -194,6 +275,83 @@
         @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
-
+        
+<script src="~/jQuery/devExtremeContactsGridControls.js"></script>
         <script src="~/jQuery/jQuery_TableSearch.js"></script>
         }
+
+<script>
+    function sortTableAsc(rowid) {
+      var table, rows, switching, i, x, y, shouldSwitch;
+      var rowIDConverted = rowid;
+      console.log(rowIDConverted);
+      table = document.getElementById("tableContactList");
+      switching = true;
+      /*Make a loop that will continue until
+      no switching has been done:*/
+      while (switching) {
+        //start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /*Loop through all table rows (except the
+        first, which contains table headers):*/
+        for (i = 1; i < (rows.length - 1); i++) {
+          //start by saying there should be no switching:
+          shouldSwitch = false;
+          /*Get the two elements you want to compare,
+          one from current row and one from the next:*/
+          x = rows[i].getElementsByTagName("TD")[rowIDConverted];
+          y = rows[i + 1].getElementsByTagName("TD")[rowIDConverted];
+          //check if the two rows should switch place:
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            //if so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          /*If a switch has been marked, make the switch
+          and mark that a switch has been done:*/
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+        }
+      }
+    }
+
+    function sortTableDesc(rowid) {
+      var table, rows, switching, i, x, y, shouldSwitch;
+      var rowIDConverted = rowid;
+      console.log(rowIDConverted);
+      table = document.getElementById("tableContactList");
+      switching = true;
+      /*Make a loop that will continue until
+      no switching has been done:*/
+      while (switching) {
+        //start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /*Loop through all table rows (except the
+        first, which contains table headers):*/
+        for (i = 1; i < (rows.length - 1); i++) {
+          //start by saying there should be no switching:
+          shouldSwitch = false;
+          /*Get the two elements you want to compare,
+          one from current row and one from the next:*/
+          x = rows[i].getElementsByTagName("TD")[rowIDConverted];
+          y = rows[i + 1].getElementsByTagName("TD")[rowIDConverted];
+          //check if the two rows should switch place:
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            //if so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          /*If a switch has been marked, make the switch
+          and mark that a switch has been done:*/
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+        }
+      }
+    }
+</script>
