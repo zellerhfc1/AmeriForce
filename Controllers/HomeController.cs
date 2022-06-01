@@ -67,18 +67,27 @@ namespace AmeriForce.Controllers
             var tasks = new List<CRMTaskSchedulerViewModel>();
             try
             {
-                var currentTasks = _context.CRMTasks.Where(c => c.OwnerId == _userHelper.GetIDFromName(User.Identity.Name)).ToList();
-                if (currentTasks.Count > 0)
+                //var currentTasks = _context.CRMTasks.Where(c => c.OwnerId == _userHelper.GetIDFromName(User.Identity.Name)).ToList();
+
+                var currentTasks = from t in _context.CRMTasks
+                               join c in _context.Contacts on t.Id equals c.NextActivityID
+                                   where t.OwnerId == _userHelper.GetIDFromName(User.Identity.Name)
+                                   select new { 
+                                   t, 
+                                   c 
+                               };
+
+                if (currentTasks != null)
                 {
                     foreach (var currentTask in currentTasks)
                     {
-                        var currentDescription = currentTask.Description.Replace("<br>", "\n");
+                        var currentDescription = currentTask.t.Description.Replace("<br>", "\n");
                         tasks.Add(new CRMTaskSchedulerViewModel
                         {
-                            text = _contactHelper.GetName(currentTask.WhoId),
+                            text = _contactHelper.GetName(currentTask.t.WhoId),
                             employeeID = 1,
-                            startDate = currentTask.ActivityDate,
-                            description = $"{currentTask.Type}\n{currentDescription}",
+                            startDate = currentTask.t.ActivityDate,
+                            description = $"{currentTask.t.Type}\n{currentDescription}",
                         });
                     }
                 }

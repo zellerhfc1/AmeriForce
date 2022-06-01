@@ -69,6 +69,7 @@ namespace AmeriForce.Data
 
         public DbSet<LOV_MailingList> LOV_MailingLists { get; set; }
         public DbSet<LOV_CompanyType> LOV_CompanyTypes { get; set; }
+        public DbSet<ClientType> LOV_ClientTypes { get; set; }
 
     }
 }

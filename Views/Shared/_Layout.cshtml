@@ -3,10 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AmeriForce</title>
+    <title>AmeriForce - @ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-
+    <link href="~/Images/ameriforce.ico" rel="shortcut icon" type="image/x-icon" />
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.1.1/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -21,7 +25,7 @@
     <link rel="stylesheet" href="~/Content/Site.css" />
 
     @* Uncomment to use the HtmlEditor control *@
-    @* <script src="https://unpkg.com/devextreme-quill/dist/dx-quill.min.js"></script> *@
+     <script src="https://unpkg.com/devextreme-quill/dist/dx-quill.min.js"></script> 
 
     @* Uncomment to use the Gantt control *@ 
     @*<link href="~/css/devextreme/dx-gantt.css" rel="stylesheet" />*@
@@ -52,7 +56,7 @@
 
     @* Uncomment to enable client-side export *@
     @*<script src="~/js/devextreme/jszip.js"></script>*@
-
+    
     <script src="~/js/devextreme/dx.all.js"></script>
 
     @* Uncomment to provide geo-data for the VectorMap control *@
@@ -81,9 +85,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Contacts" asp-action="Index">Contacts</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Clients
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                                <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Clients" asp-action="NewClientsIndex">New Clients</a>
+                            </div>
                         </li>
+                        @*<li class="nav-item">
+                            <a class="nav-link text-light dropdown-toggle" data-toggle="dropdown">Clients</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a> 
+                                </li>
+                            </ul>
+                        </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Report" asp-action="Index">Reports</a>
+                        </li>
+                        
                         @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>*@

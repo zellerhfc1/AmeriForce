@@ -42,6 +42,11 @@ $(document).ready(function () {
         //});
         const companyGrid = $('#contactsIndexGrid').dxDataGrid({
             dataSource: contactGridData,
+            loadPanel: {
+                enabled: true,
+                height: 300,
+                width: 300,
+            },
             filterRow: { visible: true },
             filterPanel: { visible: true },
             headerFilter: { visible: true },

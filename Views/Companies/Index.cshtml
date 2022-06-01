@@ -35,19 +35,15 @@
                 <div style="border:0px solid black;">
                     <table align="left">
                         <tr>
-                            <td valign="middle" style="border:1px solid #fff;padding:10px;">
+                            <td valign="middle" style="border:1px solid #fff;padding:3px;">
                                 <i class="fa fa-building" style="font-size:48px;"></i>
                             </td>
-                            <td class="leftTextAlign" style="border:1px solid #fff;padding:0px;">
-                                <span class="overviewHeader dealAmount">
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
                                     <span class="overviewHeader dealAmount">
                                         Companies
                                     </span>
-                                    @*<br />
-                                    <span class="nameSubHeader gradeAReversed"> @Model.Count() Total</span>*@
                                 <br />
-                                <span class="nameSubHeaderNextCall">Current: @DateTime.Now</span>
-                                </span>
+                                <span class="nameSubHeaderNextCall">Current as of: @DateTime.Now</span>
                             </td>
                         </tr>
                     </table>
@@ -55,7 +51,7 @@
             </div>
 
             <div class="col-lg-6" align="left">
-                @*Use this screen to create a new Company.*@
+                
             </div>
             <div class="col-lg-1" align="center">
                 &nbsp;
@@ -90,89 +86,6 @@
 
 
 
-        @*<div class="container" style="visibility:hidden;">
-            <div class="row">
-                <div class="col-lg-12" style="padding:10px;" align="left">
-                    <div class="container">
-                        <p align="left">
-                            <a href='@Url.Action("Index", "Companies", new {id="A"})' class="btn btn-sm btn-primary">A</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="B"})' class="btn btn-sm btn-primary">B</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="C"})' class="btn btn-sm btn-primary">C</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="D"})' class="btn btn-sm btn-primary">D</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="E"})' class="btn btn-sm btn-primary">E</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="F"})' class="btn btn-sm btn-primary">F</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="G"})' class="btn btn-sm btn-primary">G</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="H"})' class="btn btn-sm btn-primary">H</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="I"})' class="btn btn-sm btn-primary">I</a>
-                            <a href='@Url.Action("Index", "Companies", new {id="Z"})' class="btn btn-sm btn-primary">Z</a>
-                        </p>
-                        <p align="right">
-                            Search: <input type="text" name="contactSearch" class="searchTextbox" placeholder="Search Contacts..." />
-                        </p>
-                        <table id="tableCompanyList"  class="table table-condensed table-hover table-bordered searchTable" style="width:100%;">
-                            <tr class="darkTableHeading">
-                                
-                                <th align="left" class="leftTextAlign" >
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-sm-6" align="left">
-                                                @Html.DisplayName("Name")
-                                            </div>
-                                            <div class="col-sm-6" align="right">
-                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableAsc(0)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-up"></i></button>
-                                                <button class="btn btn-sm btn-primary tinyButton" onclick="sortTableDesc(0)" style="padding:0px 5px 0px 5px;font-size:8px;"><i class="fa fa-angle-down"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th class="centerTextAlign" style="padding:5px;width:160px;">
-                                    @Html.DisplayName("Company Type")
-                                </th>
-                                <th align="left" class="centerTextAlign" style="padding:5px;">
-                                    @Html.DisplayName("Business Description")
-                                </th>
-                                <th align="left" class="centerTextAlign" style="padding:5px;width:50px;">
-                                    @Html.DisplayName("State")
-                                </th>
-
-                                <th width="120"></th>
-                            </tr>
-
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td class="leftTextAlign align-middle" style="padding:3px;width:25%;">
-                                        @Html.DisplayFor(modelItem => item.Name)
-
-                                    </td>
-                                    <td class="leftTextAlign align-middle" style="padding:3px;width:150px;">
-                                        @Html.DisplayFor(modelItem => item.CompanyType)
-                                    </td>
-                                    <td class="leftTextAlign align-middle" style="padding:3px;">
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td class="leftTextAlign align-middle" style="padding:3px;">
-                                        @Html.DisplayFor(modelItem => item.CharterState)
-                                    </td>
-
-
-                                    <td style="padding:3px;">
-                                        <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-primary" style="padding:0px 5px 0px 5px;font-size:12px;">View</a> 
-                                        <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-primary" style="padding:0px 5px 0px 5px;font-size:12px;">Edit</a> 
-                                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                                    </td>
-                                </tr>
-                            }
-
-                        </table>
-
-
-                    </div>
-                </div>
-            </div>
-        </div>*@
-
-
 
 
     </div>
@@ -187,79 +100,3 @@
 <script src="~/jQuery/devExtremeCompanyGridControls.js"></script>
 <script src="~/jQuery/jQuery_TableSearch.js"></script>
         }
-
-<script>
-    function sortTableAsc(rowid) {
-      var table, rows, switching, i, x, y, shouldSwitch;
-      var rowIDConverted = rowid;
-      console.log(rowIDConverted);
-      table = document.getElementById("tableCompanyList");
-      switching = true;
-      /*Make a loop that will continue until
-      no switching has been done:*/
-      while (switching) {
-        //start by saying: no switching is done:
-        switching = false;
-        rows = table.rows;
-        /*Loop through all table rows (except the
-        first, which contains table headers):*/
-        for (i = 1; i < (rows.length - 1); i++) {
-          //start by saying there should be no switching:
-          shouldSwitch = false;
-          /*Get the two elements you want to compare,
-          one from current row and one from the next:*/
-          x = rows[i].getElementsByTagName("TD")[rowIDConverted];
-          y = rows[i + 1].getElementsByTagName("TD")[rowIDConverted];
-          //check if the two rows should switch place:
-          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-            //if so, mark as a switch and break the loop:
-            shouldSwitch = true;
-            break;
-          }
-        }
-        if (shouldSwitch) {
-          /*If a switch has been marked, make the switch
-          and mark that a switch has been done:*/
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-        }
-      }
-    }
-
-    function sortTableDesc(rowid) {
-      var table, rows, switching, i, x, y, shouldSwitch;
-      var rowIDConverted = rowid;
-      console.log(rowIDConverted);
-      table = document.getElementById("tableCompanyList");
-      switching = true;
-      /*Make a loop that will continue until
-      no switching has been done:*/
-      while (switching) {
-        //start by saying: no switching is done:
-        switching = false;
-        rows = table.rows;
-        /*Loop through all table rows (except the
-        first, which contains table headers):*/
-        for (i = 1; i < (rows.length - 1); i++) {
-          //start by saying there should be no switching:
-          shouldSwitch = false;
-          /*Get the two elements you want to compare,
-          one from current row and one from the next:*/
-          x = rows[i].getElementsByTagName("TD")[rowIDConverted];
-          y = rows[i + 1].getElementsByTagName("TD")[rowIDConverted];
-          //check if the two rows should switch place:
-          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-            //if so, mark as a switch and break the loop:
-            shouldSwitch = true;
-            break;
-          }
-        }
-        if (shouldSwitch) {
-          /*If a switch has been marked, make the switch
-          and mark that a switch has been done:*/
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-        }
-      }
-    }
-</script>

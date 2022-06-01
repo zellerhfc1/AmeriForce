@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <link href="~/Content/ContactStyleSheet.css" rel="stylesheet" />
-@*<link href="~/Content/ClientStyleSheet.css" rel="stylesheet" />*@
 
 
 <nav aria-label="breadcrumb" align="right">
@@ -19,17 +18,8 @@
     </ol>
     </nav>
 
-@*<div style="border:0px solid #333;">*@
-@*<div class="container">
-    <div class="row" align="right">
-    <div class="col-lg-12">
-    <a class="btn btn-primary btn-md tinyButton" href="@Url.Action("TestCreateContact", "Test")" style="padding:5px;margin:10px;">Create New Contact</a>
-    </div>
-    </div>
-    </div>*@
 <div class="container mainPageBody" style="border:1px solid #333;background-color:#fff;">
 
-    @*Contact Detail Div*@
     <div class="row contactHeader">
         <div class="col-lg-5" align="left">
             <div style="border:0px solid black;">
@@ -43,9 +33,7 @@
                                 Contacts
                             </span>
                             <br />
-                            @*<span class="nameSubHeader gradeAReversed"> @ViewBag.SubTitle (@ViewBag.ContactCount)</span>
-                            <br />*@
-                            <span class="nameSubHeaderNextCall"> Current: @DateTime.Now</span>
+                            <span class="nameSubHeaderNextCall"> Current as of: @DateTime.Now</span>
                         </td>
                     </tr>
                 </table>

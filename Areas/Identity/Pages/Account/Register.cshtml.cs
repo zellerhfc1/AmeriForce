@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AmeriForce.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [Authorize]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;

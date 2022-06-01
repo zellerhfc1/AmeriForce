@@ -31,6 +31,7 @@ namespace AmeriForce.Controllers
         private CompanyHelper _companyHelper;
         private ContactHelper _contactHelper;
         private LOVHelper _lovHelper;
+        private LOVHelper _lovHelperFiles;
         private UserHelper _userHelper;
         private UploadHelper _uploadHelper;
         private MailMergeHelper _mailMergeHelper;
@@ -49,6 +50,7 @@ namespace AmeriForce.Controllers
             configuration.GetSection("EmailConfiguration").Bind(_emailConfig);
 
             _lovHelper = new LOVHelper(_context);
+            _lovHelperFiles = new LOVHelper(_context, _webHostEnvironment);
             _companyHelper = new CompanyHelper(_context);
             _contactHelper = new ContactHelper(_context);
             _userHelper = new UserHelper(_context);
@@ -132,7 +134,9 @@ namespace AmeriForce.Controllers
             Contact contact = _context.Contacts.Find(id);
 
             string contactFiles = GetContactFiles(id);
+            string mailMergedFiled = GetMailMergedFiles(id);
             ViewBag.ContactFiles = contactFiles;
+            ViewBag.MailMergedFiles = mailMergedFiled;
 
             detailsModel.contact = contact;
             detailsModel.OwnerName = GetUserNameFromID(contact.OwnerId);
@@ -140,9 +144,30 @@ namespace AmeriForce.Controllers
             detailsModel.ReferringCompany = GetCompanyName(contact.Referring_Company);
             detailsModel.ReferringContact = GetContactName(contact.Referring_Contact);
             detailsModel.clients = _context.Clients.Where(c => c.Referring_Contact == contact.Id);
-            detailsModel.contactNotes = _context.CRMTasks.Where(c => c.WhoId == contact.Id && c.Id != contact.NextActivityID).OrderByDescending(c => c.ActivityDate);
+
+            var contactNotes = _context.CRMTasks.Where(c => c.WhoId == contact.Id && c.Id != contact.NextActivityID).OrderByDescending(c => c.ActivityDate);
+            if (contactNotes != null)
+            {
+                var existingNotes = new List<ContactNoteViewModel>();
+                foreach(var contactNote in contactNotes)
+                {
+                    var existingNote = new ContactNoteViewModel()
+                    {
+                        Owner = GetUserNameFromID(contactNote.OwnerId),
+                        cDate = contactNote.ActivityDate?.ToString("MM/dd/yyyy") ?? "",
+                        cTime = contactNote.ActivityDate?.ToString("hh:mm:ss tt") ?? "",
+                        Type = contactNote.Type,
+                        Subject = contactNote.Subject,
+                        Description = contactNote.Description
+                    };
+                    existingNotes.Add(existingNote);
+                }
+                detailsModel.contactNotesViewModel = existingNotes;
+
+            }
+
             detailsModel.contactNextTask = _context.CRMTasks.Where(c => c.Id == detailsModel.contact.NextActivityID).FirstOrDefault();
-            detailsModel.emailMessages = _context.EmailMessages.Where(e => e.RelatedTo == id).ToList();
+            detailsModel.emailMessages = _context.EmailMessages.Where(e => e.RelatedTo == id).OrderByDescending(e=>e.CreatedDate).ToList();
 
             if (detailsModel.contactNextTask == null)
             {
@@ -169,7 +194,7 @@ namespace AmeriForce.Controllers
             detailsModel.TaskListNotes = _lovHelper.GetTaskTypes();
             detailsModel.ActiveUserListNotes = _lovHelper.GetActiveUsers();
             detailsModel.YesNoList = _lovHelper.GetYesNoList();
-            detailsModel.MailMergeTemplateList = _lovHelper.GetMailMergeTemplateList();
+            detailsModel.MailMergeTemplateList = _lovHelperFiles.GetMailMergeTemplateList("contacts");
 
 
             // Duplicate Detection
@@ -1005,14 +1030,22 @@ namespace AmeriForce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SendEmail(string id, IFormCollection collection)
         {
+            string emailGUID = _guidHelper.GetGUIDString("email");
+
+            UploadContactEmailAttachments(id, emailGUID, collection);
+
+            List<string> contactEmailFiles = GetEmailContactFiles(id, emailGUID);
+
             IEmailService emailService = new EmailService(_emailConfig);
+
             var toAddress = _contactHelper.GetEmailAddress(collection["ToAddress"].ToString());
+            var preHTML = $"<pre style='font-family:Arial,Helvetica;'>{collection["HTMLBody"].ToString()}</pre>";
             emailService.Send(collection["FromName"].ToString(), collection["FromAddress"].ToString(), toAddress, collection["CcAddress"].ToString(), 
-                                    collection["BccAddress"].ToString(), collection["Subject"].ToString(), collection["HTMLBody"].ToString());
+                                    collection["BccAddress"].ToString(), collection["Subject"].ToString(), preHTML, id, emailGUID, contactEmailFiles);
 
             var sentEmailVM = new SentEmailViewModel()
             {
-                EmailID = _guidHelper.GetGUIDString("email"),
+                EmailID = emailGUID,
                 CreatedById = _userID,
                 CreatedDate = DateTime.Now, 
                 MessageDate = DateTime.Now,
@@ -1028,8 +1061,41 @@ namespace AmeriForce.Controllers
             };
             RecordSentEmail(sentEmailVM);
 
-            return Content($"{collection["Subject"].ToString()} {collection["HTMLBody"].ToString()}");
+            return RedirectToAction("Details", "Contacts", new { id = id });
         }
+
+        //public IActionResult WordRTFMailMerge()
+        //{
+        //    WordRTFMailMergeModel model = new WordRTFMailMergeModel();
+        //    return View(model);
+        //}
+
+        //public IActionResult Test()
+        //{
+        //    _mailMergeHelper.MailMergeForASpecificTemplateOpenXML("asdf");
+
+        //    //Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.Application();
+        //    ////string clearancename = Form1.Texts;
+
+        //    //string webRootPath = _webHostEnvironment.WebRootPath;
+        //    //var fileLocation = $"Templates/clients/Form-Opp - Term Sheet - Standard.doc";
+        //    //var uploadedFiles = HttpContext.Request.Form.Files;
+
+
+
+        //    //Microsoft.Office.Interop.Word.Document doc = app.Documents.Open($"{fileLocation}");
+        //    ////Word.Words wds = doc.Sections[1].Range.Words;
+        //    //doc.Activate();
+
+        //    return Content("asdf");
+        //}
+
+
+
+
+
+
+
 
         public void RecordSentEmail(SentEmailViewModel sentEmailVM)
         {
@@ -1056,41 +1122,45 @@ namespace AmeriForce.Controllers
             }
         }
 
-
-        public IActionResult WordRTFMailMerge()
+        public List<string> UploadContactEmailAttachments(string id, string emailGUID, IFormCollection collection)
         {
-            WordRTFMailMergeModel model = new WordRTFMailMergeModel();
-            return View(model);
+            var fileUploadModel = new FileUploadViewModel();
+
+            var contactID = id;
+            var fileUser = User.Identity.Name;
+            var userFullName = _userHelper.GetNameFromUserName(User.Identity.Name);
+
+            _uploadHelper.CreatedocumentDirectory(emailGUID, $"Emails/Contacts/{contactID}");
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            var fileLocation = $"Emails/Contacts/{contactID}/{emailGUID}";
+            var uploadedFiles = HttpContext.Request.Form.Files;
+
+            var user = _context.Users.SingleOrDefault(u => u.UserName == userFullName);
+
+            List<string> fileUploads = new List<string>();
+            try
+            {
+                foreach (IFormFile uploadedFile in uploadedFiles)
+                {
+                    string fileName = Path.GetFileName(uploadedFile.FileName);
+                    fileName = fileName.Replace("'", "\\'");
+                    using (FileStream stream = new FileStream(Path.Combine(webRootPath, fileLocation, fileName), FileMode.Create))
+                    {
+                        uploadedFile.CopyTo(stream);
+
+                        fileUploads.Add(fileName);
+                        ViewBag.UploadStatus += string.Format("<b>{0}</b> uploaded.<br />", fileName);
+                    }
+                }
+
+                return fileUploads;
+            }
+            catch
+            {
+
+            }
+            return fileUploads;
         }
-
-        public IActionResult Test()
-        {
-            _mailMergeHelper.MailMergeForASpecificTemplateOpenXML("asdf");
-
-            //Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.Application();
-            ////string clearancename = Form1.Texts;
-
-            //string webRootPath = _webHostEnvironment.WebRootPath;
-            //var fileLocation = $"Templates/clients/Form-Opp - Term Sheet - Standard.doc";
-            //var uploadedFiles = HttpContext.Request.Form.Files;
-
-
-
-            //Microsoft.Office.Interop.Word.Document doc = app.Documents.Open($"{fileLocation}");
-            ////Word.Words wds = doc.Sections[1].Range.Words;
-            //doc.Activate();
-
-            return Content("asdf");
-        }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1151,8 +1221,10 @@ namespace AmeriForce.Controllers
                     Type = NextNoteType,
                     OwnerId = NextNoteOwnerID,
                     ActivityDate = DateTime.Now,
-                    Description = $"{NextNoteDescription}<br>Complete By: {NextNoteActivityDate}",
-                    CreatedById = User.Identity.Name
+                    Description = $"{NextNoteDescription}<br>Completed On: {NextNoteActivityDate.Replace("T"," ")}",
+                    CreatedById = GetUserIDFromUserName(User.Identity.Name),
+                    LastModifiedById = GetUserIDFromUserName(User.Identity.Name),
+                    CompletedDateTime = Convert.ToDateTime(NextNoteActivityDate),
                 };
                 _context.CRMTasks.Add(newNote);
                 _context.SaveChanges();
@@ -1262,8 +1334,6 @@ namespace AmeriForce.Controllers
             return Json(contacts);
         }
 
-
-
         public JsonResult GetContactListByCompany(string id)
         {
             List<SelectListItem> contacts = new List<SelectListItem>();
@@ -1271,6 +1341,27 @@ namespace AmeriForce.Controllers
 
 
             return Json(new SelectList(contacts, "Value", "Text"));
+        }
+
+        public JsonResult MailMerge(string ContactID, string TemplateName, string OwnerID)
+        {
+
+            // Create VM and pass to mail merge function
+            var contactMailMergeVM = new ContactMailMergeViewModel();
+            contactMailMergeVM.contact = _context.Contacts.Where(c => c.Id == ContactID).FirstOrDefault();
+            if (contactMailMergeVM.contact != null)
+            {
+                contactMailMergeVM.company = _context.Companies.Where(c => c.ID == contactMailMergeVM.contact.AccountId).FirstOrDefault();
+            }
+            contactMailMergeVM.owner = _context.Users.Where(c => c.Id == OwnerID).FirstOrDefault();
+            contactMailMergeVM.TemplateFileName = TemplateName;
+
+            _mailMergeHelper.MailMergeForASpecificTemplateOpenXML(contactMailMergeVM);
+
+            return Json(new
+            {
+                resultMessage = "success"
+            });
         }
 
 
@@ -1283,6 +1374,18 @@ namespace AmeriForce.Controllers
 
             return Json(new SelectList(contacts, "Value", "Text"));
         }
+
+
+        public JsonResult GetHTMLTemplate(string templateName)
+        {
+            var emailTemplate = _context.TestCompany.Where(t => t.ID.ToString() == templateName).FirstOrDefault();
+            if (emailTemplate != null)
+            {
+                return Json(emailTemplate.Name);
+            }
+            return Json("No Template Available");
+        }
+
 
 
 
@@ -1390,6 +1493,162 @@ namespace AmeriForce.Controllers
                 return "<div class='well well-sm' style='margin:2px;'>No Files Yet</div>";
             }
             return returnString;
+
+        }
+
+        // GET Mail Merged FILES
+        internal string GetMailMergedFiles(string id)
+        {
+            var returnString = "";
+
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            var fileLocation = $"MergedDocuments/Contacts/{id}";
+            var fileTypeFontAwesome = "file";
+            var colorFontAwesome = "80a7d8";
+
+            try
+            {
+                returnString += "<div class='container'><div class='row'><table class='table table-condensed table-hover table-striped' style='width:100%;padding:0px;'>";
+
+                var files = new DirectoryInfo(Path.Combine(webRootPath, fileLocation)).GetFiles().OrderByDescending(f => f.CreationTime);
+
+                foreach (var f in files)
+                {
+                    var fileInfo = new FileInfo(f.ToString());
+                    string scrubbedF = f.ToString().Replace("'", "\\'");
+
+                    if (fileInfo.Extension.ToUpper().Contains("PDF"))
+                    {
+                        fileTypeFontAwesome = "file-pdf";
+                        colorFontAwesome = "ff0000";
+                    }
+
+                    if (fileInfo.Extension.ToUpper().Contains("DOC"))
+                    {
+                        fileTypeFontAwesome = "file-word";
+                        colorFontAwesome = "0078d7 ";
+                    }
+
+                    if (fileInfo.Extension.ToUpper().Contains("XLS") || fileInfo.Extension.ToUpper().Contains("CSV"))
+                    {
+                        fileTypeFontAwesome = "file-excel";
+                        colorFontAwesome = "1D6F42";
+                    }
+
+                    if (fileInfo.Extension.ToUpper().Contains("PNG") || fileInfo.Extension.ToUpper().Contains("JPG") || fileInfo.Extension.ToUpper().Contains("JPEG")
+                                || fileInfo.Extension.ToUpper().Contains("GIF") || fileInfo.Extension.ToUpper().Contains("TIFF"))
+                    {
+                        fileTypeFontAwesome = "file-image";
+                        colorFontAwesome = "999";
+                    }
+
+                    //returnString += "<a href='../../Images/DecisionLogicReports/" + Path.GetFileName(f) + "' target='_blank'><span class='glyphicon glyphicon-file' data-toggle='tooltip' title='" + Path.GetFileName(f) + "' style='color:#80a7d8;'></span></a>";
+                    //returnString += String.Format("<a href='../../Uploads/CBR/{0}/{1}' target='_blank'><span class='glyphicon glyphicon-file' data-toggle='tooltip' title='{1}' style='color:#80a7d8;'></span></a><br>", id, Path.GetFileName(f));
+                    var encodedFileName = Path.GetFileName(f.ToString()).Replace("'", HttpUtility.UrlEncode("'")); 
+                    encodedFileName = Path.GetFileName(f.ToString()).Replace("%", HttpUtility.UrlEncode("%"));
+                    returnString += $@"<tr><td style='width:5%;padding:3px;' class='leftTextAlign'>
+                                            <i class='fa fa-{fileTypeFontAwesome}' data-toggle='tooltip' title='{1}' style='color:#{colorFontAwesome};font-size:14px;padding:3px;'></i></td>
+                                                <td class='leftTextAlign' style='width:60%;padding:3px;'><a href='../../MergedDocuments/Contacts/{id}/{encodedFileName}' target='_blank'><span style='font-size:12px;'>{Path.GetFileName(f.ToString())}</span>
+                                                </a></td>
+                                                <td style='width:35%;padding:3px;'>Uploaded: {fileInfo.LastWriteTime.ToString()}</td>
+                                                </tr>";
+
+                    //< td class='leftTextAlign' style='width:60%;padding:3px;'><a href = '../../MergedDocuments/Contacts/{id}/{Path.GetFileName(f.ToString()).Replace("'", HttpUtility.UrlEncode("'"))}' target='_blank'><span style = 'font-size:12px;' >{Path.GetFileName(f.ToString())}</span>
+                    
+        //fileInfo.LastWriteTime.ToString() + "</tr></table></div></div>", id, Path.GetFileName(f), "<b>" + Path.GetFileName(f) + "</b><br>Uploaded: " +
+                    //fileInfo.LastWriteTime.ToString() + "<br>Last Opened: " + fileInfo.LastAccessTime.ToString(), fileTypeFontAwesome, colorFontAwesome);
+                }
+                returnString += "</table></div></div>";
+            }
+            catch
+            {
+                return "<div class='well well-sm' style='margin:2px;'>No Files Yet</div>";
+            }
+            return returnString;
+
+        }
+
+
+
+        // GET UPLOADED FILES
+        internal List<string> GetEmailContactFiles(string contactID, string emailID)
+        {
+            var returnFiles = new List<string>();
+
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            var fileLocation = $"Emails/Contacts/{contactID}/{emailID}";
+            var files = new DirectoryInfo(Path.Combine(webRootPath, fileLocation)).GetFiles().OrderByDescending(f => f.CreationTime);
+
+            try
+            {
+                foreach (var f in files)
+                {
+                    var scrubbedF = Path.GetFileName(f.ToString()).Replace("'", HttpUtility.UrlEncode("'"));
+                    returnFiles.Add(scrubbedF);
+                }
+            }
+            catch
+            {
+                
+            }
+            return returnFiles;
+
+
+            //try
+            //{
+            //    returnString += "<div class='container'><div class='row'><table class='table table-condensed table-hover table-striped' style='width:100%;padding:0px;'>";
+
+
+            //    foreach (var f in files)
+            //    {
+            //        var fileInfo = new FileInfo(f.ToString());
+            //        string scrubbedF = f.ToString().Replace("'", "\\'");
+
+            //        if (fileInfo.Extension.ToUpper().Contains("PDF"))
+            //        {
+            //            fileTypeFontAwesome = "file-pdf";
+            //            colorFontAwesome = "ff0000";
+            //        }
+
+            //        if (fileInfo.Extension.ToUpper().Contains("DOC"))
+            //        {
+            //            fileTypeFontAwesome = "file-word";
+            //            colorFontAwesome = "0078d7 ";
+            //        }
+
+            //        if (fileInfo.Extension.ToUpper().Contains("XLS") || fileInfo.Extension.ToUpper().Contains("CSV"))
+            //        {
+            //            fileTypeFontAwesome = "file-excel";
+            //            colorFontAwesome = "1D6F42";
+            //        }
+
+            //        if (fileInfo.Extension.ToUpper().Contains("PNG") || fileInfo.Extension.ToUpper().Contains("JPG") || fileInfo.Extension.ToUpper().Contains("JPEG")
+            //                    || fileInfo.Extension.ToUpper().Contains("GIF") || fileInfo.Extension.ToUpper().Contains("TIFF"))
+            //        {
+            //            fileTypeFontAwesome = "file-image";
+            //            colorFontAwesome = "999";
+            //        }
+
+            //        //returnString += "<a href='../../Images/DecisionLogicReports/" + Path.GetFileName(f) + "' target='_blank'><span class='glyphicon glyphicon-file' data-toggle='tooltip' title='" + Path.GetFileName(f) + "' style='color:#80a7d8;'></span></a>";
+            //        //returnString += String.Format("<a href='../../Uploads/CBR/{0}/{1}' target='_blank'><span class='glyphicon glyphicon-file' data-toggle='tooltip' title='{1}' style='color:#80a7d8;'></span></a><br>", id, Path.GetFileName(f));
+
+            //        returnString += $@"<tr><td style='width:5%;padding:3px;' class='leftTextAlign'>
+            //                                <i class='fa fa-{fileTypeFontAwesome}' data-toggle='tooltip' title='{1}' style='color:#{colorFontAwesome};font-size:14px;padding:3px;'></i></td>
+            //                                    <td class='leftTextAlign' style='width:60%;padding:3px;'><a href='../../Documents/Contacts/{id}/{Path.GetFileName(f.ToString()).Replace("'", HttpUtility.UrlEncode("'"))}' target='_blank'><span style='font-size:12px;'>{Path.GetFileName(f.ToString())}</span>
+            //                                    </a></td>
+            //                                    <td style='width:35%;padding:3px;'>Uploaded: {fileInfo.LastWriteTime.ToString()}</td>
+            //                                    </tr>";
+
+            //        //fileInfo.LastWriteTime.ToString() + "</tr></table></div></div>", id, Path.GetFileName(f), "<b>" + Path.GetFileName(f) + "</b><br>Uploaded: " +
+            //        //fileInfo.LastWriteTime.ToString() + "<br>Last Opened: " + fileInfo.LastAccessTime.ToString(), fileTypeFontAwesome, colorFontAwesome);
+            //    }
+            //    returnString += "</table></div></div>";
+            //}
+            //catch
+            //{
+            //    return "<div class='well well-sm' style='margin:2px;'>No Files Yet</div>";
+            //}
+            //return returnString;
 
         }
 

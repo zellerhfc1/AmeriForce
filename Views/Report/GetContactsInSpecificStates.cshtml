@@ -1,0 +1,105 @@
+﻿
+
+<link href="~/Content/ContactStyleSheet.css" rel="stylesheet" />
+
+<nav aria-label="breadcrumb" align="right">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Report", new { id=999 })">Reports</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Contacts By State</li>
+    </ol>
+</nav>
+
+<div style="border:0px solid #333;">
+    @*<div class="container">
+            <div class="row" align="right">
+                <div class="col-lg-12">
+                    <a class="btn btn-primary btn-md tinyButton" href="@Url.Action("TestCreateContact", "Test")" style="padding:5px;margin:10px;">Create New Contact</a>
+                </div>
+            </div>
+        </div>*@
+    <div class="container mainPageBody" style="border:1px solid #333;background-color:#fff;">
+
+        @*Contact Detail Div*@
+        <div class="row contactHeader">
+            <div class="col-lg-5" align="left">
+                <div style="border:0px solid black;">
+                    <table align="left">
+                        <tr>
+                            <td valign="middle" style="border:1px solid #fff;padding:10px;">
+                                <i class="fa fa-table" style="font-size:40px;"></i>
+                            </td>
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
+                                <span class="overviewHeader dealAmount">
+                                    Contacts By State
+                                </span>
+                                <br />
+                                <span class="nameSubHeaderNextCall"> Current As Of: @DateTime.Now</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-3 dealAmount" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-3" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-1" align="center">
+                @*<table>
+                    <tr>
+                        <td>
+                            <img src="~/Images/lorisquare.png" class="img-thumbnail img-circle" style="height:70px;" />
+                            <br />
+                            <b>Lori Lemuel</b>
+                        </td>
+                    </tr>
+                </table>*@
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                @*<a href='@Url.Action("Create", "Clients")' class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Create Client</a>*@
+                @*<a href='@Url.Action("Index", "Clients", new { id = 999 })' class="btn btn-sm btn-primary">All Clients In Pipeline</a>
+                <a href='@Url.Action("Index", "Clients", new { id = 3 })' class="btn btn-sm btn-primary">All New Clients</a>
+                <a href='@Url.Action("Index", "Clients", new { id = 1 })' class="btn btn-sm btn-primary">My Clients In Pipeline</a>
+                <a href='@Url.Action("Index", "Clients", new { id = 2 })' class="btn btn-sm btn-primary">My Clients (All)</a>*@
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;" align="left">
+                    <div class="container">
+                        <div id="selectStatus"></div>
+                        <div id="contactsInSpecificStatesGrid">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+
+
+@section Scripts {
+        @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+        
+        <script src="~/jQuery/Reports/devExtremeContactReportControls.js"></script>
+        <script src="~/jQuery/jQuery_TableSearch.js"></script>
+        }

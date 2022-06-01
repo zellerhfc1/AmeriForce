@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using DocumentFormat.OpenXml.Packaging;
 using Aspose.Words;
 using System.Data;
+using AmeriForce.Models.Contacts;
 
 namespace AmeriForce.Helpers
 {
@@ -457,23 +458,94 @@ namespace AmeriForce.Helpers
         //    }
         //}
 
-        public void MailMergeForASpecificTemplateOpenXML(string templateName)
+        public void MailMergeForASpecificTemplateOpenXML(ContactMailMergeViewModel contactMailMergeVM)
         {
             //public string ConvertDocxToHtml(string docxFileEncodedData)
             //{
 
-            templateName = "Form-Opp - Term Sheet - Standard.doc";
             string webRootPath = _webHostEnvironment.WebRootPath;
-            var folderLocation = $"Templates/Contacts/TestDoc.doc";
-            var fileLocation = $"Templates/Contacts/{templateName}";
+            var folderLocation = $"MergedDocuments/Contacts/{contactMailMergeVM.contact.Id}/Merged_{contactMailMergeVM.TemplateFileName}";
+            var fileLocation = $"Templates/Contacts/{contactMailMergeVM.TemplateFileName}";
             var folderPath = Path.Combine(webRootPath, folderLocation);
             var filePath = Path.Combine(webRootPath, fileLocation);
+
+            var contact = contactMailMergeVM.contact;
 
 
             Aspose.Words.Document doc = new Aspose.Words.Document(filePath);
 
-            doc.MailMerge.Execute(new string[] { "CONTACT_FULLNAME" },
-        new object[] { "John Doe" });
+            if (contactMailMergeVM.contact != null)
+            {
+
+                doc.MailMerge.Execute(new string[] { "CONTACT_FULLNAME" }, new object[] { $"{contact.FirstName} {contact.LastName}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_PHONE" }, new object[] { $"{contact.Phone}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_FAX" }, new object[] { $"{contact.Fax}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_TITLE" }, new object[] { $"{contact.Title}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_MAILINGSTREET" }, new object[] { $"{contact.MailingStreet}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_MAILINGCITY" }, new object[] { $"{contact.MailingCity}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_MAILINGSTATE" }, new object[] { $"{contact.MailingState}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_MAILINGPOSTALCODE" }, new object[] { $"{contact.MailingPostalCode}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_EMAIL" }, new object[] { $"{contact.Email}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_TAX_ID" }, new object[] { $"{contact.Tax_ID}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_FULLMAILINGADDRESS" }, new object[] { $"{contact.MailingStreet} {contact.MailingCity}, {contact.MailingState}{contact.MailingPostalCode}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_FIRSTNAME" }, new object[] { $"{contact.FirstName}" });
+                doc.MailMerge.Execute(new string[] { "CONTACT_LASTNAME" }, new object[] { $"{contact.LastName}" });
+
+            }
+
+            //doc.MailMerge.Execute(new string[] { "CONTACT_FULLNAME" }, new object[] { XXXXXXXXXXXX });
+            //doc.MailMerge.Execute(new string[] { "OPPORTUNITY_LEGAL_ENTITY_NAME" }, new object[] { "This Company" });
+            //doc.MailMerge.Execute(new string[] { "OPPORTUNITYOWNER_FULLNAME" }, new object[] { "Daniel Martinez" });
+            //doc.MailMerge.Execute(new string[] { "OPPORTUNITYOWNER_TITLE" }, new object[] { "Worker A12" });
+            //doc.MailMerge.Execute(new string[] { "CONTACT_TITLE" }, new object[] { "Business Development Officer" });
+            //doc.MailMerge.Execute(new string[] { "OPPORTUNITY_REFERRING_CONTACT" }, new object[] { "WRT" });
+
+            //if (fieldName == "USER_FULLNAME") { myMergeField.Select(); wordApp.Selection.TypeText($"{owner.FirstName} {owner.LastName}"); }
+            //if (fieldName == "USER_STREET") { myMergeField.Select(); wordApp.Selection.TypeText("7225 Langtry St."); }// wordApp.Selection.TypeText(contact.MailingStreet); }
+            //if (fieldName == "USER_CITY") { myMergeField.Select(); wordApp.Selection.TypeText("Houston"); }
+            //if (fieldName == "USER_STATE") { myMergeField.Select(); wordApp.Selection.TypeText("TX"); }
+            //if (fieldName == "USER_POSTALCODE") { myMergeField.Select(); wordApp.Selection.TypeText("77040"); }
+            //if (fieldName == "USER_PHONE") { myMergeField.Select(); wordApp.Selection.TypeText("(713) 863-8300"); }
+            //if (fieldName == "USER_FAX") { myMergeField.Select(); wordApp.Selection.TypeText(" "); }
+
+            //if (contact != null)
+            //{
+            //    if (fieldName == "CONTACT_FULLNAME") { myMergeField.Select(); wordApp.Selection.TypeText($"{contact.FirstName} {contact.LastName}"); }
+            //    if (fieldName == "CONTACT_PHONE") { myMergeField.Select(); wordApp.Selection.TypeText(contact.Phone); }
+            //    if (fieldName == "CONTACT_FAX") { myMergeField.Select(); wordApp.Selection.TypeText(contact.Fax); }
+            //    if (fieldName == "CONTACT_TITLE") { myMergeField.Select(); wordApp.Selection.TypeText(contact.Title); }
+            //    if (fieldName == "CONTACT_MAILINGSTREET") { myMergeField.Select(); wordApp.Selection.TypeText(contact.MailingStreet); }
+            //    if (fieldName == "CONTACT_MAILINGCITY") { myMergeField.Select(); wordApp.Selection.TypeText(contact.MailingCity); }
+            //    if (fieldName == "CONTACT_MAILINGSTATE") { myMergeField.Select(); wordApp.Selection.TypeText(contact.MailingState); }
+            //    if (fieldName == "CONTACT_MAILINGPOSTALCODE") { myMergeField.Select(); wordApp.Selection.TypeText(contact.MailingPostalCode); }
+            //    if (fieldName == "CONTACT_EMAIL") { myMergeField.Select(); wordApp.Selection.TypeText(contact.Email); }
+            //    if (fieldName == "CONTACT_TAX_ID") { myMergeField.Select(); wordApp.Selection.TypeText(contact.Tax_ID); }
+            //    if (fieldName == "CONTACT_FULLMAILINGADDRESS") { myMergeField.Select(); wordApp.Selection.TypeText($"{contact.MailingStreet} {contact.MailingCity}, {contact.MailingState}  {contact.MailingPostalCode}"); }
+            //    if (fieldName == "CONTACT_FIRSTNAME") { myMergeField.Select(); wordApp.Selection.TypeText(contact.FirstName); }
+            //    if (fieldName == "CONTACT_LASTNAME") { myMergeField.Select(); wordApp.Selection.TypeText(contact.LastName); }
+            //    if (fieldName == "CONTACT_LASTNAME") { myMergeField.Select(); wordApp.Selection.TypeText(company.Name); }
+
+
+            //}
+
+            //CONTACTOWNER_FULLNAME
+            //    CONTACTOWNER_TITLE
+
+            //if (fieldName == "OPPORTUNITY_LEGAL_ENTITY_NAME") { myMergeField.Select(); wordApp.Selection.TypeText(company.Name); }
+            //if (fieldName == "OPPORTUNITYOWNER_FULLNAME") { myMergeField.Select(); wordApp.Selection.TypeText(lookupHelper.GetUserNameFromID(client.OwnerId)); }
+            //if (fieldName == "OPPORTUNITYOWNER_TITLE") { myMergeField.Select(); wordApp.Selection.TypeText(owner.Title); }
+            //if (fieldName == "OPPORTUNITY_ACCOUNT") { myMergeField.Select(); wordApp.Selection.TypeText(client.CompanyId); }
+            //if (fieldName == "OPPORTUNITY_REFERRING_CONTACT") { myMergeField.Select(); wordApp.Selection.TypeText(client.Referring_Contact); }
+            //if (fieldName == "OPPORTUNITY_REFERRING_COMPANY") { myMergeField.Select(); wordApp.Selection.TypeText(client.Referring_Company); }
+
+            //if (fieldName == "ACCOUNT_BILLINGSTREET") { myMergeField.Select(); wordApp.Selection.TypeText(company.MailingAddress); }
+            //if (fieldName == "ACCOUNT_BILLINGCITY") { myMergeField.Select(); wordApp.Selection.TypeText(company.MailingCity); }
+            //if (fieldName == "ACCOUNT_BILLINGSTATE") { myMergeField.Select(); wordApp.Selection.TypeText(company.MailingState); }
+            //if (fieldName == "ACCOUNT_BILLINGPOSTALCODE") { myMergeField.Select(); wordApp.Selection.TypeText(company.MailingPostalCode); }
+            //if (fieldName == "ACCOUNT_NAME") { myMergeField.Select(); wordApp.Selection.TypeText(company.Name); }
+
+            doc.Save(folderPath);
+
 
             //DataTable workTable = new DataTable("Customers");
 
@@ -491,7 +563,6 @@ namespace AmeriForce.Helpers
 
             //doc.MailMerge.ExecuteWithRegions(workTable);
 
-            doc.Save(folderPath);
 
             //// Use DataTable as a data source.
             //int orderId = 10444;

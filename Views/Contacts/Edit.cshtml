@@ -165,7 +165,7 @@
                                         <span class="input-group-text input-sm" id="LabelUpdateNeeded">Update Needed </span>
                                         @*<span class="input-group-text requiredClass" id="IG_contactData_Update_Needed" name="IG_contactData_Update_Needed"><i class="fas fa-user" aria-hidden="true"></i></span>*@
                                     </div>
-                                    @Html.ListBoxFor(model => model.UpdateNeededIntermediate, Model.UpdateNeededList, new { @class = "form-control", @style = "height:75px;" })
+                                    @Html.ListBoxFor(model => model.UpdateNeededIntermediate, Model.UpdateNeededList, new { @class = "form-control", @style = "height:100px;" })
                                 </div>
 
                                 @*UPDATE NEEDED DATE*@
@@ -211,7 +211,7 @@
                                         <span class="input-group-text input-sm" id="LabelMailingLists">Mailing Lists (Test)</span>
                                         @*<span class="input-group-text requiredClass" id="IG_contactData_Mailing_Lists" name="IG_contactData_Mailing_Lists"><i class="fas fa-user" aria-hidden="true"></i></span>*@
                                     </div>
-                                    @Html.ListBoxFor(model => model.MailingListIntermediate, Model.MailingLists, new { @class = "form-control", @style = "height:100px;", @multiple = "multiple" })
+                                    @Html.ListBoxFor(model => model.MailingListIntermediate, Model.MailingLists, new { @class = "form-control", @style = "height:150px;", @multiple = "multiple" })
                                 </div>
                                         
 

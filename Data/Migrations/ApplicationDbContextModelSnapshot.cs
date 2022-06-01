@@ -437,8 +437,8 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Pre_Approval_Biz_Hours")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Pre_Approval_Biz_Hours")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Reason_Lost")
                         .HasColumnType("nvarchar(max)");
@@ -546,6 +546,27 @@ namespace AmeriForce.Data.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("ClientStages");
+                });
+
+            modelBuilder.Entity("AmeriForce.Data.ClientType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("LOV_ClientTypes");
                 });
 
             modelBuilder.Entity("AmeriForce.Data.Company", b =>

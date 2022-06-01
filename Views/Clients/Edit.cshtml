@@ -187,11 +187,20 @@
 
                             </div>
                             <div class="col-lg-6" style="padding:5px;" align="left">
+                                
+                                @*CLIENT TYPE*@
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-sm" id="LabelClientType">Type </span>
+                                        <span class="input-group-text requiredClass" id="IG_clientData_Type" name="IG_clientData_Type"></span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.clientData.Type, Model.ClientTypes, new { @class = "form-control", @maxlength = 5 })
+                                </div>
 
                                 @*CLIENT STAGE*@
                                 <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text input-sm" id="LabelClientBDO">Stage </span>
+                                        <span class="input-group-text input-sm" id="LabelClientStageName">Stage </span>
                                         <span class="input-group-text requiredClass" id="IG_clientData_StageName" name="IG_clientData_StageName"></span>
                                     </div>
                                     @Html.DropDownListFor(model => model.clientData.StageName, Model.ClientStageList, new { @class = "form-control", @maxlength = 5 })

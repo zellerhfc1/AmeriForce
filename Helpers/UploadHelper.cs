@@ -25,7 +25,7 @@ namespace AmeriForce.Helpers
         /// <param name="id"></param>
         public void CreatedocumentDirectory(string id, string folderName)
         {
-            string virtualPath = $"Documents/{folderName}/{id}";
+            string virtualPath = $"{folderName}/{id}";
             var path = Path.Combine(webRootPath, virtualPath);
             if (Directory.Exists(path))
             {

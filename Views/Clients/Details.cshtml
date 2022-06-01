@@ -226,6 +226,8 @@
                                 <hr class="hrFieldBuffer" />*@
                         </div>
                         <div class="col-lg-6" style="padding:5px;" align="left">
+                            <b>Client Type: </b> @Model.clientData.Type<br />
+                            <hr class="hrFieldBuffer" />
                             <b>Client Stage: </b> @Model.clientData.StageName<br />
                             <hr class="hrFieldBuffer" />
                             <b>Amount: </b> @String.Format("{0:c}", Model.clientData.Amount)<br />
@@ -901,7 +903,7 @@
 
             <div class="col-lg-5" style="padding:10px;height:100%;" align="left" id="rightScroll">
                 <div class="container">
-                    @*ACTIVITY INFO*@
+                    @*NEXT SCHEDULED CALL*@
                     <div class="row">
                         <div class="col-lg-12 dividerTableBackground" style="height:3px;">
                             &nbsp;
@@ -951,18 +953,21 @@
                                                 case "OTHER":
                                                     <i class="fa fa-question-circle" title="Other" style="font-size:x-large;"></i>
                                                     break;
+                                                case "NOTE":
+                                                    <i class="fa fa-clipboard" title="Other" style="font-size:x-large;"></i>
+                                                    break;
                                                 case "WARNING":
                                                     <i class="fa fa-exclamation-triangle" title="Warning" style="font-size:x-large;"></i>
                                                     break;
                                                 default:
-                                                    <i class="fa fa-question-circle" title="Unknown" style="font-size:x-large;"></i>
+                                                    <i class="fa fa-clipboard" title="Unknown" style="font-size:x-large;"></i>
                                                     break;
                                             }
                                         }
                                     </div>
                                     <div class="col-sm-11">
                                         <b>
-                                            @Model.OwnerName
+                                            @Model.clientNextTaskOwner
                                         -
                                         @{
                                             string nextCallActivityDate = Model.clientNextTask.ActivityDate?.ToString("MM/dd/yyyy") ?? "";
@@ -1013,7 +1018,7 @@
                                                 @{
                                                     switch (clientNote.Type.ToUpper())
                                                     {
-                                                        case "EMAIL":
+                                                         case "EMAIL":
                                                             <i class="fa fa-envelope" title="Email" style="font-size:x-large;"></i>
                                                             break;
                                                         case "IN-PERSON MEETING":
@@ -1028,11 +1033,14 @@
                                                         case "OTHER":
                                                             <i class="fa fa-question-circle" title="Other" style="font-size:x-large;"></i>
                                                             break;
+                                                        case "NOTE":
+                                                            <i class="fa fa-clipboard" title="Other" style="font-size:x-large;"></i>
+                                                            break;
                                                         case "WARNING":
                                                             <i class="fa fa-exclamation-triangle" title="Warning" style="font-size:x-large;"></i>
                                                             break;
                                                         default:
-                                                            <i class="fa fa-question-circle" title="Unknown" style="font-size:x-large;"></i>
+                                                            <i class="fa fa-clipboard" title="Unknown" style="font-size:x-large;"></i>
                                                             break;
                                                     }
                                                 }

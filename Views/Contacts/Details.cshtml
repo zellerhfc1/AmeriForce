@@ -472,7 +472,7 @@
                     <div class="row">
                         <div class="col-lg-12" style="padding:0px;">
 
-                            @Html.Raw(ViewBag.MailMergeFiles)
+                            @Html.Raw(ViewBag.MailMergedFiles)
 
                             @*<div class="panel panel-default">
                                 <div class="panel-body" style="padding:5px;">
@@ -679,11 +679,14 @@
                                                 case "OTHER":
                                                     <i class="fa fa-question-circle" title="Other" style="font-size:x-large;"></i>
                                                     break;
+                                                case "NOTE":
+                                                    <i class="fa fa-clipboard" title="Other" style="font-size:x-large;"></i>
+                                                    break;
                                                 case "WARNING":
                                                     <i class="fa fa-exclamation-triangle" title="Warning" style="font-size:x-large;"></i>
                                                     break;
                                                 default:
-                                                    <i class="fa fa-question-circle" title="Unknown" style="font-size:x-large;"></i>
+                                                    <i class="fa fa-clipboard" title="Unknown" style="font-size:x-large;"></i>
                                                     break;
                                             }
                                         }
@@ -733,7 +736,7 @@
                             <div class="container">
 
                                 @{
-                                    foreach (var contactNote in Model.contactNotes)
+                                    foreach (var contactNote in Model.contactNotesViewModel)
                                     {
 
                                         <div class="row">
@@ -742,7 +745,7 @@
                                                 @{
                                                     switch (contactNote.Type.ToUpper())
                                                     {
-                                                        case "EMAIL":
+                                                         case "EMAIL":
                                                             <i class="fa fa-envelope" title="Email" style="font-size:x-large;"></i>
                                                             break;
                                                         case "IN-PERSON MEETING":
@@ -757,29 +760,34 @@
                                                         case "OTHER":
                                                             <i class="fa fa-question-circle" title="Other" style="font-size:x-large;"></i>
                                                             break;
+                                                        case "NOTE":
+                                                            <i class="fa fa-clipboard" title="Other" style="font-size:x-large;"></i>
+                                                            break;
                                                         case "WARNING":
                                                             <i class="fa fa-exclamation-triangle" title="Warning" style="font-size:x-large;"></i>
                                                             break;
                                                         default:
-                                                            <i class="fa fa-question-circle" title="Unknown" style="font-size:x-large;"></i>
+                                                            <i class="fa fa-clipboard" title="Unknown" style="font-size:x-large;"></i>
                                                             break;
                                                     }
                                                 }
                                             </div>
                                             <div class="col-sm-11">
                                                 <b>
-                                                    @Model.contactNextTaskOwner
-                                                    -
+                                                    @contactNote.Owner
+                                                    on
                                                     @{
-                                                        string noteActivityDate = contactNote.ActivityDate?.ToString("MM/dd/yyyy") ?? "";
+                                                        string noteActivityDate = contactNote.cDate;
                                                         @Html.Raw(noteActivityDate)
                                                         ;
                                                     }
                                                     @@
                                                     @{
-                                                        string noteActivityTime = contactNote.ActivityDate?.ToString("hh:mm:ss tt") ?? "";
-                                                        @Html.Raw(noteActivityTime)
-                                                        ;
+                                                        string noteActivityTime = contactNote.cTime;
+                                                        if (noteActivityTime != "12:00:00 AM")
+                                                        {
+                                                        @Html.Raw(noteActivityTime);
+                                                        }
                                                     }
                                                 </b>
                                                 <br />
@@ -790,8 +798,26 @@
                                                         <br />
                                                     }
                                                 }
+                                                
+                                                @{
+                                                    if (contactNote.Subject != null)
+                                                    {
+                                                        if (contactNote.Subject.StartsWith("Email:") || contactNote.Subject.StartsWith("Pardot List Email:") || contactNote.Subject.StartsWith("Mass Email:")|| contactNote.Subject.StartsWith("Pardot"))
+                                                        {
+                                                            <i>(See email section)</i>
+                                                            <br />
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.Raw(contactNote.Description.Replace("\t","<br>").Replace("\n","<br>)"))
+                                                        }
+                                                    } else
+                                                    {
+                                                        @Html.Raw(contactNote.Description.Replace("\t","<br>").Replace("\n","<br>)"))
+                                                    }
+                                                }
 
-                                                @Html.Raw(contactNote.Description)
+                                                
                                             </div>
                                         </div>
 
@@ -1556,7 +1582,7 @@
                     @*TASK DUE DATE *@
                     <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
                         <div class="input-group-prepend">
-                        <span class="input-group-text input-sm" id="LabelNoteActivityDate">Complete By: </span>
+                        <span class="input-group-text input-sm" id="LabelNoteActivityDate">Completed On: </span>
                         <span class="input-group-text requiredClass" id="IG_contactNote_ActivityDate" name="IG_contactNote_ActivityDate"></span></div>
                         <input type="datetime-local" id="contactNote_ActivityDate" name="contactNote_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
                         
@@ -1569,7 +1595,7 @@
                         <span class="input-group-text input-sm" id="LabelNoteDescription">Notes </span>
                         <span class="input-group-text requiredClass" id="IG_contactNote_Description" name="IG_contactNote_Description"></span>
                         </div>
-                        <textarea rows="50" style="height:150px;" id="contactNote_Description" name="contactNote_Description" class="form-control input-lg clientEntryTerms" maxlength="5000"></textarea>
+                        <textarea rows="50" style="height:150px;" id="contactNote_Description" name="contactNote_Description" class="form-control input-lg clientEntryTerms" maxlength="50000"></textarea>
                     </div>
 
                     @*<table class="table table-striped table-hover table-condensed">
@@ -1690,7 +1716,7 @@
             <div class="modal-header overviewHeaderNormal">
                 Contact Mail Merge <i class="fa fa-file-word"></i>
             </div>
-            <form id="SubmitContactMailMerge" name="SubmitSubmitContactMailMerge" style="text-align:left;">
+            <form id="SubmitContactMailMerge" name="SubmitContactMailMerge" style="text-align:left;">
 
                 <div class="modal-body">
                     <input type="hidden" name="contactMailMerge_Id" id="contactMailMerge_Id" value="@Model.contact.Id" />

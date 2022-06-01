@@ -34,5 +34,6 @@ namespace AmeriForce.Models.Clients
         public IEnumerable<SelectListItem> StatesList { get; set; }
         public IEnumerable<SelectListItem> ReferralTypes { get; set; }
         public IEnumerable<SelectListItem> ApprovalTypes { get; set; }
-    }
+        public IEnumerable<SelectListItem> ClientTypes { get; set; }
+}
 }

@@ -230,12 +230,12 @@ $(document).ready(function () {
         });
     });
 
+
     $("#SubmitContactMailMerge").submit(function (e) {
 
         e.preventDefault();
-
+        
         $("#mailMergeSpinner").show();
-
 
         var contactMailMergeId = $("#contactMailMerge_Id").val();
         var mailMergeTemplate = $("#mailMerge_Template").val();
@@ -245,10 +245,10 @@ $(document).ready(function () {
             type: "POST",
             cache: false,
             async: false,
-            url: "/Contacts/MailMergeWordDoc",
+            url: "/Contacts/MailMerge",
             data: {
                 ContactID: contactMailMergeId,
-                TemplateType: mailMergeTemplate,
+                TemplateName: mailMergeTemplate,
                 OwnerID: contactMailMergeOwnerId
             },
 
@@ -318,7 +318,6 @@ $(document).ready(function () {
             }
         });
     });
-
 
 
 

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
+
 <link href="~/Content/ClientStyleSheet.css" rel="stylesheet" />
 
 
@@ -11,7 +12,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Clients" , new { id=999 })">Clients</a></li>
-        <li class="breadcrumb-item active" aria-current="page"></li>
+        <li class="breadcrumb-item active" aria-current="page">Current Active Clients</li>
     </ol>
 </nav>
 
@@ -32,16 +33,16 @@
                     <table align="left">
                         <tr>
                             <td valign="middle" style="border:1px solid #fff;padding:10px;">
-                                <i class="fa fa-file-signature" style="font-size:80px;"></i>
+                                <i class="fa fa-file-signature" style="font-size:48px;"></i>
                             </td>
                             <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
                                 <span class="overviewHeader dealAmount">
                                     Clients
                                 </span>
                                 <br />
-                                <span class="nameSubHeader gradeAReversed"> @ViewBag.SubTitle (@ViewBag.ClientCount)</span>
+                                <span class="nameSubHeader gradeAReversed"> Current Active Clients</span>
                                 <br />
-                                <span class="nameSubHeaderNextCall"> @ViewBag.TimeStamp</span>
+                                <span class="nameSubHeaderNextCall"> Current As Of: @DateTime.Now</span>
                             </td>
                         </tr>
                     </table>
@@ -74,17 +75,32 @@
             </div>
         </div>
 
+
         <div class="row">
             <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
-                <a href='@Url.Action("Index", "Clients", new { id = 999 })' class="btn btn-sm btn-primary">All Clients In Pipeline</a>
+                <a href='@Url.Action("Create", "Clients")' class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Create Client</a>
+                @*<a href='@Url.Action("Index", "Clients", new { id = 999 })' class="btn btn-sm btn-primary">All Clients In Pipeline</a>
                 <a href='@Url.Action("Index", "Clients", new { id = 3 })' class="btn btn-sm btn-primary">All New Clients</a>
                 <a href='@Url.Action("Index", "Clients", new { id = 1 })' class="btn btn-sm btn-primary">My Clients In Pipeline</a>
-                <a href='@Url.Action("Index", "Clients", new { id = 2 })' class="btn btn-sm btn-primary">My Clients (All)</a>
+                <a href='@Url.Action("Index", "Clients", new { id = 2 })' class="btn btn-sm btn-primary">My Clients (All)</a>*@
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;" align="left">
+                    <div class="container">
+                        <div id="selectStatus"></div>
+                        <div id="clientsIndexGrid">
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
 
-<div class="row">
+@*<div class="row">
     <div class="col-lg-12" style="padding:10px;" align="left">
         <div class="container">
 
@@ -125,7 +141,7 @@
             {
                     <tr>
                         <td class="leftTextAlign">
-                            @*@Html.DisplayFor(modelItem => item.OwnerId)*@
+                            @Html.DisplayFor(modelItem => item.OwnerId)
                             <img src="~/Images/@(item.OwnerId).jpg" class="img-thumbnail" style="height:45px;" />
                         </td>
                         <td class="leftTextAlign">
@@ -146,8 +162,8 @@
                         <td>
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary" style="padding:0px 5px 0px 5px;font-size:12px;">View</a> 
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary" style="padding:0px 5px 0px 5px;font-size:12px;">Edit</a> 
-                            @*<a href='@Url.Action("Details", "Clients", new { id=item.Id })' class="btn btn-xs btn-primary">View</a>
-                            <a href='@Url.Action("Edit", "Clients", new { id=item.Id })' class="btn btn-xs btn-primary">Edit</a>*@
+                            <a href='@Url.Action("Details", "Clients", new { id=item.Id })' class="btn btn-xs btn-primary">View</a>
+                            <a href='@Url.Action("Edit", "Clients", new { id=item.Id })' class="btn btn-xs btn-primary">Edit</a>
                         </td>
                     </tr>
                 }
@@ -157,7 +173,7 @@
 
         </div>
 </div>
-</div>
+</div>*@
 </div>
 
 
@@ -166,7 +182,8 @@
         @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
-
+        
+        <script src="~/jQuery/devExtremeClientsGridControls.js"></script>
         <script src="~/jQuery/jQuery_TableSearch.js"></script>
         }
     

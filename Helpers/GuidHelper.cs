@@ -13,6 +13,28 @@ namespace AmeriForce.Helpers
             return guidResult;
         }
 
+        internal string GetGuidType(string entityType)
+        {
+            switch (entityType)
+            {
+                case "001":
+                    return "companies";
+                case "003":
+                    return "contacts";
+                case "006":
+                    return "clients";
+                case "00T":
+                    return "tasks";
+                case "02s":
+                    return "emails";
+                case "TE0":
+                    return "tempemail";
+                default:
+                    return "---";
+            }
+
+        }
+
         private string GetGuidPrefix(string entityType)
         {
             switch (entityType)

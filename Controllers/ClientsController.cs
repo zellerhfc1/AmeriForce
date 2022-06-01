@@ -56,6 +56,7 @@ namespace AmeriForce.Controllers
 
         }
 
+
         // GET: Clients
         public async Task<IActionResult> Index(int? id)
         {
@@ -103,6 +104,11 @@ namespace AmeriForce.Controllers
             }
         }
 
+        public async Task<IActionResult> NewClientsIndex()
+        {
+            return View();
+        }
+
         // GET: Clients/Details/5
         public async Task<IActionResult> Details(string id)
         {
@@ -122,12 +128,34 @@ namespace AmeriForce.Controllers
                 var clientModel = new ClientDetailsViewModel();
                 clientModel.clientData = _context.Clients.Find(id);
                 clientModel.companyData = _context.Companies.Where(c => c.ID == clientModel.clientData.CompanyId).FirstOrDefault();
+
                 clientModel.mainContactData = _context.Contacts.Where(c => c.AccountId == clientModel.clientData.CompanyId).ToList();
+
                 clientModel.referringContactData = _context.Contacts.Where(c => c.Id == clientModel.clientData.Referring_Contact).FirstOrDefault();
                 clientModel.referringCompanyData = _context.Companies.Where(c => c.ID == clientModel.clientData.Referring_Company).FirstOrDefault();
                 clientModel.clientFacilities = _context.Facilities.Where(f => f.ClientID == id);
                 clientModel.clientNextTask = _context.CRMTasks.Where(c => c.Id == clientModel.clientData.NextActivityID).FirstOrDefault();
                 clientModel.clientNotes = _context.CRMTasks.Where(c => c.WhatId == clientModel.clientData.Id && c.Id != clientModel.clientData.NextActivityID).OrderByDescending(c => c.CreatedDate);
+
+
+                if (clientModel.clientNextTask == null)
+                {
+                    var nextCRMTask = new CRMTask()
+                    {
+                        Id = new GuidHelper().GetGUIDString("task"),
+                        WhatId = clientModel.clientData.Id,
+                        Type = "Warning",
+                        OwnerId = clientModel.clientData.OwnerId,
+                        ActivityDate = Convert.ToDateTime("01/01/2020"),
+                        Description = "No activity entered for this contact yet"
+                    };
+                    _context.CRMTasks.Add(nextCRMTask);
+                    clientModel.clientData.NextActivityID = nextCRMTask.Id;
+                    _context.SaveChanges();
+
+                    clientModel.clientNextTask = _context.CRMTasks.Where(c => c.Id == nextCRMTask.Id).FirstOrDefault();
+                }
+                clientModel.clientNextTaskOwner = _userHelper.GetNameFromID(clientModel.clientNextTask.OwnerId);
 
                 clientModel.TaskList = _lovHelper.GetTaskTypes();
                 clientModel.ActiveUserList = _lovHelper.GetActiveUsers();
@@ -380,6 +408,7 @@ namespace AmeriForce.Controllers
                 clientModel.StatesList = _lovHelper.GetStateList();
                 clientModel.ReferralTypes = _lovHelper.GetReferralTypes();
                 clientModel.ApprovalTypes = _lovHelper.GetApprovalDecisionList();
+                clientModel.ClientTypes = _lovHelper.GetClientTypes();
 
                 if (clientModel.referringContactData == null)
                 {
@@ -436,6 +465,7 @@ namespace AmeriForce.Controllers
 
                     var client = _context.Clients.Where(c => c.Id == clientId).FirstOrDefault();
                     client.Name = collection["clientData_Name"].ToString();
+                    client.Type = collection["clientDate_Type"].ToString();
                     client.StageName = collection["clientData.StageName"].ToString();
                     client.Amount = Convert.ToInt32(collection["clientData.Amount"].ToString());
                     client.CloseDate = validationHelper.ValidateDateWithString_NotRequired(collection["clientData_CloseDate"].ToString());
@@ -964,6 +994,73 @@ namespace AmeriForce.Controllers
             });
         }
 
+
+        [HttpPost]
+        public JsonResult GetClientChartInfo()
+        {
+            List<ClientIndexViewModel> clients = new List<ClientIndexViewModel>();
+            try
+            {
+                var currentClients = _context.Clients.Where(c => c.StageName != "00-Initial Review").OrderByDescending(c => c.CreatedDate).ToList();
+                if (currentClients.Count > 0)
+                {
+                    foreach (var currentClient in currentClients)
+                    {
+                        clients.Add(new ClientIndexViewModel
+                        {
+                            ID = currentClient.Id,
+                            OwnerName = _userHelper.GetNameFromID(currentClient.OwnerId),
+                            Name = currentClient.Name,
+                            Company = _companyHelper.GetCompanyName(currentClient.CompanyId),
+                            StageName = currentClient.StageName,
+                            Amount = currentClient.Amount,
+                            CloseDate = currentClient.CloseDate
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json(clients);
+        }
+
+
+
+
+        [HttpPost]
+        public JsonResult GetNewClientChartInfo()
+        {
+            List<ClientIndexViewModel> clients = new List<ClientIndexViewModel>();
+            try
+            {
+                var currentClients = _context.Clients.Where(c => c.StageName == "00-Initial Review").OrderByDescending(c => c.CreatedDate).ToList();
+                if (currentClients.Count > 0)
+                {
+                    foreach (var currentClient in currentClients)
+                    {
+                        clients.Add(new ClientIndexViewModel
+                        {
+                            ID = currentClient.Id,
+                            OwnerName = _userHelper.GetNameFromID(currentClient.OwnerId),
+                            Name = currentClient.Name,
+                            Company = _companyHelper.GetCompanyName(currentClient.CompanyId),
+                            StageName = currentClient.StageName,
+                            Amount = currentClient.Amount,
+                            CloseDate = currentClient.CloseDate
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json(clients);
+        }
 
 
         //[HttpPost]

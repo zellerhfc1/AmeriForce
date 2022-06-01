@@ -1,17 +1,26 @@
 ﻿using AmeriForce.Data;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 
 namespace AmeriForce.Helpers
 {
     public class LOVHelper
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public LOVHelper(ApplicationDbContext context)
         {
             _context = context;
+        }
+        public LOVHelper(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        {
+            _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IEnumerable<SelectListItem> GetBaseList()
@@ -452,7 +461,7 @@ namespace AmeriForce.Helpers
 
         public IEnumerable<SelectListItem> GetMailMergeTemplateList()
         {
-            // GET CONTACTS LIST BY COMPANY
+            // GET MailMerge Templates from DB
             SelectListItem item;
             List<SelectListItem> sList = new List<SelectListItem>();
 
@@ -472,6 +481,82 @@ namespace AmeriForce.Helpers
                     sList.Add(item);
                 }
                 return sList;
+        }
+
+        public IEnumerable<SelectListItem> GetMailMergeTemplateList(string category)
+        {
+            // GET MailMerge Templates from DB
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
+
+            //string webRootPath = _webHostEnvironment.WebRootPath;
+            //var folderLocation = $"Templates/{category}/TestDoc.doc";
+            //var fileLocation = $"Templates/{category}/{templateName}";
+            //var folderPath = Path.Combine(webRootPath, folderLocation);
+            //var filePath = Path.Combine(webRootPath, fileLocation);
+
+
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            var fileLocation = $"Templates/{category}";
+
+            var files = new DirectoryInfo(Path.Combine(webRootPath, fileLocation)).GetFiles().OrderBy(f => f.Name);
+
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
+
+
+            foreach (var f in files)
+            {
+                    item = new SelectListItem();
+                    item.Text = $"{Path.GetFileName(f.ToString())}";
+                    item.Value = $"{Path.GetFileName(f.ToString())}";
+                    sList.Add(item);
+
+                //var fileInfo = new FileInfo(f.ToString());
+                //string scrubbedF = f.ToString().Replace("'", "\\'");
+
+                //if (fileInfo.Extension.ToUpper().Contains("PDF"))
+                //{
+                //    fileTypeFontAwesome = "file-pdf";
+                //    colorFontAwesome = "ff0000";
+                //}
+
+                //if (fileInfo.Extension.ToUpper().Contains("DOC"))
+                //{
+                //    fileTypeFontAwesome = "file-word";
+                //    colorFontAwesome = "0078d7 ";
+                //}
+
+                //if (fileInfo.Extension.ToUpper().Contains("XLS") || fileInfo.Extension.ToUpper().Contains("CSV"))
+                //{
+                //    fileTypeFontAwesome = "file-excel";
+                //    colorFontAwesome = "1D6F42";
+                //}
+
+                //if (fileInfo.Extension.ToUpper().Contains("PNG") || fileInfo.Extension.ToUpper().Contains("JPG") || fileInfo.Extension.ToUpper().Contains("JPEG")
+                //            || fileInfo.Extension.ToUpper().Contains("GIF") || fileInfo.Extension.ToUpper().Contains("TIFF"))
+                //{
+                //    fileTypeFontAwesome = "file-image";
+                //    colorFontAwesome = "999";
+                //}
+
+                ////returnString += "<a href='../../Images/DecisionLogicReports/" + Path.GetFileName(f) + "' target='_blank'><span class='glyphicon glyphicon-file' data-toggle='tooltip' title='" + Path.GetFileName(f) + "' style='color:#80a7d8;'></span></a>";
+                ////returnString += String.Format("<a href='../../Uploads/CBR/{0}/{1}' target='_blank'><span class='glyphicon glyphicon-file' data-toggle='tooltip' title='{1}' style='color:#80a7d8;'></span></a><br>", id, Path.GetFileName(f));
+
+                //returnString += $@"<tr><td style='width:5%;padding:3px;' class='leftTextAlign'>
+                //                            <i class='fa fa-{fileTypeFontAwesome}' data-toggle='tooltip' title='{1}' style='color:#{colorFontAwesome};font-size:14px;padding:3px;'></i></td>
+                //                                <td class='leftTextAlign' style='width:60%;padding:3px;'><a href='../../Documents/Contacts/{id}/{Path.GetFileName(f.ToString()).Replace("'", HttpUtility.UrlEncode("'"))}' target='_blank'><span style='font-size:12px;'>{Path.GetFileName(f.ToString())}</span>
+                //                                </a></td>
+                //                                <td style='width:35%;padding:3px;'>Uploaded: {fileInfo.LastWriteTime.ToString()}</td>
+                //                                </tr>";
+
+                ////fileInfo.LastWriteTime.ToString() + "</tr></table></div></div>", id, Path.GetFileName(f), "<b>" + Path.GetFileName(f) + "</b><br>Uploaded: " +
+                ////fileInfo.LastWriteTime.ToString() + "<br>Last Opened: " + fileInfo.LastAccessTime.ToString(), fileTypeFontAwesome, colorFontAwesome);
+            }
+
+            return sList;
         }
 
 
@@ -579,7 +664,31 @@ namespace AmeriForce.Helpers
                     sList.Add(item);
                 }
                 return sList;
-            
+
+        }
+
+
+        public IEnumerable<SelectListItem> GetClientTypes()
+        {
+            // GET COMPANY REFERRAL TYPES
+            SelectListItem item;
+            List<SelectListItem> sList = new List<SelectListItem>();
+
+            var clientTypes = _context.LOV_ClientTypes.OrderBy(c => c.Type);
+
+            var defaultItem = new SelectListItem();
+            defaultItem.Text = "";
+            defaultItem.Value = "";
+            sList.Add(defaultItem);
+
+            foreach (var clientType in clientTypes)
+            {
+                item = new SelectListItem();
+                item.Text = $"{clientType.Type}";
+                item.Value = $"{clientType.Type}";
+                sList.Add(item);
+            }
+            return sList;
         }
 
 

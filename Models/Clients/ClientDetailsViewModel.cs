@@ -17,6 +17,7 @@ namespace AmeriForce.Models.Clients
         public IEnumerable<Facility> clientFacilities { get; set; }
 
         public CRMTask clientNextTask { get; set; }
+        public string clientNextTaskOwner { get; set; }
 
         public IEnumerable<CRMTask> clientNotes { get; set; }
 

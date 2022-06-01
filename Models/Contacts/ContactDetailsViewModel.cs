@@ -20,6 +20,8 @@ namespace AmeriForce.Models.Contacts
         public List<ContactDuplicateViewModel> contactDuplicates { get; set; }
         public List<EmailMessage> emailMessages { get; set; }
 
+        public IEnumerable<ContactNoteViewModel> contactNotesViewModel {get; set;}
+
 
         //public IEnumerable<Contact> mainContactData { get; set; }
 
@@ -39,5 +41,15 @@ namespace AmeriForce.Models.Contacts
         public IEnumerable<SelectListItem> ActiveUserListNotes { get; set; }
         public IEnumerable<SelectListItem> YesNoList { get; set; }
         public IEnumerable<SelectListItem> MailMergeTemplateList { get; set; }
+    }
+
+    public class ContactNoteViewModel
+    {
+        public string Type { get; set; }
+        public string Owner { get; set; }
+        public string cDate { get; set; }
+        public string cTime { get; set; }
+        public string Subject { get; set; }
+        public string Description { get; set; }
     }
 }
