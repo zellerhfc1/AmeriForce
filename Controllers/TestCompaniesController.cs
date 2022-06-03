@@ -8,16 +8,33 @@ using Microsoft.EntityFrameworkCore;
 using AmeriForce.Data;
 using AmeriForce.Models.Test;
 using System.Diagnostics;
+using System.IO;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using AmeriForce.Helpers;
 
 namespace AmeriForce.Controllers
 {
+    [Authorize]
     public class TestCompaniesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _environment;
 
-        public TestCompaniesController(ApplicationDbContext context)
+        public TestCompaniesController(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
+        }
+
+
+        public async Task<IActionResult> FileExists()
+        {
+            var x = new UploadHelper(_context, _environment).FileExists($"images/loriSquare.png");
+            var y = new UploadHelper(_context, _environment).FileExists($"images/JZeller.jpg");
+
+            return Content($"{x}<br>{y}");
+
         }
 
         // GET: TestCompanies
@@ -226,6 +243,32 @@ namespace AmeriForce.Controllers
         private bool TestCompanyExists(int id)
         {
             return _context.TestCompany.Any(e => e.ID == id);
+        }
+
+        //public void MergeList()
+        //{
+        //    var x = new MailMergeHelper(_context, _environment, "00379-ff681a618ac9", "Clients", "Form-Opp - Term Sheet - Standard.doc");
+
+        //    x.WordDocumentMailMerge();
+
+        //    var y = 1;
+
+
+        //}
+
+        public void MergeTestDevexpress()
+        {
+            //using (RichEditDocumentServer server = new RichEditDocumentServer())
+            //{
+            //    server.LoadDocument("Documents//invitation.docx", DocumentFormat.Rtf);
+            //    server.Options.MailMerge.DataSource = new SampleData();
+
+            //    MailMergeOptions myMergeOptions = server.Document.CreateMailMergeOptions();
+            //    myMergeOptions.FirstRecordIndex = 1;
+            //    myMergeOptions.MergeMode = MergeMode.NewParagraph;
+            //    server.MailMerge(myMergeOptions, "result.docx", DocumentFormat.OpenXml);
+            //}
+            //System.Diagnostics.Process.Start("result.docx");
         }
 
         #region Contact Validation

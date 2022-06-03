@@ -17,33 +17,35 @@ namespace AmeriForce.Data
         {
         }
 
-        public override int SaveChanges()
-        {
-            var modifiedEntities = ChangeTracker.Entries()
-                .Where(p => p.State == EntityState.Modified).ToList();
+        //public override int SaveChanges()
+        //{
+        //    var modifiedEntities = ChangeTracker.Entries()
+        //        .Where(p => p.State == EntityState.Modified).ToList();
 
-            var addedEntities = ChangeTracker.Entries()
-                .Where(p => p.State == EntityState.Added).ToList();
+        //    var addedEntities = ChangeTracker.Entries()
+        //        .Where(p => p.State == EntityState.Added).ToList();
 
-            var now = DateTime.UtcNow;
+        //    var now = DateTime.UtcNow;
 
-            foreach (var change in modifiedEntities)
-            {
-                var entityName = change.Entity.GetType().Name;
-                //var primaryKey = GetPrimaryKeyValue(change);
+        //    foreach (var change in modifiedEntities)
+        //    {
+        //        var entityName = change.Entity.GetType().Name;
+        //        //var primaryKey = GetPrimaryKeyValue(change);
 
-                //foreach (var prop in change.OriginalValues.PropertyNames)
-                //{
-                //    var originalValue = change.OriginalValues[prop].ToString();
-                //    var currentValue = change.CurrentValues[prop].ToString();
-                //    if (originalValue != currentValue) //Only create a log if the value changes
-                //    {
-                //        //Create the Change Log
-                //    }
-                //}
-            }
-            return base.SaveChanges();
-        }
+        //        foreach (var prop in change.OriginalValues.Properties)
+        //        {
+                       
+        //            var originalValue = change.OriginalValues[prop].ToString();
+        //                var currentValue = change.CurrentValues[prop].ToString();
+        //                var x = 1;
+        //            //    if (originalValue != currentValue) //Only create a log if the value changes
+        //            //    {
+        //            //        //Create the Change Log
+        //            //    }
+        //        }
+        //    }
+        //    return base.SaveChanges();
+        //}
 
         public DbSet<TestCompany> TestCompany { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -61,6 +63,13 @@ namespace AmeriForce.Data
         public DbSet<LOV_TemplateType> LOV_TemplateType { get; set; }
         public DbSet<NewInitialDeal> NewInitialDeals { get; set; }
         public DbSet<SICCode> SICCodes { get; set; }
+        public DbSet<LOV_RelationshipStatus> LOV_RelationshipStatuses { get; set; }
+        public DbSet<LOV_TagGradeSort> LOV_TagGradeSorts { get; set; }
+        public DbSet<LOV_UpdateNeeded> LOV_UpdateNeededs { get; set; }
+
+        public DbSet<LOV_MailingList> LOV_MailingLists { get; set; }
+        public DbSet<LOV_CompanyType> LOV_CompanyTypes { get; set; }
+        public DbSet<ClientType> LOV_ClientTypes { get; set; }
 
     }
 }

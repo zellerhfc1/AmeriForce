@@ -3,23 +3,75 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AmeriForce</title>
+    <title>AmeriForce - @ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-
+    <link href="~/Images/ameriforce.ico" rel="shortcut icon" type="image/x-icon" />
     
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.1.1/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
             integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
             crossorigin="anonymous"></script>
+            
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="~/Content/Site.css" />
 
+    @* Uncomment to use the HtmlEditor control *@
+     <script src="https://unpkg.com/devextreme-quill/dist/dx-quill.min.js"></script> 
+
+    @* Uncomment to use the Gantt control *@ 
+    @*<link href="~/css/devextreme/dx-gantt.css" rel="stylesheet" />*@
+
+    @* Uncomment to use the Diagram control *@
+    @*<link href="~/css/devextreme/dx-diagram.css" rel="stylesheet" />*@
+
+    <link href="~/css/devextreme/dx.light.css" rel="stylesheet" />
+
+    @* Uncomment to use the Gantt control *@ 
+    @*<script src="~/js/devextreme/dx-gantt.js"></script>*@
+
+    @* Uncomment to use the Diagram control *@
+    @*<script src="~/js/devextreme/dx-diagram.js"></script>*@
+
+   @* <script src="~/js/devextreme/jquery.js"></script>*@
+
+    @* Uncomment to use Globalize for localization *@
+    @*<script src="~/js/devextreme/cldr.js"></script>*@
+    @*<script src="~/js/devextreme/cldr/event.js"></script>*@
+    @*<script src="~/js/devextreme/cldr/supplemental.js"></script>*@
+    @*<script src="~/js/devextreme/cldr/unresolved.js"></script>*@
+    @*<script src="~/js/devextreme/globalize.js"></script>*@
+    @*<script src="~/js/devextreme/globalize/message.js"></script>*@
+    @*<script src="~/js/devextreme/globalize/number.js"></script>*@
+    @*<script src="~/js/devextreme/globalize/currency.js"></script>*@
+    @*<script src="~/js/devextreme/globalize/date.js"></script>*@
+
+    @* Uncomment to enable client-side export *@
+    @*<script src="~/js/devextreme/jszip.js"></script>*@
+    
+    <script src="~/js/devextreme/dx.all.js"></script>
+
+    @* Uncomment to provide geo-data for the VectorMap control *@
+    @*<script src="~/js/devextreme/vectormap-data/world.js"></script>*@
+
+    <script src="~/js/devextreme/aspnet/dx.aspnet.mvc.js"></script> 
+    <script src="~/js/devextreme/aspnet/dx.aspnet.data.js"></script>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AmeriForce</a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" style="background-color:#111;">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/Images/ameriforceLogo_small.png" style="height:60px;max-height:60px;" />
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,11 +80,32 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Companies" asp-action="Index">Companies</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Companies" asp-action="Index">Companies</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contacts" asp-action="Index">Contacts</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Contacts" asp-action="Index">Contacts</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Clients
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                                <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Clients" asp-action="NewClientsIndex">New Clients</a>
+                            </div>
+                        </li>
+                        @*<li class="nav-item">
+                            <a class="nav-link text-light dropdown-toggle" data-toggle="dropdown">Clients</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a> 
+                                </li>
+                            </ul>
+                        </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Report" asp-action="Index">Reports</a>
+                        </li>
+                        
                         @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>*@
@@ -41,20 +114,27 @@
             </div>
         </nav>
     </header>
-    <div class="container .body-container">
+    <div class="container-fluid .body-container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - AmeriForce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container" align="center">
+            &copy; 2022 - Amerisource Business Capital, Inc. @*<a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

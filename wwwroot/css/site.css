@@ -7,15 +7,24 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+/*.container-fluid {
+    margin-left:100px;
+    margin-right:100px;
+}*/
+
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: blue;
 }
 
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+nav-bar {
+    background-color:red;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -74,5 +83,11 @@ body {
 .field-validation-error {
     color: red;
     font-size: smaller;
+}
+
+.chartStyle {
+    padding: 10px;
+    border: 1px solid #999;
+    margin:0px;
 }
 

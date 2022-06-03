@@ -1,4 +1,5 @@
 ﻿using AmeriForce.Data;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AmeriForce.Helpers
@@ -24,6 +25,20 @@ namespace AmeriForce.Helpers
                 }
             }
             return companyName;
+        }
+
+        public string GetCompanyIDFromName(string companyName)
+        {
+            string companyID = "";
+            if (!string.IsNullOrEmpty(companyName))
+            {
+                var companyTemp = _context.Companies.Where(c => c.Name == companyName.Trim()).FirstOrDefault();
+                if (companyTemp != null)
+                {
+                    companyID = _context.Companies.Where(c => c.Name == companyName.Trim()).FirstOrDefault().ID;
+                }
+            }
+            return companyID;
         }
 
         public string GetBusinessDescription(string id)
@@ -68,6 +83,13 @@ namespace AmeriForce.Helpers
                     _context.SaveChanges();
                 }
             }
+        }
+
+        public IEnumerable<Company> GetAllCompanies()
+        {
+            var existingCompanies = _context.Companies.OrderBy(c => c.Name);
+
+            return existingCompanies;
         }
     }
 }

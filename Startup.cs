@@ -1,4 +1,5 @@
 using AmeriForce.Data;
+using AmeriForce.Models.Email;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,8 +33,14 @@ namespace AmeriForce
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddRazorPages();
+            services.AddHttpContextAccessor();
+
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfigurationViewModel>();
+            services.AddSingleton(emailConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

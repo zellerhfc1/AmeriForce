@@ -100,6 +100,14 @@
 
                                 <div class="input-group input-group-sm mb-3 inputGroup-margin">
                                     <div class="input-group-prepend">
+                                        <label asp-for="companyVM.CompanyType" class="input-group-text"></label>
+                                    </div>
+                                    <select asp-items="@(new SelectList(Model.CompanyTypeList, "Value", "Text"))" asp-for="companyVM.CompanyType" class="form-control"></select>
+                                    @*<span asp-validation-for="companyVM.Name" class="text-danger"></span>*@
+                                </div>
+
+                                <div class="input-group input-group-sm mb-3 inputGroup-margin">
+                                    <div class="input-group-prepend">
                                         <label asp-for="companyVM.CharterState" class="input-group-text"></label>
                                     </div>
                                     <select asp-items="@(new SelectList(Model.StateList, "Value", "Text"))" asp-for="companyVM.CharterState" class="form-control"></select>

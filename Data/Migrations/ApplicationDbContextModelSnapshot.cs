@@ -437,8 +437,8 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Pre_Approval_Biz_Hours")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Pre_Approval_Biz_Hours")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Reason_Lost")
                         .HasColumnType("nvarchar(max)");
@@ -548,12 +548,39 @@ namespace AmeriForce.Data.Migrations
                     b.ToTable("ClientStages");
                 });
 
+            modelBuilder.Entity("AmeriForce.Data.ClientType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("LOV_ClientTypes");
+                });
+
             modelBuilder.Entity("AmeriForce.Data.Company", b =>
                 {
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CharterState")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -564,6 +591,9 @@ namespace AmeriForce.Data.Migrations
 
                     b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MailingAddress")
                         .HasColumnType("nvarchar(max)");
@@ -638,6 +668,9 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("EmailBouncedReason")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("EmailOptOutDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Extension")
                         .HasColumnType("nvarchar(max)");
 
@@ -647,7 +680,7 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Guarantor")
+                    b.Property<bool>("Guarantor")
                         .HasColumnType("bit");
 
                     b.Property<bool>("HasOptedOutOfEmail")
@@ -690,6 +723,9 @@ namespace AmeriForce.Data.Migrations
                     b.Property<string>("MailingStreet")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("MailingSuite")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Mailing_Lists")
                         .HasColumnType("nvarchar(max)");
 
@@ -721,6 +757,9 @@ namespace AmeriForce.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OtherStreet")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherSuite")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerId")
@@ -924,6 +963,51 @@ namespace AmeriForce.Data.Migrations
                     b.ToTable("LOV_ClientStatus");
                 });
 
+            modelBuilder.Entity("AmeriForce.Data.LOV_CompanyType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReferralType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("LOV_CompanyTypes");
+                });
+
+            modelBuilder.Entity("AmeriForce.Data.LOV_MailingList", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("LOV_MailingLists");
+                });
+
             modelBuilder.Entity("AmeriForce.Data.LOV_ReferralType", b =>
                 {
                     b.Property<int>("ID")
@@ -945,6 +1029,27 @@ namespace AmeriForce.Data.Migrations
                     b.ToTable("LOV_ReferralType");
                 });
 
+            modelBuilder.Entity("AmeriForce.Data.LOV_RelationshipStatus", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("LOV_RelationshipStatuses");
+                });
+
             modelBuilder.Entity("AmeriForce.Data.LOV_State", b =>
                 {
                     b.Property<int>("ID")
@@ -961,6 +1066,30 @@ namespace AmeriForce.Data.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("LOV_State");
+                });
+
+            modelBuilder.Entity("AmeriForce.Data.LOV_TagGradeSort", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Grade")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("LOV_TagGradeSorts");
                 });
 
             modelBuilder.Entity("AmeriForce.Data.LOV_TaskType", b =>
@@ -1000,6 +1129,21 @@ namespace AmeriForce.Data.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("LOV_TemplateType");
+                });
+
+            modelBuilder.Entity("AmeriForce.Data.LOV_UpdateNeeded", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("UpdateField")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("LOV_UpdateNeededs");
                 });
 
             modelBuilder.Entity("AmeriForce.Data.NewInitialDeal", b =>

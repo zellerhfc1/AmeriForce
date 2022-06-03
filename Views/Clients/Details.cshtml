@@ -1,0 +1,2332 @@
+﻿@model AmeriForce.Models.Clients.ClientDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<link href="~/Content/ClientStyleSheet.css" rel="stylesheet" />
+
+<nav aria-label="breadcrumb" align="right">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Clients")">Clients</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+            @{
+                if (Model.clientData.Name == "" || Model.clientData.Name == null)
+                {
+                    @Html.Raw("TBD")
+                }
+                else
+                {
+                    @Model.clientData.Name
+                }
+            }
+        </li>
+    </ol>
+</nav>
+
+<div style="border:0px solid #333;">
+
+    <div id="fileUploadSuccess" name="fileUploadSuccess" class="alert alert-success alert-dismissible" role="alert">
+        <strong>Files uploaded successfully!</strong> 
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+
+    <div class="container mainPageBody" style="border:1px solid #333;background-color:#fff;">
+
+        @*Contact Detail Div*@
+        <div class="row contactHeader">
+            <div class="col-lg-6" align="left">
+                <div style="border:0px solid black;">
+                    <table align="left">
+                        <tr>
+                            <td valign="middle" style="border:1px solid #fff;padding:10px;">
+                                <i class="fa fa-file-signature" style="font-size:80px;"></i>
+                            </td>
+                            <td class="leftTextAlign" style="border:1px solid #fff;padding:10px;">
+                                <span class="overviewHeader dealAmount">
+                                    @{ 
+                                        if (Model.clientData.Name == "" || Model.clientData.Name == null)
+                                        {
+                                            @Html.Raw("TBD")
+                                        }
+                                        else
+                                        {
+                                            @Model.clientData.Name
+                                        }
+                                    }
+                                </span>
+                                <br />
+                                <span class="nameSubHeader gradeAReversed"> @Model.clientData.StageName </span>
+                                <br />
+                                <span class="nameSubHeaderNextCall">
+                                    <b>Next Call:</b>
+                                    @{
+                                        if (Model.clientNextTask != null)
+                                        {
+                                            if (Model.clientNextTask.ActivityDate == null)
+                                            {
+                                                @Html.Raw("TBD")
+                                            }
+                                            else
+                                            {
+                                                @Model.clientNextTask.ActivityDate.ToString()
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("---")
+                                        }
+                                    }
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-3 dealAmount" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-1" align="center">
+                &nbsp;
+            </div>
+            <div class="col-lg-2" align="center">
+                <table>
+                    <tr>
+                        <td>
+                            <img src="~/Images/@(Model.clientData.OwnerId).jpg" class="img-thumbnail img-rounded" style="height:70px;" />
+                            <br />
+                            <b>@Model.OwnerName</b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
+                @*<a class="btn btn-primary btn-md" href="@Url.Action("Create", "Clients")" style="padding:5px;">Create New Client</a>*@
+                <a class="btn btn-primary btn-md" href="@Url.Action("Edit", "Clients", new { id = Model.clientData.Id })" style="padding:5px;"><i class="fa fa-edit"></i> Edit Client</a>
+                @*<a class="btn btn-primary btn-md" href="@Url.Action("MergeContacts", "Test")" style="padding:5px;">Merge Contacts</a>
+                    <a class="btn btn-primary btn-md" href="@Url.Action("MailMergeWordDocs", "Test")" style="padding:5px;">Mail Merge</a>*@
+                @*<a class="btn btn-primary btn-md" href="@Url.Action("Upload", "Clients", new { id = Model.clientData.Id })" style="padding:5px;">Add Files</a>*@
+                <a class="btn btn-primary btn-md" href="#" name="btnUploadFile" id="btnUploadFile" data-toggle="modal" style="padding:5px;" data-target="#modalUploadClientFiles"><i class="fa fa-plus"></i> Add Files</a>
+                @*<a class="btn btn-primary btn-md" href="#" name="btnUploadFile" id="btnUploadFile" data-toggle="modal" style="padding:5px;" data-target="#modalUploadClientFiles"><i class="fa fa-envelope"></i> Send Email</a>*@
+                <a class="btn btn-primary btn-md" href="@Url.Action("SendEmail", "Clients", new { id = Model.clientData.Id })" style="padding:5px;"><i class="fa fa-envelope"></i> Send Email</a>
+                <a class="btn btn-primary btn-md" href="#" name="btnMailMerge" id="btnMailMerge" data-toggle="modal" style="padding:5px;" data-target="#modalCreateMailMergeDocument"><i class="fa fa-plus"></i> Mail Merge</a>
+                @*<a class="btn btn-primary btn-md" href="#">Clone Contact</a>
+    <a class="btn btn-primary btn-md disabled" href="#">Delete Contact</a>*@
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-7" style="padding:10px;" align="left">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle"><i class="fa fa-file-signature"></i> Client Detail</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;" align="left">
+                            <b>Client Name: </b> 
+                            @{
+                                if (Model.clientData.Name == "" || Model.clientData.Name == null)
+                                {
+                                    @Html.Raw("TBD")
+                                }
+                                else
+                                {
+                                    @Model.clientData.Name
+                                }
+                            }
+                            <br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Legal Entity Name: </b> 
+                            <a href='@Url.Action("Details", "Companies", new { id = Model.clientData.CompanyId })'>@Model.companyData.Name</a>
+                            <br />
+                            <hr class="hrFieldBuffer" />
+
+                            <b>Business Description: </b>@Model.companyData.Description
+                            <hr class="hrFieldBuffer" />
+                            <b>SIC Code: </b>@Model.companyData.SICCode
+                            <hr class="hrFieldBuffer" />
+                            <b>Charter State: </b>@Model.companyData.CharterState
+                            <hr class="hrFieldBuffer" />
+
+                            @*<b>Company Name: </b> <a href="#">Amerisource Business Capital</a><br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Title: </b> Full Stack Developer<br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Department: </b> Investment Services<br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Business Phone: </b> 666.666.6666<br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Mobile Phone: </b> 444.444.4444<br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Home Phone: </b> 555.555.5555<br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Email: </b> jzeller@amerisource.us.com<br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Alt Email: </b> jz@amerisource.com<br />
+                                <hr class="hrFieldBuffer" />
+                                <img src="~/Images/linkedin.png" /> <b>LinkedIn Profile: </b> <a href="#">https://www.linkedin.com/in/jason-zeller-6783982/</a><br />
+                                <hr class="hrFieldBuffer" />
+                                <b>Website: </b> <a href="https://www.jz.com">https://www.jz.com</a>
+                                <hr class="hrFieldBuffer" />
+                                <table>
+                                    <tr>
+                                        <td style="vertical-align:top;" class="leftTextAlign">
+                                            <b>Mailing Address:</b>
+                                        </td>
+                                        <td>
+                                            &nbsp;
+                                        </td>
+                                        <td style="vertical-align:top;" class="textLargerLineHeight leftTextAlign">
+                                            <a href="https://maps.google.com/?q=P.O. Box 310, Sayre, OK, 73662">
+                                                P.O. Box 310<br />
+                                                Sayre, OK 73662
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <hr class="hrFieldBuffer" />
+                                <table>
+                                    <tr>
+                                        <td style="vertical-align:top;" class="leftTextAlign">
+                                            <b>Physical Address:</b>
+                                        </td>
+                                        <td>
+                                            &nbsp;
+                                        </td>
+                                        <td style="vertical-align:top;" class="textLargerLineHeight leftTextAlign ">
+                                            <a href="https://maps.google.com/?q=P.O. Box 310, Sayre, OK, 73662">
+                                                P.O. Box 310<br />
+                                                Sayre, OK 73662
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <hr class="hrFieldBuffer" />*@
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;" align="left">
+                            <b>Client Type: </b> @Model.clientData.Type<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Client Stage: </b> @Model.clientData.StageName<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>Amount: </b> @String.Format("{0:c}", Model.clientData.Amount)<br />
+                            <hr class="hrFieldBuffer" />
+                            <i class="fa-solid fa-square-pen"></i><b>Close Date: </b> @String.Format("{0:d}", Model.clientData.CloseDate)
+                            <hr class="hrFieldBuffer" />
+                            <b>BDO: </b> @Model.OwnerName<br />
+                            <hr class="hrFieldBuffer" />
+                            <br />
+                        </div>
+                    </div>
+                    @*<div class="row">
+                            <div class="col-lg-12 textLargerLineHeight" style="padding:10px;" align="left">
+                                <b>Personal Notes:</b>
+                                <br />
+                                Use your existing Salesforce credentials to log into dataloader.io without the hassle of downloading an application. dataloader.io’s uses oAuth 2.0 so you can get started quickly without compromising security.
+                                <br /><br />
+                            </div>
+                        </div>*@
+
+                    @*<div class="row">
+                            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                                <h2 class="subHeadingTitle">Paid Referral Partners</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12" style="padding:5px;">
+                                <b>Referral Partner Agreement (Date): </b> 05/07/2002
+                                <hr class="hrFieldBuffer" />
+                                <b>Referral Partner Agreement (Details): </b> All fees to be paid to Donald Brown (individual)
+                                <hr class="hrFieldBuffer" />
+                                <b>Tax ID#: </b> 12-8975457
+                                <hr class="hrFieldBuffer" />
+                            </div>
+                        </div>*@
+
+                    @*CLIENTS INFO*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-credit-card"></i> Credit Facilities</h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            <a class="btn btn-primary btn-sm tinyButton facilityEntry" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" name="btnAddFacility" id="btnAddFacility" data-toggle="modal" data-target="#modalAddFacility"><i class="fa fa-plus"></i> New Facility</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:0px;">
+                            <div class="panel panel-default">
+                                <div class="panel-body" style="padding:5px;">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-3 boldText" style="padding:0px;">
+                                                Facility Name:
+                                            </div>
+                                            <div class="col-sm-3 boldText" style="padding:0px;">
+                                                Type:
+                                            </div>
+                                            <div class="col-sm-6 boldText" style="padding:0px;">
+                                                Categories:
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <hr class="hrFieldBufferWithinPanel" />
+                                            </div>
+                                        </div>
+
+
+                                        @{
+                                            foreach (var facility in Model.clientFacilities)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-sm-3" style="padding:0px;">
+                                                        @facility.FacilityName
+                                                    </div>
+                                                    <div class="col-sm-3" style="padding:0px;">
+                                                        @facility.FacilityType
+                                                    </div>
+                                                    <div class="col-sm-5" style="padding:0px;">
+                                                        @facility.FacilityCategory
+                                                    </div>
+                                                    <div class="col-sm-1" style="padding:0px;">
+                                                        <a class="btn btn-primary btn-sm tinyButton facilityEntry" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" 
+                                                                name="btnEditFacility" id="btnEditFacility" data-id="@facility.ID" data-toggle="modal" data-target="#modalAddFacility">
+                                                        <i class="fa fa-edit"></i> Edit</a>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <hr class="hrFieldBufferWithinPanel" />
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+
+
+
+
+
+                    @*Client Conacts INFO*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-user"></i> Client Contacts</h2>
+                            
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            <a class="btn btn-primary btn-sm tinyButton" href="@Url.Action("Create", "Contacts")" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" name="btnAddClientContact" id="btnAddClientContact"><i class="fa fa-plus"></i> New Client Contact</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:0px;">
+                            <div class="panel panel-default">
+                                <div class="panel-body" style="padding:5px;">
+                                    <div class="container">
+                                       
+                                        <div class="row">
+                                            <div class="col-sm-3 boldText" style="padding:0px;">
+                                                Name/Title:
+                                            </div>
+                                            <div class="col-sm-2 boldText" style="padding:0px;">
+                                                Ownership %:
+                                            </div>
+                                            <div class="col-sm-2 boldText" style="padding:0px;">
+                                                Guarantor:
+                                            </div>
+                                            <div class="col-sm-4 boldText" style="padding:0px;">
+                                                Contact Info:
+                                            </div>
+                                            <div class="col-sm-1 boldText" style="padding:0px;">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+
+
+                                        @{
+                                            foreach (var contact in Model.mainContactData)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <hr class="hrFieldBufferWithinPanel" />
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-3" style="padding:0px;">
+                                                        <a href='@Url.Action("Details", "Contacts", new { id = contact.Id })'>@contact.FirstName @contact.LastName</a>
+                                                        <br />
+                                                        @contact.Title
+                                                    </div>
+                                                    <div class="col-sm-2" style="padding:0px;">
+                                                        @contact.OwnershipPercentage
+                                                    </div>
+                                                    <div class="col-sm-2" style="padding:0px;">
+                                                        @contact.Guarantor
+                                                    </div>
+                                                    <div class="col-sm-4" style="padding:0px;">
+                                                        <i class="fa fa-phone" style="font-size:small;"></i> @contact.Phone
+                                                        <br />
+                                                        <i class="fa fa-mobile-alt" style="font-size:small;"></i> @contact.MobilePhone
+                                                        <br />
+                                                        <i class="fa fa-envelope" style="font-size:small;"></i> @contact.Email
+                                                    </div>
+                                                    <div class="col-sm-1" style="padding:0px;">
+                                                        <a class="btn btn-primary btn-sm tinyButton contactEntry" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;"
+                                                           name="btnEditClientContact" id="btnEditClientContact" data-id="@contact.Id" data-toggle="modal" data-target="#modalUpdateClientContact">
+                                                            <i class="fa fa-edit"></i> Edit
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                            }
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+
+
+                    @*REFERRAL SOURCE INFORMATION*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Client Referral Source Information</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Referral Type: </b> @Model.clientData.LeadSource
+                            <hr class="hrFieldBuffer" />
+                            <b>Referral Date: </b> @Model.clientData.Referral_Date.ToString()
+                            @*@(Model.clientData.Referral_Date?.ToString("dd/MM/yyyy"))*@
+                                @*@Model.clientData.Referral_Date?.ToString("dd/MM/yyyy")*@
+                            
+                            <hr class="hrFieldBuffer" />
+                            @*<b>Referring Company: </b> <a href='@Url.Action("Details", "Companies", new { id=Model.Referring_Company })'>@controller.GetCompanyName(Model.Referring_Company)</a>
+                            <hr class="hrFieldBuffer" />
+                            <b>Referring Contact: </b> <a href='@Url.Action("Details", "Contacts", new { id=Model.Referring_Contact })'>@controller.GetContactName(Model.Referring_Contact)</a>*@
+
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Referring Company: </b> 
+                           
+                            @{
+                                if (Model.referringCompanyData != null)
+                                {
+                                    <a href='@Url.Action("Details", "Companies", new { id = Model.referringCompanyData.ID })'>@Model.referringCompanyData.Name</a>
+                                }
+                            }
+                            <hr class="hrFieldBuffer" />
+                            <b>Referring Contact: </b> 
+                            @{
+                                if (Model.referringContactData != null)
+                                {
+                                    <a href='@Url.Action("Details", "Contacts", new { id = Model.referringContactData.Id })'>@Model.referringContactData.FirstName @Model.referringContactData.LastName</a>
+                                }
+                            }
+                            <hr class="hrFieldBuffer" />
+
+                            @*<b>Business Description: </b> @controller.GetBusinessDescription(Model.CompanyId)
+                            <hr class="hrFieldBuffer" />
+                            <b>SIC Code: </b> @controller.GetSICCode(Model.CompanyId)
+                            <hr class="hrFieldBuffer" />
+                            <b>Charter State: </b> @controller.GetCharterState(Model.CompanyId)
+                            <br /><br />
+                            <br /><br />*@
+                            <br />
+                        </div>
+                    </div>
+
+                    @*TERM SHEET INFORMATION*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Term Sheet</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Term Sheet Issued: </b> @Model.clientData.Term_Sheet_Issued
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Term Sheet Received: </b> @Model.clientData.Term_Sheet_Received
+                            <hr class="hrFieldBuffer" />
+                            <br />
+                        </div>
+                    </div>
+
+
+
+                    @*UW LEVEL I INFORMATION*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Underwriting Level 1</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Due Diligence Deposit Received: </b> @Model.clientData.Due_Diligence_Deposit_Received
+                            <hr class="hrFieldBuffer" />
+                            <b>State UCC Searches Received: </b> @Model.clientData.UCC_Search
+                            <hr class="hrFieldBuffer" />
+                            <b>Tax Guard Report: </b> @Model.clientData.Tax_Guard_Report
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>File Received by UW: </b> @Model.clientData.File_Received_by_UW
+                            <hr class="hrFieldBuffer" />
+                            <b>County Searches Received: </b> @Model.clientData.FTL_Search_State_County
+                            <hr class="hrFieldBuffer" />
+                            <b>Insurance Verification: </b> @Model.clientData.Ins_Verification_Transp_Staff_only
+                            <hr class="hrFieldBuffer" />
+                            <br />
+                        </div>
+                    </div>
+
+
+                    @*UW LEVEL I INFORMATION*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Approval/Decision</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>UW Hands over File to CO: </b> @Model.clientData.UW_Hands_over_for_First_Review
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Approval Decision: </b> @Model.clientData.Approval_Decision
+                            <hr class="hrFieldBuffer" />
+                            <br />
+                        </div>
+                    </div>
+
+
+
+                    @*LEGAL DOCS INFORMATION*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Legal Docs</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Legal Docs Issued: </b> @Model.clientData.Legal_Docs_Issued
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Legal Docs Received: </b> @Model.clientData.Legal_Docs_Received
+                            <hr class="hrFieldBuffer" />
+                            <br />
+                        </div>
+                    </div>
+
+
+
+                    @*PORTFOLIO / AUDIT / VERIFICATION INFORMATION*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Portfolio / Audit / Verification</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Initial Funding Date: </b> @Model.clientData.Initial_Funding
+                            <hr class="hrFieldBuffer" />
+                            <b>File to Mgmt for Review: </b> @Model.clientData.File_to_Mgmt_for_Review
+                            <hr class="hrFieldBuffer" />
+                            <b>All Post-Funding Tasks Received: </b> @Model.clientData.All_Post_Funding_Tasks_Completed
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>File to Client Services: </b> @Model.clientData.File_to_Client_Services
+                            <hr class="hrFieldBuffer" />
+                            <b>Mgmt Completes Post-Funding File Review: </b> @Model.clientData.Mgmt_Completes_Post_Funding_File_Review
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                    </div>
+
+
+
+                    @*METRICS*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Metrics</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>UW Process: </b> 
+                            @*UW_Hands_over_for_First_Review__c - File_Received_by_UW__c*@
+                            @{
+                                DateTime uwHandsOverForFirstReview = Convert.ToDateTime(Model.clientData.UW_Hands_over_for_First_Review);
+                                DateTime fileReceivedByUW = Convert.ToDateTime(Model.clientData.File_Received_by_UW);
+
+                                TimeSpan uwProcess = uwHandsOverForFirstReview.Subtract(fileReceivedByUW);
+                                @Html.Raw($"{uwProcess.TotalDays.ToString("0.##")} Days")
+                            }
+                            <hr class="hrFieldBuffer" />
+                            <b>Client Legal Doc Review: </b>
+                            @*@{
+                                var x = Convert.ToInt32(Model.clientData.Legal_Docs_Received - Model.clientData.Legal_Docs_Issued) * 24;
+                                @Html.Raw(x);
+                            }*@
+                            @{
+                                DateTime legalDocsReceived = Convert.ToDateTime(Model.clientData.Legal_Docs_Received);
+                                DateTime legalDocsIssued = Convert.ToDateTime(Model.clientData.Legal_Docs_Issued);
+
+                                TimeSpan legalDocsOut = legalDocsReceived.Subtract(legalDocsIssued);
+                                @Html.Raw($"{legalDocsOut.TotalDays.ToString("0.##")} Days")
+                            }
+                            <hr class="hrFieldBuffer" />
+                            <b>Total Funding Timeline: </b> 
+                            @*Initial_Funding__c - File_Received_by_UW__c*@
+                            @{
+                                DateTime fileReceivedByUW2 = Convert.ToDateTime(Model.clientData.File_Received_by_UW);
+                                DateTime initialFunding2 = Convert.ToDateTime(Model.clientData.Initial_Funding);
+
+                                TimeSpan totalFundingTimeline = initialFunding2.Subtract(fileReceivedByUW2);
+                                if (totalFundingTimeline.TotalDays < 0)
+                                {
+                                    @Html.Raw(" --- ");
+                                } else
+                                {
+                                    @Html.Raw($"{totalFundingTimeline.TotalDays.ToString("0.##")} Days")
+                                }
+                            }
+                            <hr class="hrFieldBuffer" />
+                            <b>Completion of all Post-Funding Tasks: </b> 
+                            @{
+                                DateTime allPostFundingTasksCompleted = Convert.ToDateTime(Model.clientData.All_Post_Funding_Tasks_Completed);
+                                DateTime initialFunding3 = Convert.ToDateTime(Model.clientData.Initial_Funding);
+
+                                TimeSpan completionOfAllPostFundingTasks = allPostFundingTasksCompleted.Subtract(initialFunding3);
+                                @*@Html.Raw($"{completionOfAllPostFundingTasks.TotalDays.ToString("0.##")} Days")*@
+                            if (completionOfAllPostFundingTasks.TotalDays < 0)
+                            {
+                                    @Html.Raw(" --- ");
+                            }
+                            else
+                            {
+                                    @Html.Raw($"{completionOfAllPostFundingTasks.TotalDays.ToString("0.##")} Days")
+                            }
+                            }
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                        <div class="col-lg-6" style="padding:5px;">
+                            <b>Post-Funding UW Processing: </b> 
+                            @{
+                                DateTime fileToClientServices = Convert.ToDateTime(Model.clientData.File_to_Client_Services);
+                                DateTime initialFunding = Convert.ToDateTime(Model.clientData.Initial_Funding);
+
+                                TimeSpan postFundingUWProcessing = fileToClientServices.Subtract(initialFunding);
+                                @*@Html.Raw($"{postFundingUWProcessing.TotalDays.ToString("0.##")} Days")*@
+                            if (postFundingUWProcessing.TotalDays < 0)
+                            {
+                                    @Html.Raw(" --- ");
+                            }
+                            else
+                            {
+                                    @Html.Raw($"{postFundingUWProcessing.TotalDays.ToString("0.##")} Days")
+                            }
+                            }
+                            <hr class="hrFieldBuffer" />
+                            <b>Post-Funding CO Processing: </b> 
+                            @{
+                                DateTime fileToClientServices2 = Convert.ToDateTime(Model.clientData.File_to_Client_Services);
+                                DateTime fileToMgmtForReview = Convert.ToDateTime(Model.clientData.File_to_Mgmt_for_Review);
+
+                                TimeSpan postFundingCOProcessing = fileToMgmtForReview.Subtract(fileToClientServices2);
+                                @*@Html.Raw($"{postFundingCOProcessing.TotalDays.ToString("0.##")} Days")*@
+                            if (postFundingCOProcessing.TotalDays > 10000)
+                            {
+                                    @Html.Raw(" --- ");
+                            }
+                            else
+                            {
+                                    @Html.Raw($"{postFundingCOProcessing.TotalDays.ToString("0.##")} Days")
+                            }
+                            }
+                            <hr class="hrFieldBuffer" />
+                            <b>Post-Funding Mgmt Review: </b> 
+                            @*Mgmt_Completes_Post_Funding_File_Review__c - File_to_Mgmt_for_Review__c*@
+                            @{
+                                DateTime mgmtCompletesPostFundingFile = Convert.ToDateTime(Model.clientData.Mgmt_Completes_Post_Funding_File_Review);
+                                DateTime fileToMgmtForReview2 = Convert.ToDateTime(Model.clientData.File_to_Mgmt_for_Review);
+
+                                TimeSpan postFundingMgmtReview = mgmtCompletesPostFundingFile.Subtract(fileToMgmtForReview2);
+                                @*@Html.Raw($"{postFundingMgmtReview.TotalDays.ToString("0.##")} Days")*@
+                            if (postFundingMgmtReview.TotalDays < 0)
+                            {
+                                    @Html.Raw(" --- ");
+                            }
+                            else
+                            {
+                                    @Html.Raw($"{postFundingMgmtReview.TotalDays.ToString("0.##")} Days")
+                            }
+                            }
+                            <hr class="hrFieldBuffer" />
+                        </div>
+                    </div>
+                    @*FILES INFO*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-folder"></i> Files </h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            @*<a class="btn btn-primary btn-sm tinyButton" href="@Url.Action("Upload", "Clients", new { id = Model.clientData.Id })"><i class="fa fa-plus"></i> Add Files</a>*@
+                            
+                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" name="btnUploadFile" id="btnUploadFile" data-toggle="modal" data-target="#modalUploadClientFiles"><i class="fa fa-plus"></i> Add Files</a>
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:10px;">
+
+                            @Html.Raw(ViewBag.ClientFiles)
+
+                            @*<div class="panel panel-default">
+                    <div class="panel-body" style="padding:5px;">
+                        <div class="col-lg-3" align="center">
+                            <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                <img src="~/Images/filePlaceholder.png" />
+                                <br /><br />
+                                This_Is_The_File_Name.jpg
+                                <br /><br />
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3" align="center">
+                            <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                <img src="~/Images/filePlaceholder.png" />
+                                <br /><br />
+                                This_Is_The_File_Name.jpg
+                                <br /><br />
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3" align="center">
+                            <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                <img src="~/Images/filePlaceholder.png" />
+                                <br /><br />
+                                This_Is_The_File_Name.jpg
+                                <br /><br />
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3" align="center">
+                            <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                <img src="~/Images/filePlaceholder.png" />
+                                <br /><br />
+                                This_Is_The_File_Name.jpg
+                                <br /><br />
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+                        </div>
+                    </div>
+
+
+
+
+
+                    @*MAIL MERGE FILES INFO*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-folder"></i> Mail Merge Files </h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            @*<a class="btn btn-primary btn-sm tinyButton" href="@Url.Action("DocumentUpload", "Test")"><i class="fa fa-plus"></i> Add Files</a>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:0px;">
+
+                            @Html.Raw(ViewBag.MailMergeFiles)
+
+                            @*<div class="panel panel-default">
+                    <div class="panel-body" style="padding:5px;">
+                        <div class="col-lg-3" align="center">
+                            <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                <img src="~/Images/filePlaceholder.png" />
+                                <br /><br />
+                                This_Is_The_File_Name.jpg
+                                <br /><br />
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3" align="center">
+                            <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                <img src="~/Images/filePlaceholder.png" />
+                                <br /><br />
+                                This_Is_The_File_Name.jpg
+                                <br /><br />
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3" align="center">
+                            <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                <img src="~/Images/filePlaceholder.png" />
+                                <br /><br />
+                                This_Is_The_File_Name.jpg
+                                <br /><br />
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3" align="center">
+                            <div style="border:1px solid #ccc;background-color:#eee;padding:10px;">
+                                <img src="~/Images/filePlaceholder.png" />
+                                <br /><br />
+                                This_Is_The_File_Name.jpg
+                                <br /><br />
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">View</a>
+                                <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+            <div class="col-lg-5" style="padding:10px;height:100%;" align="left" id="rightScroll">
+                <div class="container">
+                    @*NEXT SCHEDULED CALL*@
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-calendar-alt"></i> Next Scheduled Call</h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            <a class="btn btn-primary btn-sm tinyButton nextClientCall" href="#" 
+                                    style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" 
+                                    name="btnEditNextScheduledCall" id="btnEditNextScheduledCall" data-toggle="modal" 
+                                    data-target="#modalEditNextScheduledCall"><i class="fa fa-plus"></i> Update Call</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:10px;">
+                            @{
+                                if (Model.clientNextTask.ActivityDate < DateTime.Now)
+                                {
+                                    <div id="callBehindSchedule" name="callBehindSchedule" class="alert alert-danger alert" style="padding:3px;font-size:larger;" role="alert">
+                                        <i class="fa fa-exclamation-triangle"></i> <strong>Task is past due.  Please edit to reflect current status.</strong>
+                                    </div>
+                                }
+                            }
+                            <div class="container">
+
+                                <div class="row">
+                                    <div class="col-sm-1">
+
+                                        @{
+                                            switch (Model.clientNextTask.Type.ToUpper())
+                                            {
+                                                case "EMAIL":
+                                                    <i class="fa fa-envelope" title="Email" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "IN-PERSON MEETING":
+                                                    <i class="fa fa-handshake" title="In-Person Meeting" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "PHONE CALL":
+                                                    <i class="fa fa-mobile-alt" title="Phone Call" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "VIRTUAL MEETING":
+                                                    <i class="fa fa-video" title="Zoom, Skype, etc." style="font-size:x-large;"></i>
+                                                    break;
+                                                case "OTHER":
+                                                    <i class="fa fa-question-circle" title="Other" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "NOTE":
+                                                    <i class="fa fa-clipboard" title="Other" style="font-size:x-large;"></i>
+                                                    break;
+                                                case "WARNING":
+                                                    <i class="fa fa-exclamation-triangle" title="Warning" style="font-size:x-large;"></i>
+                                                    break;
+                                                default:
+                                                    <i class="fa fa-clipboard" title="Unknown" style="font-size:x-large;"></i>
+                                                    break;
+                                            }
+                                        }
+                                    </div>
+                                    <div class="col-sm-11">
+                                        <b>
+                                            @Model.clientNextTaskOwner
+                                        -
+                                        @{
+                                            string nextCallActivityDate = Model.clientNextTask.ActivityDate?.ToString("MM/dd/yyyy") ?? "";
+                                            @Html.Raw(nextCallActivityDate);
+                                        }
+                                        @@
+                                        @{
+                                            string nextCallActivityTime = Model.clientNextTask.ActivityDate?.ToString("hh:mm:ss tt") ?? "";
+                                            @Html.Raw(nextCallActivityTime);
+                                        }
+                                    </b>
+                                    <br />
+                                    @Model.clientNextTask.Description.Trim()
+                                </div>
+                            </div>
+
+
+                            </div>
+                                                @*}
+                                            }*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" style="height:35px;">
+                            <h2 class="subHeadingTitle"><i class="fa fa-fa fa-comment-dots"></i> Notes</h2>
+                        </div>
+                        <div class="col-lg-6 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                            <a class="btn btn-primary btn-sm tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;" name="btnAddNote" id="btnAddNote" data-toggle="modal" data-target="#modalAddAClientNote"><i class="fa fa-plus"></i> New Note</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:10px;">
+                            <div class="container">
+
+                                @{
+                                    foreach (var clientNote in Model.clientNotes)
+                                    {
+
+
+                                        <div class="row">
+                                            <div class="col-sm-1">
+
+                                                @{
+                                                    switch (clientNote.Type.ToUpper())
+                                                    {
+                                                         case "EMAIL":
+                                                            <i class="fa fa-envelope" title="Email" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "IN-PERSON MEETING":
+                                                            <i class="fa fa-handshake" title="In-Person Meeting" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "PHONE CALL":
+                                                            <i class="fa fa-mobile-alt" title="Phone Call" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "VIRTUAL MEETING":
+                                                            <i class="fa fa-video" title="Zoom, Skype, etc." style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "OTHER":
+                                                            <i class="fa fa-question-circle" title="Other" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "NOTE":
+                                                            <i class="fa fa-clipboard" title="Other" style="font-size:x-large;"></i>
+                                                            break;
+                                                        case "WARNING":
+                                                            <i class="fa fa-exclamation-triangle" title="Warning" style="font-size:x-large;"></i>
+                                                            break;
+                                                        default:
+                                                            <i class="fa fa-clipboard" title="Unknown" style="font-size:x-large;"></i>
+                                                            break;
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="col-sm-11">
+                                                <b>
+                                                    @Model.OwnerName
+                                                    -
+                                                    @{
+                                                        string noteActivityDate = clientNote.CreatedDate?.ToString("MM/dd/yyyy") ?? "";
+                                                        @Html.Raw(noteActivityDate);
+                                                    }
+                                                    @@
+                                                    @{
+                                                        string noteActivityTime = clientNote.CreatedDate?.ToString("hh:mm:ss tt") ?? "";
+                                                        @Html.Raw(noteActivityTime);
+                                                    }
+                                                </b>
+                                                <br />
+                                                @{
+                                                    if (clientNote.Subject != null && clientNote.Subject != "")
+                                                    {
+                                                        @Html.Raw(clientNote.Subject)
+                                                        <br />
+                                                    }
+                                                }
+                                                @Html.Raw(clientNote.Description)
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <hr class="hrFieldBuffer" />
+                                        </div>
+                                    }
+                                }
+
+
+
+
+                                @*<div class="row">
+                                    <div class="col-lg-2">
+                                        <img src="~/Images/lorisquare.png" class="img-thumbnail img-square" style="width:60px;" />
+                                    </div>
+                                    <div class="col-lg-3" style="padding:10px;">
+                                        <b>Lori Lemuel</b>
+                                        <br />
+                                        7/01/2021 @@ 11:30 AM CST
+                                        <br />
+                                        <i class="fa fa-video" title="Virtual Meeting" style="font-size:medium;"></i>  Video Call
+                                    </div>
+                                    <div class="col-lg-7" style="padding:10px;">
+                                        Visit at ASF office, met with BH and MM, discussed sending us more opportunities, responsiveness and quick turnaround very important, sees a lot in the valley, more factoring than ABL focus
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <hr class="hrFieldBuffer" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <img src="~/Images/lorisquare.png" class="img-thumbnail img-square" style="width:60px;" />
+                                    </div>
+                                    <div class="col-lg-3" style="padding:10px;">
+                                        <b>Lori Lemuel</b>
+                                        <br />
+                                        7/01/2021 @@ 11:30 AM CST
+                                        <br />
+                                        <i class="fa fa-mobile-alt" title="Virtual Meeting" style="font-size:medium;"></i>  Phone Call
+                                    </div>
+                                    <div class="col-lg-7" style="padding:10px;">
+                                        Don mentioned $3.5MM RE deal, warehouse facility in South Texas appraised at $7.5MM, want to refi to pay grandfather out, requested package
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <hr class="hrFieldBuffer" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <img src="~/Images/lorisquare.png" class="img-thumbnail img-square" style="width:60px;" />
+                                    </div>
+                                    <div class="col-lg-3" style="padding:10px;">
+                                        <b>Lori Lemuel</b>
+                                        <br />
+                                        7/01/2021 @@ 11:30 AM CST
+                                        <br />
+                                        <i class="fa fa-handshake" title="In-Person Meeting" style="font-size:medium;"></i>  In-Person Meeting
+                                    </div>
+                                    <div class="col-lg-7" style="padding:10px;">
+                                        Don mentioned $3.5MM RE deal, warehouse facility in South Texas appraised at $7.5MM, want to refi to pay grandfather out, requested package
+                                    </div>
+                                </div>*@
+
+
+
+
+                            </div>
+
+
+                        </div>
+                        @*<div class="col-lg-9 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                                <a class="btn btn-primary btn-xs" href="#">Phone Call</a>
+                                <input type="button" name="buttonMergeDocument" value="Merge Document" id="buttonMergeDocument" data-toggle="modal" data-target="#modalMergeDocument" class="btn btn-primary btn-xs" />
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle">Address Info</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Mailing Address: </b>
+                    <br /><br />
+                    <a href="https://maps.google.com/?q=P.O. Box 310, Sayre, OK, 73662">
+                        P.O. Box 310<br />
+                        Sayre, OK 73662
+                    </a>
+                    <br /><br />
+                </div>
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Physical Address: </b>
+                    <br /><br />
+                    <a href="https://maps.google.com/?q=P.O. Box 310, Sayre, OK, 73662">
+                        P.O. Box 310<br />
+                        Sayre, OK 73662
+                    </a>
+                    <br /><br />
+                </div>
+            </div>*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle">Updates Needed</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Update Needed: </b> Email<br /><br />
+                </div>
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Update Needed Date: </b> 5/12/2021<br /><br />
+                </div>
+            </div>*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle">Individual Referral Agreement</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Referral Partner Agmnt (Date): </b> 09/12/2003<br />
+                    <hr class="hrFieldBuffer" />
+                    <b>Referral Partner Agmnt (Details): </b> All fees to be paid to Donald Brown (individual)<br />
+                    <hr class="hrFieldBuffer" />
+                    <b>Leasing Industry Referral: </b> No<br /><br />
+                </div>
+                <div class="col-lg-6" style="padding:10px;">
+                    <b>Standard Pay Terms: </b> Scale - Max Reached - 15% Gross<br />
+                    <hr class="hrFieldBuffer" />
+                    <b>Term Of Agreement: </b> Annual Renewal - Active Broker Status<br />
+                    <hr class="hrFieldBuffer" />
+                    <b>Tax ID #: </b> 84-5166835
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a tabindex="0" class="btn btn-xs btn-info" role="button" data-html="true" data-toggle="popover" data-trigger="focus" title="Tax ID Definition" data-content="@Html.Raw("Business Entities = FIN<br>Individuals = SSN")">?</a>
+                    <br /><br />
+                </div>
+            </div>*@
+
+
+
+
+        @*NOTES INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle"><i class="fa fa-comment-dots"></i> Notes</h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground" align="left">
+                    <a class="btn btn-primary btn-sm tinyButton tinyButton tinyButton" href="#">New Note</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="padding:0px;">
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="10%" class="leftTextAlign">Title</th>
+                                        <th scope="col" width="63%" class="leftTextAlign">Content</th>
+                                        <th scope="col" width="7%" class="leftTextAlign">Last Modified</th>
+                                        <th scope="col" width="8%" class="leftTextAlign">Created By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton tinyButton" href="#">View</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        </td>
+                                        <td class="leftTextAlign">Progress</td>
+                                        <td class="leftTextAlign">
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                        </td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton tinyButton" href="#">View</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        </td>
+                                        <td class="leftTextAlign">Progress</td>
+                                        <td class="leftTextAlign">
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                            These are minutes written when there is a project meeting. Project meeting can be either to discuss an oncoming project or an ongoing project.
+                                        </td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br /><br />*@
+
+
+
+
+
+
+
+
+        @*<div class="row">
+                <div class="col-lg-12" style="height:50px;">
+                    <hr width="100%" />
+                </div>
+            </div>
+
+            <br /><br />*@
+
+        @*ACTIVITY INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground" style="height:35px;">
+                    <h2 class="subHeadingTitle"><i class="fa fa-calendar-alt"></i> Activity Information</h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground" align="left" style="height:35px;">
+                    <a class="btn btn-primary btn-xs" href="#">Phone Call</a>
+                    <a class="btn btn-primary btn-xs" href="#">Email</a>
+                    <a class="btn btn-primary btn-xs" href="#">In-person Meeting</a>
+                    <a class="btn btn-primary btn-xs" href="#">Virtual Meeting</a>
+                    <a class="btn btn-primary btn-xs" href="#">Event</a>
+                    <input type="button" name="buttonMergeDocument" value="Merge Document" id="buttonMergeDocument" data-toggle="modal" data-target="#modalMergeDocument" class="btn btn-primary btn-xs" />
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-heading workingSectionSubHeader">Current</div>
+                        <div class="panel-body" style="padding:0px;">
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="3%">Date</th>
+                                        <th scope="col" width="10%">Assigned To</th>
+                                        <th scope="col" width="3%"></th>
+                                        <th scope="col" width="77%" class="leftTextAlign">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-mobile-alt" title="Phone Call"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-handshake" title="In-Person Meeting"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-video" title="Virtual Meeting"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-envelope" title="Email"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-heading workingSectionSubHeader">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6" align="left">
+                                        Activity History
+                                    </div>
+                                    <div class="col-md-6" align="right">
+                                        Sort:
+                                        <select>
+                                            <option>All Activities</option>
+                                            <option>Email</option>
+                                            <option>In-person Meeting</option>
+                                            <option>Phone</option>
+                                            <option>Virtual Meeting</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="padding:0px;">
+
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="3%">Date</th>
+                                        <th scope="col" width="10%">Assigned To</th>
+                                        <th scope="col" width="3%"></th>
+                                        <th scope="col" width="77%" class="leftTextAlign">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-mobile-alt" title="Phone Call"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-handshake" title="In-Person Meeting"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-video" title="Virtual Meeting"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" disabled href="#">Close</a>
+                                        </td>
+                                        <td>5/7/2021</td>
+                                        <td>
+                                            <a href="#">Allison Billings</a>
+                                        </td>
+                                        <td class="workingSectionHeader" style="padding:3px;">
+                                            <i class="fa fa-envelope" title="Email"></i>
+                                        </td>
+                                        <td style="padding:3px;text-align:left;"><a href="#">EMAIL RESPONSE: Don replied saying business was fair to partly cloudy due to COVID but things are headed in the right direction.</a></td>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <br /><br />*@
+
+        @*CONTACT INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle">
+                        <i class="fa fa-address-card"></i> <i class="fa fa-share"></i> Contacts (Referred)
+                    </h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground" align="left">
+                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;">New Contact</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+
+                        <table class="table table-striped table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="7%">Action</th>
+                                    <th scope="col" width="15%" class="leftTextAlign">Name</th>
+                                    <th scope="col" width="15%" class="leftTextAlign">Account Name</th>
+                                    <th scope="col" width="15%" class="leftTextAlign">Phone</th>
+                                    <th scope="col" width="48%" class="leftTextAlign"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding:3px;">
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                    </td>
+                                    <td class="leftTextAlign"><a href="#">Janakiram Ajjarapu</a></td>
+                                    <td class="leftTextAlign"><a href="#">OSR Holding Company</a></td>
+                                    <td class="leftTextAlign">(908) 756-7300</td>
+                                    <td class="leftTextAlign"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:3px;">
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                    </td>
+                                    <td class="leftTextAlign"><a href="#">Janakiram Ajjarapu</a></td>
+                                    <td class="leftTextAlign"><a href="#">OSR Holding Company</a></td>
+                                    <td class="leftTextAlign">(908) 756-7300</td>
+                                    <td class="leftTextAlign"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:3px;">
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                        <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                    </td>
+                                    <td class="leftTextAlign"><a href="#">Janakiram Ajjarapu</a></td>
+                                    <td class="leftTextAlign"><a href="#">OSR Holding Company</a></td>
+                                    <td class="leftTextAlign">(908) 756-7300</td>
+                                    <td class="leftTextAlign"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <br /><br />*@
+
+        @*OPPORTUNITY INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle"><i class="fa fa-pen-alt"></i> Deals</h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground">
+                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;">New Opportunity</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="padding:0px;">
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Opportunity Name</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Account Name</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Acccount Site</th>
+                                        <th scope="col" class="leftTextAlign">Stage</th>
+                                        <th scope="col" class="leftTextAlign">Close Date</th>
+                                        <th scope="col" class="leftTextAlign">Owner</th>
+                                        <th scope="col" class="leftTextAlign">Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc.-2016-11</a></td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc</a></td>
+                                        <td class="leftTextAlign"></td>
+                                        <td class="leftTextAlign">95-Declined by ASF</td>
+                                        <td class="leftTextAlign">12/31/2016</td>
+                                        <td class="leftTextAlign"><a href="#">Lori Lemuel</a></td>
+                                        <td class="leftTextAlign">Factoring (Standard)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc.-2016-11</a></td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc</a></td>
+                                        <td class="leftTextAlign"></td>
+                                        <td class="leftTextAlign">95-Declined by ASF</td>
+                                        <td class="leftTextAlign">12/31/2016</td>
+                                        <td class="leftTextAlign"><a href="#">Lori Lemuel</a></td>
+                                        <td class="leftTextAlign">Factoring (Standard)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc.-2016-11</a></td>
+                                        <td class="leftTextAlign"><a href="#">Atlantic Labor Solutions Inc</a></td>
+                                        <td class="leftTextAlign"></td>
+                                        <td class="leftTextAlign">95-Declined by ASF</td>
+                                        <td class="leftTextAlign">12/31/2016</td>
+                                        <td class="leftTextAlign"><a href="#">Lori Lemuel</a></td>
+                                        <td class="leftTextAlign">Factoring (Standard)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <br /><br />*@
+
+
+        @*LEAD INFO*@
+        @*<div class="row">
+                <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 workingSectionSubHeaderBackground">
+                    <h2 class="subHeadingTitle"><i class="fa fa-pen-alt"></i><i class="fa fa-share"></i>  Preliminary Deals (Referred)</h2>
+                </div>
+                <div class="col-lg-9 workingSectionSubHeaderBackground" align="left">
+                    <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;">New Lead</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" style="padding:10px;">
+                    <div class="panel panel-default">
+                        <div class="panel-body" style="padding:0px;">
+
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="7%">Action</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Name</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Company</th>
+                                        <th scope="col" width="15%" class="leftTextAlign">Phone</th>
+                                        <th scope="col" width="48%" class="leftTextAlign">Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Jasmin Espy</a></td>
+                                        <td class="leftTextAlign"><a href="#">Clear Choice Staffing Solutions</a></td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Jasmin Espy</a></td>
+                                        <td class="leftTextAlign"><a href="#">Clear Choice Staffing Solutions</a></td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:3px;">
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Edit</a>
+                                            <a class="btn btn-primary btn-sm tinyButton tinyButton" href="#">Delete</a>
+                                        </td>
+                                        <td class="leftTextAlign"><a href="#">Jasmin Espy</a></td>
+                                        <td class="leftTextAlign"><a href="#">Clear Choice Staffing Solutions</a></td>
+                                        <td class="leftTextAlign">(281) 825-3439</td>
+                                        <td class="leftTextAlign">Allison Billings</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <br /><br />*@
+
+
+
+        <div class="row">
+            <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 workingSectionSubHeaderBackground">
+                <h2 class="subHeadingTitle">Audit Information</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6" style="padding:10px;">
+                <b>Created By: </b> @Model.clientData.CreatedById,  @Model.clientData.CreatedDate<br /><br />
+            </div>
+            <div class="col-lg-6" style="padding:10px;">
+                <b>Last Updated By: </b> @Model.clientData.LastModifiedById, @Model.clientData.LastModifiedDate<br /><br />
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+@*<script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="popover"]').popover()
+        });
+    </script>*@
+
+
+<div class="modal fade panel-primary" id="modalMergeDocument" tabindex="-1" role="dialog" aria-labelledby="modalMergeDocumentLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                <span class="glyphicon glyphicon-exclamation-sign"></span> Select a template to merge:
+            </div>
+            <div class="modal-body">
+
+                <br /><br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger">Merge Document</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade panel-primary" id="modalEditNextScheduledCall" tabindex="-1" role="dialog" aria-labelledby="modalEditNextScheduledCall">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                <i class="fa fa-calendar-alt"></i> Update Next Scheduled Call
+            </div>
+            <form id="SubmitUpdateNextScheduledCall" name="SubmitUpdateNextScheduledCall" style="text-align:left;">
+
+                <div class="modal-body">
+                    <input type="hidden" name="clientNextTask_Id" id="clientNextTask_Id" value="@Model.clientNextTask.Id" />
+                    <input type="hidden" name="client_Id" id="client_Id" value="@Model.clientData.Id" />
+
+                    <div id="NextCallSuccess" class="alert alert-success">
+
+                    </div>
+                    <div id="NextCallError" class="alert alert-success">
+                        <strong>There was a problem updating the next scheduled call.  Please try again.</strong>
+                    </div>
+                    @*TASK TYPE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelCallType">Call Type </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientNextTask_Type" name="IG_clientNextTask_Type"></span>
+                        @Html.DropDownListFor(model => Model.clientNextTask.Type, Model.TaskList, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                    @*TASK OWNER *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelTaskOwner">Task Owner </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientNextTask_OwnerId" name="IG_clientNextTask_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                        @Html.DropDownListFor(model => Model.clientNextTask.OwnerId, Model.ActiveUserList, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                    @*TASK DUE DATE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelTaskActivityDate">Task Date </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientNextTask_ActivityDate" name="IG_clientNextTask_ActivityDate"></span>
+                        @*<input type="datetime-local" id="clientNextTask_ActivityDate" name="clientNextTask_ActivityDate" class="form-control input-lg clientEntryTerms" maxlength="50" value="@Model.clientNextTask.ActivityDate" />*@
+                        @Html.TextBoxFor(m => m.clientNextTask.ActivityDate, "{0:yyyy-MM-ddThh:mm:ss}", new { @class = "form-control", type = "datetime-local" })
+                    </div>
+
+                    @*TASK nOTES *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelTaskDescription">Notes </span>
+                        <span class="input-group-addon requiredClass" id="IG_taskData_Description" name="IG_taskData_Description"></span>
+                        <textarea rows="50" style="height:150px;" id="clientNextTask_Description" name="clientNextTask_Description" class="form-control input-lg clientEntryTerms" maxlength="50">@Model.clientNextTask.Description</textarea>
+                    </div>
+
+                    @*<table class="table table-striped table-hover table-condensed">
+                    <thead>
+                    <tbody>
+                        <tr>
+                            <td class="centerTextAlign" style="width:5%;">Date:</td>
+                            <td class="leftTextAlign"><input type="text" value="08/01/2021" /></td>
+                        </tr>
+                        <tr>
+                            <td class="centerTextAlign">Time:</td>
+                            <td class="leftTextAlign"><input type="text" value="04:00 PM" /></td>
+                        </tr>
+                        <tr>
+                            <td class="centerTextAlign">Notes:</td>
+                            <td class="leftTextAlign">
+                                <textarea cols="40" rows="10">
+                                    Don mentioned $3.5MM RE deal, warehouse facility in South Texas appraised at $7.5MM, want to refi to pay grandfather out, requested package
+                                </textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>*@
+
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" class="btn btn-primary"><i name="nextCallSpinner" id="nextCallSpinner" class="fas fa-spinner fa-spin facilitySpinner"></i> &nbsp;Update Call</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade panel-primary" id="modalAddAClientNote" tabindex="-1" role="dialog" aria-labelledby="modalAddAClientNote">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                <i class="fa fa-calendar-alt"></i> Add A Note
+            </div>
+            <form id="SubmitAddAClientNote" name="SubmitAddAClientNote" style="text-align:left;">
+
+                <div class="modal-body">
+                    <input type="hidden" name="clientNote_Id" id="clientNote_Id" />
+
+                    <div id="NewNoteSuccess" class="alert alert-success">
+
+                    </div>
+
+                    <div id="NewNoteError" class="alert alert-success">
+                        <strong>There was a problem updating the note.  Please try again.</strong>
+                    </div>
+
+                    @*TASK TYPE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteType">Call Type </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientNote_Type" name="IG_clientNote_Type"></span>
+                        @Html.DropDownList("clientNote_Type", Model.TaskListNotes, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                    @*TASK OWNER *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteOwner">Task Owner </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientNote_OwnerId" name="IG_clientNote_OwnerId"><i class="fas fa-user" aria-hidden="true"></i></span>
+                        @Html.DropDownList("clientNote_OwnerId", Model.ActiveUserListNotes, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                    @*TASK DUE DATE *@
+                    @*<div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteActivityDate">Task Date </span>
+                        <span class="input-group-addon requiredClass" id="IG_taskData_ActivityDate" name="IG_taskData_ActivityDate"></span>
+                        <input type="datetime-local" id="clientNote_ActivityDate" name="clientNextTask_ActivityDate" class="form-control input-lg clientEntryTerms" maxlength="50" value="" />
+                    </div>*@
+
+
+                        @*TASK nOTES *@
+                        <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                            <span class="input-group-addon input-sm" id="LabelNoteDescription">Notes </span>
+                            <span class="input-group-addon requiredClass" id="IG_clientNote_Description" name="IG_clientNote_Description"></span>
+                            <textarea rows="50" style="height:150px;" id="clientNote_Description" name="clientNote_Description" class="form-control input-lg clientEntryTerms" maxlength="5000"></textarea>
+                        </div>
+
+                        @*<table class="table table-striped table-hover table-condensed">
+                <thead>
+                <tbody>
+                    <tr>
+                        <td class="centerTextAlign" style="width:5%;">Date:</td>
+                        <td class="leftTextAlign"><input type="text" value="08/01/2021" /></td>
+                    </tr>
+                    <tr>
+                        <td class="centerTextAlign">Time:</td>
+                        <td class="leftTextAlign"><input type="text" value="04:00 PM" /></td>
+                    </tr>
+                    <tr>
+                        <td class="centerTextAlign">Notes:</td>
+                        <td class="leftTextAlign">
+                            <textarea cols="40" rows="10">
+                                Don mentioned $3.5MM RE deal, warehouse facility in South Texas appraised at $7.5MM, want to refi to pay grandfather out, requested package
+                            </textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>*@
+
+                    </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" class="btn btn-primary"><i name="noteSpinner" id="noteSpinner" class="fas fa-spinner fa-spin facilitySpinner"></i> &nbsp;Update Note</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade panel-primary" id="modalAddFacility" name="modalAddFacility" tabindex="-1" role="dialog" aria-labelledby="modalAddFacility">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                <i class="fa fa-credit-card"></i> Add Facility
+            </div>
+            <form id="SubmitAddFacility" name="SubmitAddFacility" style="text-align:left;">
+                <div class="modal-body">
+                    <div id="FacilitySuccess" class="alert alert-success">
+                        
+                    </div>
+                    <div id="FacilityError" class="alert alert-success">
+                        <strong>There was a problem updating your facility.  Please try again.</strong>
+                    </div>
+                    <table class="table table-striped table-hover table-condensed">
+                        <thead>
+                        <tbody>
+                            <tr>
+                                <td class="rightTextAlign" style="width:25%;">Facility Name:</td>
+                                <td class="leftTextAlign">
+                                    <input type="text" name="FacilityName" id="FacilityName" value="" class="form-control input-sm" required/>
+                                    <input type="hidden" name="FacilityClientID" id="FacilityClientID" value="@Model.clientData.Id" />
+                                    <input type="hidden" name="FacilityID" id="FacilityID" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="rightTextAlign">Facility Type:</td>
+                                <td class="leftTextAlign">
+                                    <select name="FacilityType" id="FacilityType" class="form-control input-sm" required>
+                                        <option value=""></option>
+                                        <option value="Revolving">Revolving</option>
+                                        <option value="Term">Term</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="rightTextAlign">Facility Categories:</td>
+                                <td class="leftTextAlign">
+                                    <div class="form-group requiredOptions">
+                                        <input type="checkbox" id="AccountsReceivable" name="facilityCategory" value="Accounts Receivable" required>
+                                        <label for="vehicle1"> A/R</label><br>
+                                        <input type="checkbox" id="Inventory" name="facilityCategory" value="Inventory" required>
+                                        <label for="vehicle1"> Inventory</label><br>
+                                        <input type="checkbox" id="RealEstate" name="facilityCategory" value="Real Estate" required>
+                                        <label for="vehicle1"> Real Estate</label><br>
+                                        <input type="checkbox" id="ME" name="facilityCategory" value="M & E" required>
+                                        <label for="vehicle1"> M & E</label><br>
+                                        <input type="checkbox" id="Brokerage" name="facilityCategory" value="Brokerage" required>
+                                        <label for="vehicle1"> Brokerage</label><br>
+                                        <input type="checkbox" id="Other" name="facilityCategory" value="Other" required>
+                                        <label for="vehicle1"> Other</label><br>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" id="Submit_AddFacility" name="Submit_AddFacility" class="btn btn-primary"><i name="facilitySpinner" id="facilitySpinner" class="fas fa-spinner fa-spin facilitySpinner"></i> &nbsp;Update Facility</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade panel-primary" id="modalUpdateClientContact" tabindex="-1" role="dialog" aria-labelledby="modalUpdateClientContact">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                <i class="fa fa-calendar-alt"></i> Update Client Contact
+            </div>
+            <form id="SubmitUpdateClientContact" name="SubmitUpdateClientContact" style="text-align:left;">
+
+                <div class="modal-body">
+                    <input type="hidden" name="clientContact_Id" id="clientContact_Id" />
+
+                    <div id="ClientContactSuccess" class="alert alert-success">
+
+                    </div>
+                    <div id="ClientContactError" class="alert alert-success">
+                        <strong>There was a problem updating the note.  Please try again.</strong>
+                    </div>
+
+                    @*CLIENT TITLE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelClientTitle">Title </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientContact_Title" name="IG_clientContact_Title"></span>
+                        <input type="text" id="clientContact_Title" name="clientContact_Title" class="form-control input-lg clientEntryTerms" maxlength="50" />
+                    </div>                    
+    
+                    @*CLIENT OWNERSHIP % *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelClientOwnershipPercentage">Ownership Percentage </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientContact_OwnershipPercentage" name="IG_clientContact_OwnershipPercentage"></span>
+                        <input type="text" id="clientContact_OwnershipPercentage" name="clientContact_OwnershipPercentage" class="form-control input-lg clientEntryTerms" maxlength="50" />
+                    </div>
+
+                    @*CLIENT GUARANTOR *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelClientContactGuarantor">Guarantor? </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientContact_Guarantor" name="IG_clientContact_Guarantor"></span>
+                        @Html.DropDownList("clientContact_Guarantor", Model.YesNoList, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>                    
+    
+                    @*CLIENT PHONE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelClientContactPhone">Phone </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientContact_Phone" name="IG_clientContact_Phone"></span>
+                        <input type="text" id="clientContact_Phone" name="clientContact_Phone" class="form-control input-lg clientEntryTerms" maxlength="50" />
+                    </div>                    
+    
+                    @*CLIENT MOBILE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelClientContactMobilePhone">Mobile Phone </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientContact_MobilePhone" name="IG_clientContact_MobilePhone"></span>
+                        <input type="text" id="clientContact_MobilePhone" name="clientContact_MobilePhone" class="form-control input-lg clientEntryTerms" maxlength="50" />
+                    </div>                    
+    
+                    @*CLIENT EMAIL *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelClientContactEmail">Email </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientContact_Email" name="IG_clientContact_Email"></span>
+                        <input type="text" id="clientContact_Email" name="clientContact_Email" class="form-control input-lg clientEntryTerms" maxlength="50" />
+                    </div>                    
+
+
+                    @*TASK DUE DATE *@
+                    @*<div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteActivityDate">Task Date </span>
+                        <span class="input-group-addon requiredClass" id="IG_taskData_ActivityDate" name="IG_taskData_ActivityDate"></span>
+                        <input type="text" id="clientNote_ActivityDate" name="clientNextTask_ActivityDate" data-provide="datepicker" class="form-control input-lg clientEntryTerms dateDropDown" maxlength="50" />
+                    </div>*@
+
+                    @*TASK nOTES *@
+                    @*<div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelNoteDescription">Notes </span>
+                        <span class="input-group-addon requiredClass" id="IG_clientNote_Description" name="IG_clientNote_Description"></span>
+                        <textarea rows="50" style="height:150px;" id="clientNote_Description" name="clientNote_Description" class="form-control input-lg clientEntryTerms" maxlength="50"></textarea>
+                    </div>*@
+
+                    @*<table class="table table-striped table-hover table-condensed">
+                            <thead>
+                            <tbody>
+                                <tr>
+                                    <td class="centerTextAlign" style="width:5%;">Date:</td>
+                                    <td class="leftTextAlign"><input type="text" value="08/01/2021" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="centerTextAlign">Time:</td>
+                                    <td class="leftTextAlign"><input type="text" value="04:00 PM" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="centerTextAlign">Notes:</td>
+                                    <td class="leftTextAlign">
+                                        <textarea cols="40" rows="10">
+                                            Don mentioned $3.5MM RE deal, warehouse facility in South Texas appraised at $7.5MM, want to refi to pay grandfather out, requested package
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>*@
+
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" class="btn btn-primary"><i name="clientContactSpinner" id="clientContactSpinner" class="fas fa-spinner fa-spin clientContactSpinner"></i> &nbsp;Update Client Contact</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade panel-primary" id="modalUploadClientFiles" tabindex="-1" role="dialog" aria-labelledby="modalUploadClientFiles">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                <i class="fa fa-calendar-alt"></i> Update Client Contact
+            </div>
+                <div class="modal-body">
+                    <input type="hidden" name="clientContact_Id" id="clientContact_Id" />
+
+                    @*<div id="ClientContactSuccess" class="alert alert-success">
+
+                    </div>
+                    <div id="ClientContactError" class="alert alert-success">
+                        <strong>There was a problem updating the note.  Please try again.</strong>
+                    </div>*@
+
+                    @using (Html.BeginForm("Upload", "Clients", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div style="padding:10px;">
+                            <input type="hidden" name="uploadClientID" value="@Model.clientData.Id" />
+
+                            @*FILE NAME *@
+                            @*<div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                <span class="input-group-addon input-sm" id="LabelUploadFileName">File Name </span>
+                                <span class="input-group-addon requiredClass" id="IG_upload_FileName" name="IG_upload_FileName"></span>
+                                <input type="text" id="upload_FileName" name="upload_FileName" class="form-control input-lg" maxlength="50" />
+                            </div>*@
+
+                            @*FILE TO UPLOAD *@
+                            <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                                <span class="input-group-text input-sm" id="LabelUploadFile">Files </span>
+                                <span class="input-group-text requiredClass" id="IG_file" name="IG_file"></span>
+                                @*<input type="file" id="file" name="file" class="form-control input-lg" maxlength="50" />*@
+                                <input type="file" id="files" name="files" class="form-control input-lg" multiple />
+                            </div>
+
+                            <div id="uploadedFileNames" name="uploadedFileNames">
+
+                            </div>
+                            @*<input type="text" name="FileDescription" id="FileDescription" />
+                            <br /><br />
+                            @Html.TextBox("file", "", new { type = "file", @class = "btn btn-default", style = "width: 100%;" }) <br />
+                            <br /><br />*@
+                            <input class="btn btn-primary btn-md" type="submit" value="Upload File" />
+                        </div>
+                    }
+
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    @*<button type="submit" class="btn btn-primary"><i name="clientUploadSpinner" id="clientUploadSpinner" class="fas fa-spinner fa-spin clientUploadContactSpinner"></i> &nbsp;Upload Client Files</button>*@
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade panel-primary" id="modalCreateMailMergeDocument" tabindex="-1" role="dialog" aria-labelledby="modalCreateMailMergeDocument">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header overviewHeaderNormal">
+                <i class="fa fa-calendar-alt"></i> Create Mail Merge Document
+            </div>
+            <form id="SubmitCreateMailMergeDocument" name="SubmitCreateMailMergeDocument" style="text-align:left;">
+
+                <div class="modal-body">
+                    <div id="MailMergeSuccess" class="alert alert-success">
+                        <strong>Mail merge was successful!  Please check for the document in the Mail Merge files section below.</strong>
+                    </div>
+                    <div id="MailMergeError" class="alert alert-success">
+                        <strong>There was a problem updating the note.  Please try again.</strong>
+                    </div>
+
+                    @*TEMPLATE *@
+                    <div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelTemplateDocument">Template </span>
+                        <span class="input-group-addon requiredClass" id="IG_templateType" name="IG_templateType"></span>
+                        @Html.DropDownList("templateType", Model.MailMergeTemplateList, new { @class = "form-control input-sm", @maxlength = 5 })
+                    </div>
+
+                    @*RECIPIENT *@
+                    @*<div class="input-group input-group-sm" style="margin-bottom:5px;padding:5px;">
+                        <span class="input-group-addon input-sm" id="LabelTemplateRecipient">Email </span>
+                        <span class="input-group-addon requiredClass" id="IG_templateRecipient" name="IG_templateRecipient"></span>
+                        <input type="hidden" id="templateRecipient" name="templateRecipient" class="form-control input-lg clientEntryTerms" maxlength="50" value="@Model.mainContactData.FirstOrDefault().Id" />
+                    </div>*@       
+
+                </div>
+                <div class="modal-footer rightTextAlign">
+                    <button type="submit" class="btn btn-primary"><i name="mailMergeSpinner" id="mailMergeSpinner" class="fas fa-spinner fa-spin mailMergeSpinner"></i> &nbsp;Create Document</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+        $('#fileUploadSuccess').hide();
+
+
+        $("#files").change(function () {
+            console.log(this.files.length);
+            $("#uploadedFileNames").addClass("fileUploadFileDisplay");
+            $("#uploadedFileNames").append("<b>Files to Upload:</b><br>");
+            for (var i = 0; i < this.files.length; i++) {
+                //console.log(this.files[i].name);
+                $("#uploadedFileNames").append(this.files[i].name + "<br>");
+            }
+        });
+    });
+
+
+    $('#buttonMergeDocument').click(function () {
+        /* when the button in the form, display the entered values in the modal */
+        $('#lname').text($('#lastname').val());
+        $('#fname').text($('#firstname').val());
+    });
+
+    $('#btnEditNextScheduledCall').click(function () {
+        /* when the button in the form, display the entered values in the modal */
+        $('#lname').text($('#lastname').val());
+        $('#fname').text($('#firstname').val());
+    });
+</script>
+
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
+
+
+<script src="~/jQuery/jQueryValidation.js"></script>
+<script src="~/jQuery/jQuery_ClientFunctions.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

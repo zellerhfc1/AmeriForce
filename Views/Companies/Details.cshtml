@@ -1,4 +1,4 @@
-﻿@model AmeriForce.Data.Company
+﻿@model AmeriForce.Models.Companies.CompanyDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -13,7 +13,7 @@
         <li class="breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Companies" , new { id=999 })">Companies</a></li>
         <li class="breadcrumb-item active" aria-current="page">Company Details</li>
-        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.company.Name</li>
     </ol>
 </nav>
 
@@ -31,7 +31,7 @@
                             </td>
                             <td class="leftTextAlign" style="border:1px solid #fff;padding:0px;">
                                 <span class="overviewHeader dealAmount">
-                                    @Model.Name
+                                    @Model.company.Name
                                 </span>
                             </td>
                         </tr>
@@ -55,7 +55,8 @@
 
         <div class="row">
             <div class="col-lg-12" style="padding:10px;background-color:#eee;" align="center">
-                <a href='@Url.Action("Edit", "Companies", new { id = Model.ID })' class="btn btn-sm btn-primary"> <i class="far fa-edit"></i> Edit</a>
+                <a href='@Url.Action("Edit", "Companies", new { id = Model.company.ID })' class="btn btn-sm btn-primary"> <i class="far fa-edit"></i> Edit</a>
+                <a href='@Url.Action("MergeContacts", "Companies", new { id = Model.company.ID })' class="btn btn-sm btn-primary"> <i class="fa fa-people-arrows"></i> Merge Company Contacts</a>
                 <a href='@Url.Action("Index", "Companies", new { id = 999 })' class="btn btn-sm btn-primary"> <i class="far fa-arrow-alt-circle-left"></i> Back To Company List</a>
             </div>
         </div>
@@ -79,27 +80,30 @@
 
                     <div class="row">
                         <div class="col-lg-6" style="padding:5px;" align="left">
-                            <b>Name: </b> @Model.Name<br />
+                            <b>Name: </b> @Model.company.Name<br />
                             <hr class="hrFieldBuffer" />
-                            <b>Description: </b> @Model.Description<br />
+                            <b>Description: </b> @Model.company.Description<br />
                             <hr class="hrFieldBuffer" />
-                            <b>Charter State: </b> @Model.CharterState<br />
+                            <b>Referral Type: </b> @Model.company.CompanyType<br />
                             <hr class="hrFieldBuffer" />
-                            <b>SIC Code: </b> @Model.SICCode<br />
+                            <b>Charter State: </b> @Model.company.CharterState<br />
+                            <hr class="hrFieldBuffer" />
+                            <b>SIC Code: </b> @Model.company.SICCode<br />
                             <hr class="hrFieldBuffer" />
                             @*<b>Company Name: </b> <a href="@Url.Action("Details", "Companies", new { id = Model.contact.AccountId })">@controller.GetCompanyName(Model.contact.AccountId)</a><br />
                                 <hr class="hrFieldBuffer" />
                                 <b>Title: </b> @Model.contact.Title<br />*@
+                                <br />
                         </div>
 
                         <div class="col-lg-6" style="padding:5px;" align="left">
-                            <b>Address: </b> @Model.MailingAddress<br />
+                            <b>Address: </b> @Model.company.MailingAddress<br />
                             <hr class="hrFieldBuffer" />
-                            <b>City: </b> @Model.MailingCity<br />
+                            <b>City: </b> @Model.company.MailingCity<br />
                             <hr class="hrFieldBuffer" />
-                            <b>State: </b> @Model.MailingState<br />
+                            <b>State: </b> @Model.company.MailingState<br />
                             <hr class="hrFieldBuffer" />
-                            <b>ZipCode: </b> @Model.MailingPostalCode<br />
+                            <b>ZipCode: </b> @Model.company.MailingPostalCode<br />
                             <hr class="hrFieldBuffer" />
                         </div>
 
@@ -109,13 +113,90 @@
                             </div>
                             </div>*@
                     </div>
+                
+                    <div class="row">
+                        <div class="col-lg-12 dividerTableBackground" style="height:3px;">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 workingSectionSubHeaderBackground">
+                            <h2 class="subHeadingTitle">Related Contacts</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="padding:5px;" align="left">
+                            <div class="container">
+                                       
+                                        <div class="row">
+                                            <div class="col-sm-3 boldText" style="padding:0px;">
+                                                Name/Title:
+                                            </div>
+                                            <div class="col-sm-2 boldText" style="padding:0px;">
+                                                Ownership %:
+                                            </div>
+                                            <div class="col-sm-2 boldText" style="padding:0px;">
+                                                Guarantor:
+                                            </div>
+                                            <div class="col-sm-4 boldText" style="padding:0px;">
+                                                Contact Info:
+                                            </div>
+                                            <div class="col-sm-1 boldText" style="padding:0px;">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+
+
+                                        @{
+                                            foreach (var contact in Model.contacts)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <hr class="hrFieldBufferWithinPanel" />
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-3" style="padding:0px;">
+                                                        <a href='@Url.Action("Details", "Contacts", new { id = contact.Id })'>@contact.FirstName @contact.LastName</a>
+                                                        <br />
+                                                        @contact.Title
+                                                    </div>
+                                                    <div class="col-sm-2" style="padding:0px;">
+                                                        @contact.OwnershipPercentage
+                                                    </div>
+                                                    <div class="col-sm-2" style="padding:0px;">
+                                                        @contact.Guarantor
+                                                    </div>
+                                                    <div class="col-sm-4" style="padding:0px;">
+                                                        <i class="fa fa-phone" style="font-size:small;"></i> @contact.Phone
+                                                        <br />
+                                                        <i class="fa fa-mobile-alt" style="font-size:small;"></i> @contact.MobilePhone
+                                                        <br />
+                                                        <i class="fa fa-envelope" style="font-size:small;"></i> @contact.Email
+                                                    </div>
+                                                    <div class="col-sm-1" style="padding:0px;">
+                                                        <a href='@Url.Action("Details", "Contacts", new { id = contact.Id })' class="btn btn-primary btn-sm tinyButton contactEntry" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;"><i class="fa fa-eye"></i>View</a>
+                                                        <a href='@Url.Action("Edit", "Contacts", new { id = contact.Id })' class="btn btn-primary btn-sm tinyButton contactEntry" style="padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;font-size:11px;"><i class="fa fa-edit"></i> Edit</a>
+                                                        
+                                                    </div>
+                                                </div>
+
+                                            }
+                                        }
+                                    </div>
+                        </div>
+                    </div>
                 </div>
+
+
             </div>
         </div>
+
+
     </div>
-    <div>
+   @* <div>
         <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
         <a asp-action="Index">Back to List</a>
-    </div>
+    </div>*@
 
 </div>

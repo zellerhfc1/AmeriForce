@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmeriForce.Data", "..\Ameri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeriForce.ReportCreator", "..\AmeriForce.ReportCreator\AmeriForce.ReportCreator.csproj", "{65F990F5-279D-49AD-B6E5-A0DAE225A9A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ameriforce.Testing", "..\Ameriforce.Testing\Ameriforce.Testing.csproj", "{51ABE1A9-2FCA-45F0-BABE-78DADA518DCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ameriforce.Testing", "..\Ameriforce.Testing\Ameriforce.Testing.csproj", "{51ABE1A9-2FCA-45F0-BABE-78DADA518DCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeriForce.EmailServer", "..\AmeriForce.EmailServer\AmeriForce.EmailServer.csproj", "{CEC29FA9-3A34-41A1-8EAF-BDEE54793568}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{51ABE1A9-2FCA-45F0-BABE-78DADA518DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51ABE1A9-2FCA-45F0-BABE-78DADA518DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51ABE1A9-2FCA-45F0-BABE-78DADA518DCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEC29FA9-3A34-41A1-8EAF-BDEE54793568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEC29FA9-3A34-41A1-8EAF-BDEE54793568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEC29FA9-3A34-41A1-8EAF-BDEE54793568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEC29FA9-3A34-41A1-8EAF-BDEE54793568}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

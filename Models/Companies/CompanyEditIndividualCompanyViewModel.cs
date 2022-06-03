@@ -27,6 +27,9 @@ namespace AmeriForce.Models.Companies
         [Display(Name = "SIC Code Override")]
         public string SICCodeManual { get; set; }
 
+        [Display(Name = "Referral Type")]
+        public string CompanyType { get; set; }
+
         [Display(Name = "Charter State")]
         public string CharterState { get; set; }
 
@@ -34,7 +37,12 @@ namespace AmeriForce.Models.Companies
         public DateTime CreatedDate { get; set; }
 
         [Display(Name = "Last Update Date")]
+
         public DateTime LastModifiedDate { get; set; }
+
+        public string CreatedBy { get; set; }
+
+        public string LastUpdatedBy { get; set; }
 
         [Display(Name = "Address")]
         public string MailingAddress { get; set; }
