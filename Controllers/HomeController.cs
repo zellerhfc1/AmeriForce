@@ -81,13 +81,41 @@ namespace AmeriForce.Controllers
                 {
                     foreach (var currentTask in currentTasks)
                     {
+                        var taskIcon = "<i class='fa fa-clipboard' title='Unknown' style='font-size:x-large;'></i>";
+                        switch (currentTask.t.Type.ToUpper())
+                        {
+                            case "EMAIL":
+                                taskIcon = $"<i class='fa fa-envelope' title='Email' style='font-size:x-large;'></i>";
+                                break;
+                            case "IN-PERSON MEETING":
+                                taskIcon = $"<i class='fa fa-handshake' title='In-Person Meeting' style='font-size:x-large;'></i>";
+                                break;
+                            case "PHONE CALL":
+                                taskIcon = $"<i class='fa fa-mobile-alt' title='Phone Call' style='font-size:x-large;'></i>";
+                                break;
+                            case "VIRTUAL MEETING":
+                                taskIcon = $"<i class='fa fa-video' title='Zoom, Skype, etc.' style='font-size:x-large;'></i>";
+                                break;
+                            case "OTHER":
+                                taskIcon = $"<i class='fa fa-clipboard' title='Other' style='font-size:x-large;'></i>";
+                                break;
+                            case "WARNING":
+                                taskIcon = $"<i class='fa fa-exclamation-triangle' title='Warning' style='font-size:x-large;'></i>";
+                                break;
+                            default:
+                                break;
+                        }
+
                         var currentDescription = currentTask.t.Description.Replace("<br>", "\n");
                         tasks.Add(new CRMTaskSchedulerViewModel
                         {
-                            text = _contactHelper.GetName(currentTask.t.WhoId),
-                            employeeID = 1,
+                            text = $"{currentTask.c.FirstName} {currentTask.c.LastName}",
+                            employeeID = 1, //currentTask.c.Id,
                             startDate = currentTask.t.ActivityDate,
-                            description = $"{currentTask.t.Type}\n{currentDescription}",
+                            taskType = $"{currentTask.t.Type}",
+                            description = $"{currentDescription}",
+                            taskIcon = $"{taskIcon}",
+                            contactID = $"{currentTask.c.Id}",
                         });
                     }
                 }
@@ -129,6 +157,109 @@ namespace AmeriForce.Controllers
             }
 
             return Json(userInfos);
+        }
+
+
+
+        [HttpPost]
+        public JsonResult GetNewUnassignedContacts()
+        {
+            var contactInfos = new List<GetChartInfoViewModel>();
+            try
+            {
+                var currentContacts = _context.Contacts
+                                                    .Where(c => c.Relationship_Status.ToUpper() == "NEW")
+                                                    .GroupBy(c => c.OwnerId)
+                                                    .Select(c => new { c.Key, Count = c.Count() });
+                if (currentContacts != null)
+                {
+                    foreach (var currentContact in currentContacts)
+                    {
+                        contactInfos.Add(new GetChartInfoViewModel
+                        {
+                            bdo = $"{_userHelper.GetNameFromID(currentContact.Key)}",
+                            valueCount = currentContact.Count
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json(contactInfos.OrderBy(u => u.valueCount));
+        }
+
+
+
+        [HttpPost]
+        public JsonResult GetFundedDealsYTD()
+        {
+            var clientOwnerInfos = new List<GetChartInfoViewModel>();
+            try
+            {
+                DateTime firstDayOfCurrentYear = new DateTime(DateTime.Now.Year, 1, 1);
+                var currentClientOwnersData = _context.Clients
+                                                    .Where(c => c.StageName.ToUpper() == "50-FUNDED" && c.Initial_Funding >= firstDayOfCurrentYear)
+                                                    .GroupBy(c => c.OwnerId)
+                                                    .OrderByDescending(c => c.Sum(x => x.Amount))
+                                                    .Select(c => new { c.Key, Count = c.Count(), Amounts = c.Sum(x => x.Amount) })
+                                                    .ToList();
+                                                    //.Select(c => new { c.Key, Count = c.Count(), Amounts = c. });
+                if (currentClientOwnersData != null)
+                {
+                    foreach (var currentClientOwnerData in currentClientOwnersData)
+                    {
+                        clientOwnerInfos.Add(new GetChartInfoViewModel
+                        {
+                            bdo = $"{_userHelper.GetNameFromID(currentClientOwnerData.Key)}",
+                            valueCount = Convert.ToInt32(currentClientOwnerData.Amounts)
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json(clientOwnerInfos.OrderBy(u => u.valueCount));
+        }
+
+
+        [HttpPost]
+        public JsonResult GetDealsByLeadSourceYTD()
+        {
+            var clientOwnerInfos = new List<GetChartInfoViewModel>();
+            try
+            {
+                DateTime firstDayOfCurrentYear = new DateTime(DateTime.Now.Year, 1, 1);
+                var currentClientOwnersData = _context.Clients
+                                                    .Where(c => c.Initial_Funding >= firstDayOfCurrentYear)
+                                                    .GroupBy(c => c.LeadSource)
+                                                    .OrderByDescending(c => c.Sum(x => x.Amount))
+                                                    .Select(c => new { c.Key, Count = c.Count(), Amounts = c.Sum(x => x.Amount) })
+                                                    .ToList();
+                //.Select(c => new { c.Key, Count = c.Count(), Amounts = c. });
+                if (currentClientOwnersData != null)
+                {
+                    foreach (var currentClientOwnerData in currentClientOwnersData)
+                    {
+                        clientOwnerInfos.Add(new GetChartInfoViewModel
+                        {
+                            bdo = $"{currentClientOwnerData.Key}",
+                            valueCount = Convert.ToInt32(currentClientOwnerData.Count)
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json(clientOwnerInfos.OrderBy(u => u.valueCount));
         }
 
 

@@ -28,21 +28,6 @@ $(document).ready(function () {
             groupPanel: {
                 visible: true,
             },
-            //toolbar: {
-            //    items: [
-            //        {
-            //            location: 'before',
-            //            template() {
-            //                return $('<div>')
-            //                    .addClass('informer')
-            //                    .append(
-            //                        $('<h3>')
-            //                            .addClass('nameSubHeaderNextCall')
-            //                            .text(getGroupCount('name') + " Contacts"),
-            //                    );
-            //            },
-            //        },],
-            //},
             selection: {
                 mode: 'multiple',
             },
@@ -168,6 +153,7 @@ $(document).ready(function () {
             .groupBy(groupField)
             .toArray().length;
     }
+
 
 
 });

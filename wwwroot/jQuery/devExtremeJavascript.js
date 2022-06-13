@@ -3,8 +3,12 @@ $(document).ready(function () {
 
     var schedules;
     var employees;
-    var chartInfo;
+    var chartNewUnassignedContacts;
+    var chartFundedDealsYTD;
+    var dataSource;
     var todaysDate = new Date();
+    var appointmentContact;
+
 
     $(function GetUserInfo() {
 
@@ -18,26 +22,6 @@ $(document).ready(function () {
             },
             success: function (data) {
                 employees = data;
-                console.log(data);
-            },
-            fail: function (data) {
-                console.log(data);
-            }
-        });
-    });
-
-    $(function GetChartInfo() {
-
-        $.ajax({
-            type: "POST",
-            cache: false,
-            async: false,
-            url: "/Home/GetChartInfo",
-            data: {
-                //OwnerID: ownerID
-            },
-            success: function (data) {
-                chartInfo = data;
                 console.log(data);
             },
             fail: function (data) {
@@ -66,10 +50,70 @@ $(document).ready(function () {
         });
     });
 
+    $(function GetNewUnassignedContacts() {
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            async: false,
+            url: "/Home/GetNewUnassignedContacts",
+            data: {
+                //OwnerID: ownerID
+            },
+            success: function (data) {
+                chartNewUnassignedContacts = data;
+                console.log(data);
+            },
+            fail: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    $(function GetDealsByLeadSourceYTD() {
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            async: false,
+            url: "/Home/GetDealsByLeadSourceYTD",
+            data: {
+                //OwnerID: ownerID
+            },
+            success: function (data) {
+                dataSource = data;
+                console.log(data);
+            },
+            fail: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    $(function GetFundedDealsYTD() {
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            async: false,
+            url: "/Home/GetFundedDealsYTD",
+            data: {
+                //OwnerID: ownerID
+            },
+            success: function (data) {
+                chartFundedDealsYTD = data;
+                console.log(data);
+            },
+            fail: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
 
     $(() => {
         $('.scheduler').dxScheduler({
-            timeZone: 'America/Los_Angeles',
+           /* timeZone: 'America/Chicago',*/
             dataSource: schedules,
             views: ['week', 'month'],
             currentView: 'month',
@@ -93,10 +137,28 @@ $(document).ready(function () {
                     dataSource: employees,
                     label: 'Employee',
                 },
-            ],
+            ], onAppointmentFormOpening: function (e) {
+                e.popup.option('showTitle', true);
+                e.popup.option('title', e.appointmentData.text ?
+                    e.appointmentData.text :
+                    'Create a new appointment');
+                e.popup.option('contentTemplate', popupContentTemplate);
+                appointmentContact = e.appointmentData;
+            },
+            //appointmentTooltipTemplate: function (model, index, element) {
+            //    //element.append(`<div class='container-fluid'>`);
+            //    //element.append(`<div class='row'>`);
+            //    //element.append(`<div class='col-sm-9'><b>${model.appointmentData.text}</b><br>asfdasdfsad<br>asfdasdfsad<br>asfdasdfsad<br>asfdasdfsad</div>`);
+            //    //element.append(`<div class='col-sm-3'>${model.appointmentData.taskIcon}</div>`);
+            //    //element.append(`</div>`);
+            //    //element.append(`</div>`);
+
+            //    //element.append("<i>" + model.appointmentData.description + "<br>(" + model.appointmentData.startDate + ")</i>");
+            //    //element.append("<p><img style='height: 80px' src='" + model.appointmentData.img + "' /></p>");
+            //},
             dataCellTemplate(cellData, index, container) {
                 const { employeeID } = cellData.groups;
-                const currentTraining = getCurrentTraining(cellData.startDate.getDate(), employeeID);
+                const apptDate = getCurrentEE(cellData.startDate.getDate(), employeeID);
 
                 const wrapper = $('<div>')
                     .toggleClass(`employee-weekend-${employeeID}`, isWeekEnd(cellData.startDate)).appendTo(container)
@@ -105,7 +167,7 @@ $(document).ready(function () {
 
                 wrapper.append($('<div>')
                     .text(cellData.text)
-                    .addClass(currentTraining)
+                    .addClass(apptDate)
                     .addClass('day-cell'));
             },
             resourceCellTemplate(cellData) {
@@ -134,38 +196,41 @@ $(document).ready(function () {
             return day === 0 || day === 6;
         }
 
-        function getCurrentTraining(date, employeeID) {
+        function getCurrentEE(date, employeeID) {
             const result = (date + employeeID) % 3;
             const currentTraining = `training-background-${result}`;
 
             return currentTraining;
         }
+
+
+        const popupContentTemplate = function () {
+            var dateFormatted = formatDate(appointmentContact.startDate);
+            return $('<div>').append(
+                $(`<span><br>${appointmentContact.taskIcon}</span><br>`),
+                $(`<span>${appointmentContact.taskType}</span><br>`),
+                $(`<span>${dateFormatted}</span><br><br>`),
+                $(`<span>Description: ${appointmentContact.description}</span><br><br>`),
+                $(`<span><a href='https://localhost:44381/Contacts/Details/003b7-9419a982ca03' class="btn btn-sm btn-primary"><i class="fa fa-eye"></i> View Contact Info</a></span><br><br>`),
+            );
+        };
+
+        function formatDate(incomingDate) {
+            var d = new Date(incomingDate).toString('yyyy-MM-dd H:i:s')
+            return d; 
+        }
+
     });
 
-
-    //var newText = String(employeee["textes"]);
-
-    //const employees = [{
-    //    text: `${employeee.color}`, //employeee.text.toString(),
-    //    id: employeee.id,
-    //    color: employeee.color,
-    //    avatar: employeee.avatar,
-    //    discipline: employeee.discipline,
-    //}];
-
-    //const employees = [{
-    //    text: 'asdf', //employeee.text.toString(),
-    //    id: 1,
-    //    color: "#ff0000",
-    //    avatar: "images/loriSquare.png",
-    //    discipline: "BDO",
-    //}];
 
 
     $(() => {
         $('#chart').dxChart({
-            dataSource:chartInfo,
-            title: "YTD Leads",
+            size: {
+                height: 300,
+            },
+            dataSource: chartNewUnassignedContacts,
+            title: "New Contacts",
             rotated: true,
             argumentAxis: {
                 grid: {
@@ -175,17 +240,33 @@ $(document).ready(function () {
             series: {
                 argumentField: 'bdo',
                 valueField: 'valueCount',
-                name: 'Lead Count',
+                name: 'New Contacts',
                 type: 'bar',
                 color: '#ffaa66',
+                showInLegend: false,
+                label: {
+                    visible: true,
+                    backgroundColor: "#005eb8",
+                    customizeText: function (pointInfo) {
+                        return `${pointInfo.value}`;
+                        //return pointInfo.argument + ': ' + pointInfoAsCurrency;
+                    },
+                    connector: {
+                        visible: true
+                    }
+                }
             },
         });
     });
+
 
     $(() => {
         $('#chart2').dxChart({
-            dataSource: chartInfo,
-            title: "YTD Leads",
+            size: {
+                height: 300,
+            },
+            dataSource: chartFundedDealsYTD,
+            title: "Deals Funded YTD ($)",
             rotated: true,
             argumentAxis: {
                 grid: {
@@ -195,56 +276,167 @@ $(document).ready(function () {
             series: {
                 argumentField: 'bdo',
                 valueField: 'valueCount',
-                name: 'Lead Count',
+                name: 'Deal Amount',
                 type: 'bar',
                 color: '#ffaa66',
+                showInLegend: false,
+                label: {
+                    visible: true,
+                    backgroundColor: "#005eb8",
+                    customizeText: function (pointInfo) {
+                        var pointInfoAsCurrency = formatMoney(pointInfo.value);
+                        return `$${pointInfoAsCurrency}`;
+                        //return pointInfo.argument + ': ' + pointInfoAsCurrency;
+                    },
+                    connector: {
+                        visible: true
+                    }
+                }
             },
         });
     });
+
+
+    //$(() => {
+    //    $('#chart3').dxChart({
+    //        dataSource: chartFundedDealsYTD,
+    //        title: "Deals Funded YTD ($)",
+    //        rotated: true,
+    //        argumentAxis: {
+    //            grid: {
+    //                visible: true
+    //            }
+    //        },
+    //        series: {
+    //            argumentField: 'bdo',
+    //            valueField: 'valueCount',
+    //            name: 'Deal Amount',
+    //            type: 'bar',
+    //            color: '#ffaa66',
+    //            showInLegend: false,
+    //            label: {
+    //                visible: true,
+    //                backgroundColor: "#005eb8",
+    //                customizeText: function (pointInfo) {
+    //                    var pointInfoAsCurrency = formatMoney(pointInfo.value);
+    //                    return `$${pointInfoAsCurrency}`;
+    //                    //return pointInfo.argument + ': ' + pointInfoAsCurrency;
+    //                },
+    //                connector: {
+    //                    visible: true
+    //                }
+    //            }
+    //        },
+    //    });
+    //});
+
+
 
     $(() => {
-        $('#chart3').dxChart({
-            dataSource: chartInfo,
-            title: "YTD Leads",
-            rotated: true,
-            argumentAxis: {
-                grid: {
-                    visible: true
-                }
+        $('#chart3').dxPieChart({
+            size: {
+                height: 300,
             },
-            series: {
-                argumentField: 'bdo',
-                valueField: 'valueCount',
-                name: 'Lead Count',
-                type: 'bar',
-                color: '#ffaa66',
+            palette: 'bright',
+            dataSource,
+            series: [
+                {
+                    argumentField: 'bdo',
+                    valueField: 'valueCount',
+                    showInLegend: false,
+                    label: {
+                        visible: true,
+                        connector: {
+                            visible: true,
+                            width: 1,
+                        },
+                    },
+                    //label: {
+                    //    visible: true,
+                    //    backgroundColor: "#005eb8",
+                    //    customizeText: function (pointInfo) {
+                    //        var pointInfoAsCurrency = formatMoney(pointInfo.value);
+                    //        return `${pointInfo.argument} - $${pointInfoAsCurrency}`;
+                    //        //return pointInfo.argument + ': ' + pointInfoAsCurrency;
+                    //    },
+                    //    connector: {
+                    //        visible: true
+                    //    }
+                    //},
+                },
+            ],
+            title: 'Lead Sources YTD',
+            export: {
+                enabled: true,
             },
+            //onPointClick(e) {
+            //    const point = e.target;
+
+            //    toggleVisibility(point);
+            //},
+            //onLegendClick(e) {
+            //    const arg = e.target;
+
+            //    toggleVisibility(this.getAllSeries()[0].getPointsByArg(arg)[0]);
+            //},
         });
+
+        function toggleVisibility(item) {
+            if (item.isVisible()) {
+                item.hide();
+            } else {
+                item.show();
+            }
+        }
     });
 
-    const dataSource = [{
-        bdo: 'Bill Herrington',
-        valueCount: 3,
-    }, {
-        bdo: 'Tuesday',
-        valueCount: 2,
-    }, {
-        bdo: 'Wednesday',
-        valueCount: 3,
-    }, {
-        bdo: 'Thursday',
-        valueCount: 4,
-    }, {
-        bdo: 'Friday',
-        valueCount: 6,
-    }, {
-        bdo: 'Saturday',
-        valueCount: 11,
-    }, {
-        bdo: 'Sunday',
-        valueCount: 4,
-        }];
+    //$(() => {
+    //    $('#chart3').dxChart({
+    //        dataSource: chartFundedDealsYTD,
+    //        title: "YTD Leads",
+    //        rotated: true,
+    //        argumentAxis: {
+    //            grid: {
+    //                visible: true
+    //            }
+    //        },
+    //        series: {
+    //            argumentField: 'bdo',
+    //            valueField: 'valueCount',
+    //            name: 'Lead Count',
+    //            type: 'bar',
+    //            color: '#ffaa66',
+    //        },
+    //    });
+    //});
 
+    //const dataSource = [{
+    //    bdo: 'Bill Herrington',
+    //    valueCount: 3,
+    //}, {
+    //    bdo: 'Tuesday',
+    //    valueCount: 2,
+    //}, {
+    //    bdo: 'Wednesday',
+    //    valueCount: 3,
+    //}, {
+    //    bdo: 'Thursday',
+    //    valueCount: 4,
+    //}, {
+    //    bdo: 'Friday',
+    //    valueCount: 6,
+    //}, {
+    //    bdo: 'Saturday',
+    //    valueCount: 11,
+    //}, {
+    //    bdo: 'Sunday',
+    //    valueCount: 4,
+    //    }];
+
+
+    function formatMoney(number) {
+        return number.toLocaleString('en-US');
+    }
 
 
 });

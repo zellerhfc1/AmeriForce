@@ -50,21 +50,12 @@ $(document).ready(function () {
                 width: 240,
                 placeholder: 'Search...',
             },
-            //toolbar: {
-            //    items: [
-            //        {
-            //            location: 'before',
-            //            template() {
-            //                return $('<div>')
-            //                    .addClass('informer')
-            //                    .append(
-            //                        $('<h3>')
-            //                            .addClass('nameSubHeaderNextCall')
-            //                            .text(getGroupCount('name') + " Contacts"),
-            //                    );
-            //            },
-            //        },],
-            //},
+            grouping: {
+                autoExpandAll: true,
+            },
+            groupPanel: {
+                visible: true,
+            },
             selection: {
                 mode: 'single',
             },

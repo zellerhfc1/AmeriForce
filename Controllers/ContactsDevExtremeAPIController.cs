@@ -561,6 +561,61 @@ namespace AmeriForce.Controllers
         }
 
 
+
+        //[HttpGet]
+        //public Json GetNewUnassignedContacts(DataSourceLoadOptions loadOptions)
+        //{
+        //    var contactsAndCompanies = new List<ContactAndCompanyViewModel>();
+
+        //    var contacts = from con in _context.Contacts
+        //                   group con by con.OwnerId into concom
+        //                   join com in _context.Companies on concom.FirstOrDefault().AccountId equals com.ID
+        //                   where concom.FirstOrDefault().Relationship_Status.ToUpper() == "NEW" //&& con.OwnerId.ToUpper() == "0054W00000C3cWNQAZ" // unassigned owner
+        //                   select new { concom };
+
+
+        //    foreach (var contact in contacts)
+        //    {
+        //        var contactAndCompany = new ContactAndCompanyViewModel
+        //        {
+        //            Id = contact.concom.FirstOrDefault().Id.Count().ToString(),
+        //            FirstName = contact.concom.FirstOrDefault().FirstName,
+        //            //LastName = contact.concom.FirstOrDefault().LastName,
+        //            //CompanyName = contact.concom.FirstOrDefault().Name,
+        //            //MailingStreet = contact.concom.FirstOrDefault().MailingStreet,
+        //            //MailingCity = contact.concom.FirstOrDefault().MailingCity,
+        //            //MailingState = contact.concom.FirstOrDefault().MailingState,
+        //            //MailingPostalCode = contact.concom.FirstOrDefault().MailingPostalCode,
+        //            //Phone = contact.concom.FirstOrDefault().Phone,
+        //            //MobilePhone = contact.concom.FirstOrDefault().MobilePhone,
+        //            //Email = contact.concom.FirstOrDefault().Email,
+        //            //Rating_Sort = contact.concom.FirstOrDefault().Rating_Sort,
+        //            //Relationship_Status = contact.concom.FirstOrDefault().Relationship_Status,
+        //            //CompanyType = contact.concom.FirstOrDefault().CompanyType,
+        //            //Opt_Out = contact.concom.FirstOrDefault().Opt_Out,
+        //            //HasOptedOutOfEmail = contact.concom.FirstOrDefault().HasOptedOutOfEmail,
+        //            //OwnerName = _userHelper.GetNameFromID(contact.concom.FirstOrDefault().OwnerId)
+        //        };
+        //        contactsAndCompanies.Add(contactAndCompany);
+        //    }
+
+        //    //var pipelineClientsQueryable = contactsAndCompanies.Select(c => new
+        //    //{
+        //    //    c.Name,
+        //    //    c.OwnerName,
+        //    //    c.CreatedDate
+        //    //}).AsQueryable();
+
+        //    // If underlying data is a large SQL table, specify PrimaryKey and PaginateViaPrimaryKey.
+        //    // This can make SQL execution plans more efficient.
+        //    // For more detailed information, please refer to this discussion: https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/336.
+        //    // loadOptions.PrimaryKey = new[] { "Id" };
+        //    // loadOptions.PaginateViaPrimaryKey = true;
+
+        //    return Json(DataSourceLoader.Load(contactsAndCompanies, loadOptions));
+        //}
+
+
         #endregion
 
     }
